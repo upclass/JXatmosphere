@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@color/light_white">
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:text="@string/cancel"
+        android:layout_alignParentLeft="true"
+        android:textSize="15dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@color/light_white"
+        android:layout_height="40dp" />
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="wrap_content"
+        android:text="@string/cofirm"
+        android:textColor="@color/lightbule"
+        android:layout_alignParentRight="true"
+        android:textSize="15dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@color/light_white"
+        android:layout_height="40dp" />
+</RelativeLayout>

@@ -1,0 +1,1075 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/home_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spacing_40"
+            style="@style/header_color"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <ImageView
+                android:id="@+id/more_info"
+                style="@style/feture_pic"
+                android:src="@drawable/self_conter" />
+
+            <TextView
+                style="@style/one_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/toolbar_title"
+                android:textColor="@color/white" />
+        </android.support.v7.widget.Toolbar>
+
+
+        <LinearLayout
+            android:id="@+id/primary_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/main_weath_loc"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_50"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1">-->
+
+                <!--<ImageView-->
+                <!--style="@style/main_image_style"-->
+                <!--android:layout_marginLeft="@dimen/spacing_4"-->
+                <!--android:src="@drawable/location" />-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/main_loc"-->
+                <!--style="@style/main_text_style"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:text="高新区" />-->
+
+                <!--</LinearLayout>-->
+                <!---->
+                <!--<android.support.percent.PercentRelativeLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="3">-->
+
+                <!--<ImageView-->
+                <!--android:id="@+id/pic_cloud"-->
+                <!--style="@style/main_image_style"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:gravity="center"-->
+                <!--android:src="@drawable/cloudy"-->
+                <!--app:layout_marginLeftPercent="10%" />-->
+
+
+                <!--<TextView-->
+                <!--android:id="@+id/main_temp"-->
+                <!--style="@style/main_text_style"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_toRightOf="@+id/pic_cloud"-->
+                <!--android:gravity="center"-->
+                <!--android:text="18.1℃"-->
+                <!--app:layout_marginLeftPercent="5%" />-->
+
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_toRightOf="@+id/main_temp"-->
+                <!--android:gravity="center"-->
+                <!--android:orientation="vertical"-->
+                <!--app:layout_marginLeftPercent="8%">-->
+
+                <!--<TextView-->
+                <!--style="@style/main_text_style"-->
+                <!--android:layout_gravity="left"-->
+                <!--android:gravity="center"-->
+                <!--android:text="今日" />-->
+
+                <!--<TextView-->
+                <!--style="@style/main_text_style"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:gravity="center"-->
+                <!--android:text="22.6℃-14.6℃" />-->
+                <!--</LinearLayout>-->
+
+                <!--<ImageView-->
+                <!--android:layout_width="@dimen/spacing_20"-->
+                <!--android:layout_height="@dimen/spacing_20"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:src="@drawable/app_right" />-->
+
+                <!--</android.support.percent.PercentRelativeLayout>-->
+
+                <LinearLayout
+                    android:id="@+id/more_weath"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="6dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        style="@style/main_image_style"
+                        android:layout_marginLeft="@dimen/spacing_4"
+                        android:src="@drawable/location" />
+
+                    <TextView
+                        android:id="@+id/main_loc"
+                        style="@style/main_text_style"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="高新区" />
+
+                    <ImageView
+                        android:layout_width="@dimen/spacing_20"
+                        android:layout_height="@dimen/spacing_20"
+                        android:layout_gravity="center"
+                        android:src="@drawable/app_right" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/main_duty"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_40"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/two_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:gravity="center"
+                        android:text="@string/work_schedule"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/see_more_schedule"
+                        style="@style/context_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/see_all" />
+
+                    <ImageView
+                        android:layout_width="@dimen/spacing_20"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/spacing_4"
+                        android:src="@drawable/app_right" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:background="@color/view_color" />
+            </LinearLayout>
+
+
+            <android.support.percent.PercentRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginLeft="6dp"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:id="@+id/image_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/spacing_4"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/image_duty"
+                        style="@style/main_image_style"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/form" />
+
+                    <ImageView
+                        android:id="@+id/image_duty1"
+                        style="@style/main_image_style"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/form" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/duty_name_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/image_group"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/duty_name"
+                        style="@style/main_text_style"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:text="徐彬(带班领导)" />
+
+                    <TextView
+                        android:id="@+id/duty_name1"
+                        style="@style/main_text_style"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="2dp"
+                        android:text="徐彬(带班领导)" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/duty_time_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/duty_name_group"
+                    android:orientation="vertical"
+                    app:layout_marginLeftPercent="16%">
+
+                    <TextView
+                        android:id="@+id/duty_time"
+                        style="@style/main_text_style"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_toRightOf="@id/duty_name"
+                        android:gravity="center"
+                        android:text="白班"
+                        app:layout_marginLeftPercent="16%" />
+
+                    <TextView
+                        android:id="@+id/duty_time1"
+                        style="@style/main_text_style"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:layout_toRightOf="@id/duty_name"
+                        android:gravity="center"
+                        android:text="白班"
+                        app:layout_marginLeftPercent="16%" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/duty_date_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:gravity="right"
+                    android:layout_toRightOf="@id/duty_time_group"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/duty_date"
+                        style="@style/main_text_style"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="2dp"
+                        android:text="2018-03-26" />
+
+                    <TextView
+                        android:id="@+id/duty_date1"
+                        style="@style/main_text_style"
+                        android:layout_marginTop="2dp"
+                        android:text="2018-03-26" />
+                </LinearLayout>
+            </android.support.percent.PercentRelativeLayout>
+
+            <!--<android.support.percent.PercentRelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="6dp"-->
+            <!--android:background="@color/white"-->
+            <!--android:weightSum="3">-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/image_duty1"-->
+            <!--style="@style/main_image_style"-->
+            <!--android:layout_marginBottom="2dp"-->
+            <!--android:layout_marginLeft="@dimen/spacing_4"-->
+            <!--android:src="@drawable/form" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/duty_name1"-->
+            <!--style="@style/main_text_style"-->
+            <!--android:layout_marginLeft="@dimen/spacing_10"-->
+            <!--android:layout_toRightOf="@+id/image_duty1"-->
+            <!--android:text="徐彬(带班领导)" />-->
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/duty_time1"-->
+            <!--style="@style/main_text_style"-->
+            <!--android:layout_alignLeft="@+id/duty_time"-->
+            <!--android:layout_toRightOf="@id/duty_name1"-->
+            <!--android:gravity="center"-->
+            <!--android:text="白班"-->
+            <!--app:layout_marginLeftPercent="16%" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/duty_date1"-->
+            <!--style="@style/main_text_style"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="@dimen/spacing_8"-->
+            <!--android:text="2018-03-26" />-->
+            <!--</android.support.percent.PercentRelativeLayout>-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_40"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/two_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:gravity="center"
+                        android:text="@string/weather_monitor"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:background="@color/view_color" />
+            </LinearLayout>
+
+
+            <android.support.percent.PercentRelativeLayout
+                android:id="@+id/main_feture_item1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_120"
+                android:background="@color/light_white">
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item1_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/wt_monitor_1"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/wt_monitor_1"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_text_1"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/wt_monitor_1"
+                        android:text="@string/wea_monitor_pg_name1"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item1_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item1_1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/wt_monitor_2"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/wt_monitor_2"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_text_2"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/wt_monitor_2"
+                        android:text="@string/wea_monitor_pg_name2"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item1_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item1_2"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/wt_monitor_3"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/wt_monitor_3"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_text_3"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/wt_monitor_3"
+                        android:text="@string/wea_monitor_pg_name3"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item1_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item1_3"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/wt_monitor_4"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/wt_monitor_4"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_text_4"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/wt_monitor_4"
+                        android:text="@string/wea_monitor_pg_name4"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+
+            </android.support.percent.PercentRelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_40"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/two_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:gravity="center"
+                        android:text="@string/forecast_warn"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:background="@color/view_color" />
+            </LinearLayout>
+
+            <android.support.percent.PercentRelativeLayout
+                android:id="@+id/main_feture_item2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_120"
+                android:background="@color/light_white">
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item2_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_1"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_1"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_1"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_1"
+                        android:text="@string/fc_warn_pg_name1"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item2_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item2_1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_2"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_2"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_2"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_2"
+                        android:text="@string/fc_warn_pg_name2"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item2_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item2_2"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_3"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_3"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_3"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_3"
+                        android:text="@string/fc_warn_pg_name3"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item2_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item2_3"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_4"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_4"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_4"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_4"
+                        android:text="@string/fc_warn_pg_name4"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+
+            </android.support.percent.PercentRelativeLayout>
+
+            <android.support.percent.PercentRelativeLayout
+                android:id="@+id/main_feture_item3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_120"
+                android:layout_marginTop="@dimen/spacing_4"
+                android:background="@color/light_white">
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item3_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_5"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_5"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_5"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_5"
+                        android:text="@string/fc_warn_pg_name5"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item3_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item3_1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_6"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_6"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_6"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_6"
+                        android:text="@string/fc_warn_pg_name6"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item3_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item3_2"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_7"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/wt_monitor_3"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_7"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_7"
+                        android:text="@string/fc_warn_pg_name7"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item3_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item3_3"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_8"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_8"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_8"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_8"
+                        android:text="@string/fc_warn_pg_name8"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+
+            </android.support.percent.PercentRelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_40"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/two_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:gravity="center"
+                        android:text="@string/data_forecast"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:background="@color/view_color" />
+            </LinearLayout>
+
+
+            <android.support.percent.PercentRelativeLayout
+                android:id="@+id/main_feture_item0"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_120"
+                android:background="@color/light_white">
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item0_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/data_forecast_1"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/data_forecast_1"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/data_forecast_text_1"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/data_forecast_1"
+                        android:text="@string/data_pg_name1"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item0_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item0_1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/data_forecast_2"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/data_forecast_2"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_data_forecast_text_2"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/data_forecast_2"
+                        android:text="@string/data_pg_name2"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item0_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item0_2"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/data_forecast_3"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/data_forecast_3"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_data_forecast_text_3"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/data_forecast_3"
+                        android:text="@string/data_pg_name3"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item0_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item0_3"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/data_forecast_4"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/data_forecast_4"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_data_forecast_text_4"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/data_forecast_4"
+                        android:text="@string/data_pg_name4"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+
+            </android.support.percent.PercentRelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_40"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/two_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:gravity="center"
+                        android:text="@string/service_feedback"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:background="@color/view_color" />
+            </LinearLayout>
+
+            <android.support.percent.PercentRelativeLayout
+                android:id="@+id/main_feture_item4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_120"
+                android:background="@color/light_white">
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item4_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/sercice_feedback_1"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/sercice_feedback_1"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_sercice_feedback_text_1"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/sercice_feedback_1"
+                        android:text="@string/sv_feedback_pg_name1"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item4_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item4_1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/sercice_feedback_2"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/sercice_feedback_2"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_sercice_feedback_text_2"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/sercice_feedback_2"
+                        android:text="@string/sv_feedback_pg_name2"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item4_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item4_2"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/sercice_feedback_3"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/sercice_feedback_3"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_sercice_feedback_text3"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/sercice_feedback_3"
+                        android:text="@string/sv_feedback_pg_name3"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item4_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item4_3"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/sercice_feedback_4"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/sercice_feedback_4"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_sercice_feedback_text_4"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/sercice_feedback_4"
+                        android:text="@string/sv_feedback_pg_name4"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+
+            </android.support.percent.PercentRelativeLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

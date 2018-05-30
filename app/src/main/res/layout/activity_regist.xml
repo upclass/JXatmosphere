@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/light_white"
+    android:orientation="vertical"
+    tools:context="net.univr.pushi.jxatmosphere.feature.RegistActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/regist_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_40"
+        android:background="@drawable/toolbar_bg">
+
+        <ImageView
+            android:id="@+id/regist_back"
+            style="@style/feture_pic"
+            android:src="@drawable/app_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/regist_1"
+            android:textColor="@color/white"
+            style="@style/one_title"/>
+
+    </android.support.v7.widget.Toolbar>
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/re_phone"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_heightPercent="10%"
+            app:layout_widthPercent="100%"
+            android:layout_marginLeft="@dimen/spacing_4"
+            android:background="@drawable/edittext_bg"
+            android:inputType="phone"
+            android:hint="@string/regst_hint_phone" />
+
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/linerlay_ps"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_heightPercent="10%"
+            app:layout_widthPercent="100%"
+            android:layout_below="@+id/re_phone"
+            android:layout_marginTop="@dimen/spacing_10"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_marginLeft="@dimen/spacing_4"
+                android:id="@+id/re_code"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_widthPercent="75%"
+                android:inputType="number"
+                android:background="@drawable/edittext_bg"
+                android:hint="@string/regist_hint_code" />
+
+            <Button
+                android:id="@+id/get_sms_code"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_heightPercent="80%"
+                app:layout_widthPercent="25%"
+                android:layout_toRightOf="@+id/re_code"
+                android:layout_centerVertical="true"
+                style="@style/two_title"
+                android:background="@drawable/app_btn_backimage"
+                android:text="@string/get_code"
+                android:textColor="@color/white" />
+        </android.support.percent.PercentRelativeLayout>
+
+
+        <Button
+            android:id="@+id/go_next_regist"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_heightPercent="7%"
+            app:layout_widthPercent="80%"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/linerlay_ps"
+            android:layout_marginTop="@dimen/spacing_30"
+            android:background="@drawable/app_btn_backimage"
+            android:text="@string/regist_next"
+            style="@style/two_title"
+            android:textColor="@color/white" />
+
+    </android.support.percent.PercentRelativeLayout>
+
+</LinearLayout>

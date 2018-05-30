@@ -1,0 +1,36 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:background="@color/light_white"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="80dp"
+        app:layout_anchor="@id/pic"
+        android:visibility="gone"
+        app:layout_anchorGravity="right|bottom"></android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        android:backgroundTint="#0d61a6"
+        android:src="@drawable/map_time"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/pic"
+        app:layout_anchorGravity="right|bottom"
+        app:pressedTranslationZ="10dp" />
+</android.support.design.widget.CoordinatorLayout>
+

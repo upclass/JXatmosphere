@@ -1,0 +1,143 @@
+apply plugin: 'com.android.application'
+//集成butterknife
+apply plugin: 'com.jakewharton.butterknife'
+//mob 短信集成
+apply plugin: 'com.mob.sdk'
+//lamada表达式需要
+//apply plugin: 'me.tatarka.retrolambda'
+
+// 在MobSDK的扩展中注册SMSSDK的相关信息
+
+
+MobSDK {
+    appKey "24f1bb45e832f"
+    appSecret "acff34b5077aaa8908968b39897bc8a9"
+
+    SMSSDK {}
+
+    ShareSDK {
+        //平台配置信息
+        devInfo {
+            SinaWeibo {
+                appKey "568898243"
+                appSecret "38a4f8204cc784f81f9f0daaf31e02e3"
+                callbackUri "http://www.sharesdk.cn"
+                shareByAppClient false
+            }
+            Wechat {
+                appId "wx4868b35061f87885"
+                appSecret "64020361b8ec4c99936c0e3999a9f249"
+            }
+            QQ {
+                appId "100371282"
+                appKey "aed9b0303e3ed1e27bae87c33761161d"
+            }
+            Facebook {
+                appKey "1412473428822331"
+                appSecret "a42f4f3f867dc947b9ed6020c2e93558"
+                callbackUri "https://mob.com"
+            }
+        }
+    }
+}
+
+android {
+
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    signingConfigs {
+        config {
+            keyAlias 'jxatmosphere'
+            keyPassword '123456'
+            storeFile file('E:/androidApp/JXatmosphere/app/jxatmosphere.jks')
+            storePassword '123456'
+        }
+    }
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "net.univr.pushi.jxatmosphere"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 3
+        versionName "1.1"
+        testInstrumentationRunner "android.support.popup_feedback_layout.runner.AndroidJUnitRunner"
+        //方法>64k
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+//lamada表达式需要
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    //rxlifecycle
+    compile 'com.trello:rxlifecycle-components:0.6.1'
+    //绑定view工具
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    //谷歌解析json工具
+    compile 'com.google.code.gson:gson:2.8.2'
+    //okHttp网络请求库
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+    //retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    //RecycleView第三方Adapter
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    //第三方工具库
+    compile 'com.blankj:utilcode:1.9.4'
+    //数据库调试库
+    compile 'com.facebook.stetho:stetho:1.3.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
+    //加入百分比布局
+    compile 'com.android.support:percent:22.2.0'
+    //第三方图片选择
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.2'
+    //xutil
+    compile 'org.xutils:xutils:3.3.36'
+    //高德地图
+    compile 'com.amap.api:location:latest.integration'
+    //图片加载框架
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //时间选择
+    compile('com.github.gzu-liyujiang.AndroidPicker:WheelPicker:1.5.5') {
+        exclude group: 'com.android.support'
+    }
+//方法>64k
+    compile 'com.android.support:multidex:1.0.1'
+    //floatButton
+    compile 'com.getbase:floatingactionbutton:1.10.1'
+    api('com.afollestad.material-dialogs:core:0.9.5.0') {
+        exclude group: 'com.android.support'
+    }
+    //蒲公英
+    compile 'com.pgyersdk:sdk:2.8.1'
+
+}

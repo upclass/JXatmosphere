@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="bule">#f00b5ccf</color>
+    <color name="lightbule">#f04f89dd</color>
+    <color name="floatbule">#f00e4eab</color>
+    <color name="black">#2c2a2a</color>
+    <color name="tine_black">#585353</color>
+
+
+    <color name="white">#FFFFFF</color><!--白色 -->
+    <color name="view_color">#aad0ed</color>
+    <color name="light_white">#f6f6f6</color>
+    <item name="gray_holo_light" type="color">#ffd0d0d0</item>
+    <color name="login_light_blue">#88c8f7</color>
+    <color name="toolbar_color">#0081e7</color><!--题头颜色 -->
+
+
+
+</resources>

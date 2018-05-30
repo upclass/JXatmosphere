@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        style="@style/header_color"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                style="@style/feture_pic"
+                android:src="@drawable/app_left" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/one_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/sv_feedback_pg_name4"
+            android:textColor="@color/white" />
+
+        <!--<LinearLayout-->
+            <!--style="@style/feture_pic"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/share_to"-->
+                <!--style="@style/feture_pic"-->
+                <!--android:src="@drawable/nav_share" />-->
+
+        <!--</LinearLayout>-->
+
+    </RelativeLayout>
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></WebView>
+</LinearLayout>
