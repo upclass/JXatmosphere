@@ -107,6 +107,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //wtf快速循环
     @BindView(R.id.main_content_item0_4)
     PercentRelativeLayout wtfdlxh;
+    //雷达预报
+    @BindView(R.id.main_content_item2_3)
+    PercentRelativeLayout radarForecast;
 
 
     @BindView(R.id.duty_name)
@@ -165,6 +168,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         gdybtx.setOnClickListener(this);
         wtfdlxh.setOnClickListener(this);
         more_weath.setOnClickListener(this);
+        radarForecast.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
 //            Toast.makeText(MainActivity.this, item.getTitle().toString(), Toast.LENGTH_SHORT).show();
             int itemId = item.getItemId();
@@ -351,6 +355,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 intentMoreWeath.putExtra("lat", lat);
                 intentMoreWeath.putExtra("lon", lon);
                 startActivity(intentMoreWeath);
+                break;
+            case R.id.main_content_item2_3:
+                Intent radarForecast = new Intent(context, RadarForecastActivity.class);
+                startActivity(radarForecast);
                 break;
         }
 

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.EcOneMenu;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -256,7 +258,12 @@ public class WtfRapidFragment extends RxLazyFragment {
 
     private DmcgjcAdapter3 getAdapter3() {
         if (mAdapter3 == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL){
+                @Override
+                public boolean canScrollVertically() {
+                    return  false;
+                }
+            };
             mAdapter3 = new DmcgjcAdapter3(mData3);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);

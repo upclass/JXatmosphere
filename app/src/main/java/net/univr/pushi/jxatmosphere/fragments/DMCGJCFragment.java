@@ -522,14 +522,14 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     mData3.clear();
                     for (int i = 0; i < time.size(); i++) {
                         GkdmClickBeen clickBeen = new GkdmClickBeen();
-                        if (i == 0)
+                        if (i == time.size()-1)
                             clickBeen.setOnclick(true);
                         else clickBeen.setOnclick(false);
                         clickBeen.setText(time.get(i));
                         mData3.add(clickBeen);
                     }
                     getAdapter3().setNewData(mData3);
-                    //播放轮播
+                    mViewPager.setCurrentItem(time.size()-1);
 
                 }, throwable -> {
                     progressDialog.dismiss();

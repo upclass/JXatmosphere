@@ -5,6 +5,13 @@
     android:orientation="vertical"
     tools:context="net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment">
 
+
+    <net.univr.pushi.jxatmosphere.widget.CustomViewPager
+        android:id="@+id/viepager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -18,23 +25,19 @@
 
     </LinearLayout>
 
-
-    <net.univr.pushi.jxatmosphere.widget.CustomViewPager
-        android:id="@+id/viepager"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
-
+        android:layout_height="2dp"
+        android:background="@color/tine_black" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/toolbar_bg">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/pic_ready"
@@ -49,7 +52,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/spacing_2"></android.support.v7.widget.RecyclerView>
 
     </LinearLayout>

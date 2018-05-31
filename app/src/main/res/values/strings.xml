@@ -118,4 +118,5 @@
     <string name="title_activity_aaaaaaaaa_main2">aaaaaaaaaMain2Activity</string>
     <string name="title_activity_wtf_rapid">WtfRapidActivity</string>
     <string name="title_activity_yujing">YujingActivity</string>
+    <string name="title_activity_radar_forecast">RadarForecastActivity</string>
 </resources>

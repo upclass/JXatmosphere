@@ -53,7 +53,7 @@ public class GKDMGCFragment extends RxLazyFragment {
 
     List<GkdmClickBeen> mData3 = new ArrayList<>();
     //播放的下一位置
-    int recycle_skipto_position = 1;
+    int recycle_skipto_position ;
     //是否播放
     Boolean isStart = false;
     //现在位置
@@ -355,13 +355,14 @@ public class GKDMGCFragment extends RxLazyFragment {
                         mData3.clear();
                         for (int i = 0; i < time.size(); i++) {
                             GkdmClickBeen clickBeen = new GkdmClickBeen();
-                            if (i == 0)
+                            if (i == time.size()-1)
                                 clickBeen.setOnclick(true);
                             else clickBeen.setOnclick(false);
                             clickBeen.setText(time.get(i));
                             mData3.add(clickBeen);
                         }
                         getAdapter3().setNewData(mData3);
+                        mViewPager.setCurrentItem(time.size()-1);
                     }, throwable -> {
                         progressDialog.dismiss();
                         LogUtils.e(throwable);

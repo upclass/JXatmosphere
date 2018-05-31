@@ -6,6 +6,7 @@ import net.univr.pushi.jxatmosphere.beens.GdybtxBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GeneforeBeen;
 import net.univr.pushi.jxatmosphere.beens.QxfxBeen;
+import net.univr.pushi.jxatmosphere.beens.RadarForecastBeen;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -48,5 +49,7 @@ public interface ForecastWarn {
     Observable<BdskBeen> getbdsk(@Query("lat")String lattitude,@Query("lon")String lontitude);
     @GET("bdyb.do")
     Observable<BdybBeen> getbdyb(@Query("lattitude")String lattitude, @Query("lontitude")String lontitude, @Query("adress")String adress);
-
+    //雷达预报
+    @GET("radarForecastFrom20.do")
+    Observable<RadarForecastBeen> radarForecastFrom20(@Query("type")String type);
 }

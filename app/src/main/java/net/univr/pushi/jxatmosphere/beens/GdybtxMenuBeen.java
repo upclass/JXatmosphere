@@ -12,8 +12,9 @@ import java.util.List;
 
 
 public class GdybtxMenuBeen {
+
     /**
-     * data : {"menu":["天气现象","气温","降水量","风向风速","相对湿度"]}
+     * data : {"menu":[{"name":"降水量","type":"rain"},{"name":"最高温","type":"tmax24"},{"name":"最低温","type":"tmin24"},{"name":"天气现象","type":"wp"}]}
      * errmsg : success
      * errcode : 0
      */
@@ -47,14 +48,40 @@ public class GdybtxMenuBeen {
     }
 
     public static class DataBean {
-        private List<String> menu;
+        private List<MenuBean> menu;
 
-        public List<String> getMenu() {
+        public List<MenuBean> getMenu() {
             return menu;
         }
 
-        public void setMenu(List<String> menu) {
+        public void setMenu(List<MenuBean> menu) {
             this.menu = menu;
+        }
+
+        public static class MenuBean {
+            /**
+             * name : 降水量
+             * type : rain
+             */
+
+            private String name;
+            private String type;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
         }
     }
 }

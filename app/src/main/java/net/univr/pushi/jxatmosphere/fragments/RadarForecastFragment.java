@@ -36,8 +36,7 @@ import rx.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LdptRadarFragment extends RxLazyFragment {
-
+public class RadarForecastFragment extends RxLazyFragment {
 
     @BindView(R.id.viewpager)
     CustomViewPager mViewPager;
@@ -51,7 +50,7 @@ public class LdptRadarFragment extends RxLazyFragment {
 
     List<GkdmClickBeen> mData3 = new ArrayList<>();
     //播放的下一位置
-    int recycle_skipto_position = 0;
+    int recycle_skipto_position = 1;
     //是否播放
     Boolean isStart = false;
     //现在的位置
@@ -62,7 +61,7 @@ public class LdptRadarFragment extends RxLazyFragment {
     List<Fragment> fragmentList = new ArrayList<>();
     List<String> urls = new ArrayList<>();
     MyPagerAdapter viewPagerAdapter;
-    String flag;
+    String type;
 
 
     public void setStart(Boolean start) {
@@ -70,12 +69,12 @@ public class LdptRadarFragment extends RxLazyFragment {
         mViewPager.setScanScroll(true);
     }
 
-    public static LdptRadarFragment newInstance(String flag) {
-        LdptRadarFragment ldptRadarFragment = new LdptRadarFragment();
+    public static RadarForecastFragment newInstance(String flag) {
+        RadarForecastFragment radarForecastFragment = new RadarForecastFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("flag", flag);
-        ldptRadarFragment.setArguments(bundle);
-        return ldptRadarFragment;
+        bundle.putString("type", flag);
+        radarForecastFragment.setArguments(bundle);
+        return radarForecastFragment;
     }
 
 
@@ -89,14 +88,14 @@ public class LdptRadarFragment extends RxLazyFragment {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.fragment_ldpt_radar;
+        return R.layout.fragment_radar_forecast;
     }
 
     @Override
     public void finishCreateView(Bundle state) {
         mcontext = getActivity();
         if (getArguments() != null) {
-            flag = getArguments().getString("flag");
+            type = getArguments().getString("type");
         }
         getTestdata();
         isStartPic.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +124,7 @@ public class LdptRadarFragment extends RxLazyFragment {
 
     private LdptWxAdapter getAdapter3() {
         if (mAdapter == null) {
-            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6,StaggeredGridLayoutManager.VERTICAL){
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL){
                 @Override
                 public boolean canScrollVertically() {
                     return false;
@@ -164,16 +163,17 @@ public class LdptRadarFragment extends RxLazyFragment {
     private void getTestdata() {
         progressDialog=ProgressDialog.show(getContext(),"请稍等...", "获取数据中...",true);
         progressDialog.setCancelable(true);
-        if (flag.equals("1")) {
+        if (type.equals("rain")) {
             getAdapter3();
-            RetrofitHelper.getWeatherMonitorAPI()
-                    .getLdpt()
+            RetrofitHelper.getForecastWarn()
+                    .radarForecastFrom20(type)
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(LdptBeen -> {
+                    .subscribe(radarForecastBeen -> {
                         progressDialog.dismiss();
-                        now_postion=LdptBeen.getData().getBtnName().size()-1;
+                        now_postion= 0;
+                        recycle_skipto_position = 1;
 
                         List<Fragment> huancunFragments = new ArrayList<>();
                         for (int i = 0; i < fragmentList.size(); i++) {
@@ -181,7 +181,7 @@ public class LdptRadarFragment extends RxLazyFragment {
                         }
                         fragmentList.clear();
 
-                        urls = LdptBeen.getData().getImageUrl();
+                        urls = radarForecastBeen.getData().getUrlList();
                         for (int i = 0; i < urls.size(); i++) {
                             PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i));
                             fragmentList.add(fragment);
@@ -221,10 +221,10 @@ public class LdptRadarFragment extends RxLazyFragment {
                         });
 
 
-                        List<String> time = LdptBeen.getData().getBtnName();
+                        List<String> time = radarForecastBeen.getData().getTimeList();
                         for (int i = 0; i < time.size(); i++) {
                             GkdmClickBeen clickBeen = new GkdmClickBeen();
-                            if (i == time.size()-1) clickBeen.setOnclick(true);
+                            if (i ==0) clickBeen.setOnclick(true);
                             else clickBeen.setOnclick(false);
                             clickBeen.setText(time.get(i));
 
@@ -232,7 +232,7 @@ public class LdptRadarFragment extends RxLazyFragment {
                         }
 
                         getAdapter3().setNewData(mData3);
-                        mViewPager.setCurrentItem(time.size()-1);
+//                        mViewPager.setCurrentItem(time.size()-1);
                     }, throwable -> {
                         progressDialog.dismiss();
                         LogUtils.e(throwable);
@@ -240,22 +240,22 @@ public class LdptRadarFragment extends RxLazyFragment {
                     });
         } else {
             getAdapter3();
-            RetrofitHelper.getWeatherMonitorAPI()
-                    .getWxyt()
+            RetrofitHelper.getForecastWarn()
+                    .radarForecastFrom20("ref")
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(wxytBeen -> {
-                            progressDialog.dismiss();
-                        recycle_skipto_position = 0;
-                        now_postion= wxytBeen.getData().getBtnNameList().size()-1;
+                    .subscribe(radarForecastBeen -> {
+                        progressDialog.dismiss();
+                        recycle_skipto_position = 1;
+                        now_postion=0;
                         List<Fragment> huancunFragments = new ArrayList<>();
                         for (int i = 0; i < fragmentList.size(); i++) {
                             huancunFragments.add(fragmentList.get(i));
                         }
                         fragmentList.clear();
 
-                        urls = wxytBeen.getData().getImageUrl();
+                        urls = radarForecastBeen.getData().getUrlList();
                         for (int i = 0; i < urls.size(); i++) {
                             PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i));
                             fragmentList.add(fragment);
@@ -295,10 +295,10 @@ public class LdptRadarFragment extends RxLazyFragment {
                         });
 
 
-                        List<String> time = wxytBeen.getData().getBtnNameList();
+                        List<String> time = radarForecastBeen.getData().getTimeList();
                         for (int i = 0; i < time.size(); i++) {
                             GkdmClickBeen clickBeen = new GkdmClickBeen();
-                            if (i == time.size()-1) clickBeen.setOnclick(true);
+                            if (i == 0) clickBeen.setOnclick(true);
                             else clickBeen.setOnclick(false);
                             clickBeen.setText(time.get(i));
 
@@ -306,9 +306,9 @@ public class LdptRadarFragment extends RxLazyFragment {
                         }
 
                         getAdapter3().setNewData(mData3);
-                        mViewPager.setCurrentItem(time.size()-1);
+//                        mViewPager.setCurrentItem(time.size()-1);
                     }, throwable -> {
-                            progressDialog.dismiss();
+                        progressDialog.dismiss();
                         LogUtils.e(throwable);
                         ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                     });

@@ -14,6 +14,7 @@ import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.ComPagerAdapter;
 import net.univr.pushi.jxatmosphere.adapter.GdybtxMenuAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
+import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmmenuBeen;
 import net.univr.pushi.jxatmosphere.fragments.GdybtxFragment;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
@@ -103,25 +104,18 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxOneMenu -> {
-                    List<String> menu = gdybtxOneMenu.getData().getMenu();
+                    List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxOneMenu.getData().getMenu();
                     List<GkdmmenuBeen> destMenu = new ArrayList<>();
 
                     for (int i = 0; i < menu.size(); i++) {
                         GkdmmenuBeen menuBean = new GkdmmenuBeen();
-                        menuBean.setText(menu.get(i));
+                        menuBean.setText(menu.get(i).getName());
                         if (i == 0)
                             menuBean.setSelect(true);
                         else
                             menuBean.setSelect(false);
                         destMenu.add(menuBean);
-                        if(i==0)
-                        list.add(new GdybtxFragment().newInstance("rain"));
-                        if(i==1)
-                            list.add(new GdybtxFragment().newInstance("tmax24"));
-                        if(i==2)
-                            list.add(new GdybtxFragment().newInstance("tmin24"));
-                        if(i==3)
-                            list.add(new GdybtxFragment().newInstance("wp"));
+                        list.add(new GdybtxFragment().newInstance(menu.get(i).getType()));
                     }
                     ComPagerAdapter comPagerAdapter=new ComPagerAdapter(getSupportFragmentManager(),list);
                     viewPager.setAdapter(comPagerAdapter);

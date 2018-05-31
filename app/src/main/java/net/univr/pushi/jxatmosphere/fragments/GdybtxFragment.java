@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,8 +26,10 @@ import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
 import net.univr.pushi.jxatmosphere.adapter.ViewpageAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
+import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -147,11 +150,11 @@ public class GdybtxFragment extends RxLazyFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxTwoMenu -> {
-                    List<String> menu = gdybtxTwoMenu.getData().getMenu();
+                    List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxTwoMenu.getData().getMenu();
                     List<DmcgjcmenuBeen.DataBean> dataBeans = new ArrayList<>();
                     for (int i = 0; i < menu.size(); i++) {
                         DmcgjcmenuBeen.DataBean temp=new DmcgjcmenuBeen.DataBean();
-                        String menuname = menu.get(i);
+                        String menuname = menu.get(i).getName();
                         temp.setZnName(menuname);
                         if(i==0) temp.setSelect(true);
                         else
@@ -223,6 +226,11 @@ public class GdybtxFragment extends RxLazyFragment {
                 if (type.equals("rain")&&menu.equals("逐12小时")) {
                     type = "rain12";
                 }
+                if (type.equals("rain")&&menu.equals("逐12小时")) {
+                    type = "rain12";
+                }
+
+
 //                if (type.equals("10uv")&&menu.equals("逐小时（001-024小时预报）")) {
 //                    type = "10uv";
 //                }
@@ -244,7 +252,12 @@ public class GdybtxFragment extends RxLazyFragment {
 
     private DmcgjcAdapter3 getAdapter3() {
         if (mAdapter3 == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL){
+                @Override
+                public boolean canScrollVertically() {
+                    return false;
+                }
+            };
             mAdapter3 = new DmcgjcAdapter3(mData3);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
