@@ -16,7 +16,8 @@ public class GetResourceInt {
 
     public static int getResource(String imageName,Context context) {
         Context ctx = ((Activity) context).getBaseContext();
-        int resId = context.getResources().getIdentifier(imageName, "drawable", ctx.getPackageName());
+        String packageName = ctx.getPackageName();
+        int resId = context.getResources().getIdentifier(imageName, "drawable", packageName);
         //如果没有在"mipmap"下找到imageName,将会返回0
         return resId;
     }

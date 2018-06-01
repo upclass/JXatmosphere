@@ -1,29 +1,25 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ToastUtils;
-import com.squareup.picasso.Picasso;
-
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.ViewpageAdapter;
+import net.univr.pushi.jxatmosphere.adapter.ComPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
-import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.fragments.WeatherWarnFragment;
+import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class WeathWarnActivity extends BaseActivity implements View.OnClickListener {
 
@@ -50,11 +46,11 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
 //    @BindView(R.id.share_to)
 //    ImageView shareTo;
 
-    LayoutInflater inflater;
-    ViewpageAdapter adapter;
+//    LayoutInflater inflater;
+    ComPagerAdapter adapter;
     @BindView(R.id.viewpager)
-    ViewPager viewpager;
-    List<ImageView> list;
+    CustomViewPager viewpager;
+    List<Fragment> list;
     ImageView image;
     ProgressDialog progressDialog;
 
@@ -73,8 +69,9 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
 //        shareTo.setOnClickListener(this);
         back.setOnClickListener(this);
         list = new ArrayList<>();
-        adapter= new ViewpageAdapter(list);
+        adapter= new ComPagerAdapter(getSupportFragmentManager(),list);
         viewpager.setAdapter(adapter);
+        viewpager.setScanScroll(false);
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -114,12 +111,14 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
 
             }
         });
-        inflater = LayoutInflater.from(this);
-
-
-        getTestData("dz");
-        getTestData("sh");
-        getTestData("hl");
+//        inflater = LayoutInflater.from(this);
+//        getTestData("dz");
+//        getTestData("sh");
+//        getTestData("hl");
+        list.add(WeatherWarnFragment.newInstance("dz"));
+        list.add(WeatherWarnFragment.newInstance("sh"));
+        list.add(WeatherWarnFragment.newInstance("hl"));
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -178,32 +177,32 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void getTestData(String type) {
-        if(type.equals("dz"))
-        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
-        RetrofitHelper.getForecastWarn()
-                .getXqfx(type)
-                .compose(bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(qxfxBeen -> {
-                    if(progressDialog!=null)
-                    progressDialog.dismiss();
-                    image=new ImageView(context);
-                    list.add(image);
-                    adapter.notifyDataSetChanged();
-                    String url = qxfxBeen.getData().get(0).getUrl();
-                    Picasso.with(context).load(url).placeholder(R.drawable.app_imageplacehold).into(image);
+//    private void getTestData(String type) {
+//        if(type.equals("dz"))
+//        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+//        progressDialog.setCancelable(true);
+//        RetrofitHelper.getForecastWarn()
+//                .getQxfx(type)
+//                .compose(bindToLifecycle())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(qxfxBeen -> {
+//                    if(progressDialog!=null)
+//                    progressDialog.dismiss();
+//                    image=new ImageView(context);
+//                    list.add(image);
+//                    adapter.notifyDataSetChanged();
+//                    String url = qxfxBeen.getData().get(0).getUrl();
+//                    Picasso.with(context).load(url).placeholder(R.drawable.app_imageplacehold).into(image);
+//
+//                }, throwable -> {
+//                    if(progressDialog!=null)
+//                    progressDialog.dismiss();
+//                    LogUtils.e(throwable);
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                });
 
-                }, throwable -> {
-                    if(progressDialog!=null)
-                    progressDialog.dismiss();
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
-
-    }
+//    }
 
 
 }

@@ -13,8 +13,9 @@ import java.util.List;
 
 public class QxfxBeen {
 
+
     /**
-     * data : [{"tittleName":"中小河流洪水气象风险预报","url":"http://stwx.jxgis.cn/JXST_WeiXin_V3.1/source/image/hl201805071600.png"}]
+     * data : [{"tittleName":"中小河流洪水气象风险预报","url":["http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805301800.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805260900.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805260800.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805182200.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805071600.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805071500.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804231000.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804230500.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804230400.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804230300.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804221800.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804150100.png"]}]
      * errmsg : success
      * errcode : 0
      */
@@ -50,11 +51,11 @@ public class QxfxBeen {
     public static class DataBean {
         /**
          * tittleName : 中小河流洪水气象风险预报
-         * url : http://stwx.jxgis.cn/JXST_WeiXin_V3.1/source/image/hl201805071600.png
+         * url : ["http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805301800.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805260900.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805260800.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805182200.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805071600.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201805071500.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804231000.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804230500.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804230400.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804230300.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804221800.png","http://stwx.jxgis.cn/JXST_APP_V1.0/source/image/hl201804150100.png"]
          */
 
         private String tittleName;
-        private String url;
+        private List<String> url;
 
         public String getTittleName() {
             return tittleName;
@@ -64,11 +65,11 @@ public class QxfxBeen {
             this.tittleName = tittleName;
         }
 
-        public String getUrl() {
+        public List<String> getUrl() {
             return url;
         }
 
-        public void setUrl(String url) {
+        public void setUrl(List<String> url) {
             this.url = url;
         }
     }

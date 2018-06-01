@@ -7,17 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Author:    ZhuWenWu
- * Version    V1.0
- * Date:      2015/2/26  14:15.
- * Description:
- * Modification  History:
- * Date             Author                Version            Description
- * -----------------------------------------------------------------------------------
- * 2015/2/26        ZhuWenWu            1.0                    1.0
- * Why & What is modified:
- */
 public class FullyLinearLayoutManager extends LinearLayoutManager {
 
     private static final String TAG = FullyLinearLayoutManager.class.getSimpleName();

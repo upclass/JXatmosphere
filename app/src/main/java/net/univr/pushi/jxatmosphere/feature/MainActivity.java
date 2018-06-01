@@ -110,6 +110,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //雷达预报
     @BindView(R.id.main_content_item2_3)
     PercentRelativeLayout radarForecast;
+    //预警信号
+    @BindView(R.id.main_content_item2_1)
+    PercentRelativeLayout YujinXinhao;
 
 
     @BindView(R.id.duty_name)
@@ -169,6 +172,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         wtfdlxh.setOnClickListener(this);
         more_weath.setOnClickListener(this);
         radarForecast.setOnClickListener(this);
+        YujinXinhao.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
 //            Toast.makeText(MainActivity.this, item.getTitle().toString(), Toast.LENGTH_SHORT).show();
             int itemId = item.getItemId();
@@ -359,6 +363,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.main_content_item2_3:
                 Intent radarForecast = new Intent(context, RadarForecastActivity.class);
                 startActivity(radarForecast);
+                break;
+            case R.id.main_content_item2_1:
+                Intent yujinXinhao = new Intent(context, YujingActivity.class);
+                startActivity(yujinXinhao);
                 break;
         }
 

@@ -7,6 +7,7 @@ import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GeneforeBeen;
 import net.univr.pushi.jxatmosphere.beens.QxfxBeen;
 import net.univr.pushi.jxatmosphere.beens.RadarForecastBeen;
+import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -24,7 +25,7 @@ import rx.Observable;
 public interface ForecastWarn {
     //气象分析预报
     @GET("EnvironmentalPrediction.do")
-    Observable<QxfxBeen> getXqfx(@Query("type") String type);
+    Observable<QxfxBeen> getQxfx(@Query("type") String type);
 
     //全省文字报
     @GET("genefore.do")
@@ -52,4 +53,8 @@ public interface ForecastWarn {
     //雷达预报
     @GET("radarForecastFrom20.do")
     Observable<RadarForecastBeen> radarForecastFrom20(@Query("type")String type);
+    //预警信号
+    @GET("yujin.do")
+    Observable<YuJinXinhaoBeen> getYujinInfo();
+
 }
