@@ -5,20 +5,6 @@
     android:orientation="vertical"
     tools:context="net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/light_white"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler1"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"></android.support.v7.widget.RecyclerView>
-
-
-    </LinearLayout>
-
 
     <net.univr.pushi.jxatmosphere.widget.CustomViewPager
         android:id="@+id/viepager"
@@ -26,31 +12,63 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/light_white"
+        android:orientation="horizontal">
+
+
+        <!--<TextView-->
+        <!--android:id="@+id/tvShow"-->
+        <!--style="@style/two_title"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:gravity="center"-->
+        <!--android:text="天气现象" />-->
+
+        <Spinner
+            android:id="@+id/spDwon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="40dp"
-            android:layout_height="match_parent">
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/start_par"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="match_parent">-->
 
-            <ImageView
-                android:id="@+id/pic_ready"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:src="@drawable/app_start" />
-        </RelativeLayout>
+        <!--<ImageView-->
+        <!--android:id="@+id/pic_ready"-->
+        <!--android:layout_width="25dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@drawable/app_start" />-->
+        <!--</RelativeLayout>-->
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/spacing_2"></android.support.v7.widget.RecyclerView>
+            android:layout_marginLeft="@dimen/spacing_2"
+            android:layout_marginStart="20dp"></android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 

@@ -2,20 +2,15 @@ package net.univr.pushi.jxatmosphere.feature;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.ComPagerAdapter;
-import net.univr.pushi.jxatmosphere.adapter.GdybtxMenuAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
-import net.univr.pushi.jxatmosphere.beens.GkdmmenuBeen;
 import net.univr.pushi.jxatmosphere.fragments.GdybtxFragment;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
@@ -38,12 +33,23 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 //    ImageView share_to;
     @BindView(R.id.back)
     ImageView leave;
-    @BindView(R.id.recyclerView)
-    RecyclerView recycleView;
 
-    GdybtxMenuAdapter madapter;
+//    @BindView(R.id.recyclerView)
+//    RecyclerView recycleView;
+
+//    GdybtxMenuAdapter madapter;
 
     private List<Fragment> list;
+
+    public void setFristFragment(Boolean fristFragment) {
+        this.fristFragment = fristFragment;
+    }
+
+    public Boolean getFristFragment() {
+        return fristFragment;
+    }
+
+    Boolean fristFragment;
 
 
     @Override
@@ -60,6 +66,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
 
     private void initView() {
+        fristFragment=true;
         viewPager.setScanScroll(false);
 //        share_to.setOnClickListener(this);
         leave.setOnClickListener(this);
@@ -105,42 +112,44 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxOneMenu -> {
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxOneMenu.getData().getMenu();
-                    List<GkdmmenuBeen> destMenu = new ArrayList<>();
+//                    List<GkdmmenuBeen> destMenu = new ArrayList<>();
 
                     for (int i = 0; i < menu.size(); i++) {
-                        GkdmmenuBeen menuBean = new GkdmmenuBeen();
-                        menuBean.setText(menu.get(i).getName());
-                        if (i == 0)
-                            menuBean.setSelect(true);
-                        else
-                            menuBean.setSelect(false);
-                        destMenu.add(menuBean);
-                        list.add(new GdybtxFragment().newInstance(menu.get(i).getType()));
+//                        GkdmmenuBeen menuBean = new GkdmmenuBeen();
+//                        menuBean.setText(menu.get(i).getName());
+//                        if (i == 0)
+//                            menuBean.setSelect(true);
+//                        else
+//                            menuBean.setSelect(false);
+//                        destMenu.add(menuBean);
+                        GdybtxFragment gdybtxFragment = new GdybtxFragment().newInstance(menu.get(i).getType(), menu, viewPager);
+                        list.add(gdybtxFragment);
                     }
                     ComPagerAdapter comPagerAdapter=new ComPagerAdapter(getSupportFragmentManager(),list);
                     viewPager.setAdapter(comPagerAdapter);
+                    viewPager.setOffscreenPageLimit(2);
 
 
 
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                    madapter = new GdybtxMenuAdapter(destMenu);
-                    recycleView.setLayoutManager(linearLayoutManager);
-                    recycleView.setAdapter(madapter);
-                    madapter.setOnItemChildClickListener((adapter, view, position) -> {
-                        List<GkdmmenuBeen> data = adapter.getData();
-                        int lastclick = ((GdybtxMenuAdapter) adapter).getLastposition();
-                        GkdmmenuBeen dataBeanlasted = data.get(lastclick);
-                        dataBeanlasted.setSelect(false);
-                        GkdmmenuBeen dataBean = data.get(position);
-                        dataBean.setSelect(true);
-                        adapter.notifyItemChanged(lastclick);
-                        adapter.notifyItemChanged(position);
-                        viewPager.setCurrentItem(position);
-                        ((GdybtxMenuAdapter) adapter).setLastposition(position);
-                    });
+//                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+//                    madapter = new GdybtxMenuAdapter(destMenu);
+//                    recycleView.setLayoutManager(linearLayoutManager);
+//                    recycleView.setAdapter(madapter);
+//                    madapter.setOnItemChildClickListener((adapter, view, position) -> {
+//                        List<GkdmmenuBeen> data = adapter.getData();
+//                        int lastclick = ((GdybtxMenuAdapter) adapter).getLastposition();
+//                        GkdmmenuBeen dataBeanlasted = data.get(lastclick);
+//                        dataBeanlasted.setSelect(false);
+//                        GkdmmenuBeen dataBean = data.get(position);
+//                        dataBean.setSelect(true);
+//                        adapter.notifyItemChanged(lastclick);
+//                        adapter.notifyItemChanged(position);
+//                        viewPager.setCurrentItem(position);
+//                        ((GdybtxMenuAdapter) adapter).setLastposition(position);
+//                    });
 
                 }, throwable -> {
-                    LogUtils.e(throwable);
+                   throwable.printStackTrace();
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }

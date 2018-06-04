@@ -11,8 +11,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -51,8 +56,18 @@ public class GdybtxFragment extends RxLazyFragment {
     @BindView(R.id.recycler1)
     RecyclerView mRecyclerView1;
 
-    @BindView(R.id.pic_ready)
-    ImageView isStartPic;
+//    @BindView(R.id.pic_ready)
+//    ImageView isStartPic;
+
+    //    @BindView(R.id.tvShow)
+//    TextView tvShow;
+    @BindView(R.id.spDwon)
+    Spinner spDown;
+
+    private List<String> oneMenu = new ArrayList<>();
+    private ArrayAdapter<String> spinAdapter;
+    List<GdybtxMenuBeen.DataBean.MenuBean> menulist;
+    CustomViewPager actviewpager;
 
     private Context mcontext;
 
@@ -77,12 +92,16 @@ public class GdybtxFragment extends RxLazyFragment {
     List<ImageView> list;
 
     ProgressDialog progressDialog;
+    private ImageView parent;
 
 
-    public static GdybtxFragment newInstance(String type) {
+    public static GdybtxFragment newInstance(String type, List<GdybtxMenuBeen.DataBean.MenuBean> list, CustomViewPager viewpager) {
+
         GdybtxFragment gdybtxFragment = new GdybtxFragment();
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
+        gdybtxFragment.menulist = list;
+        gdybtxFragment.actviewpager = viewpager;
         gdybtxFragment.setArguments(bundle);
         return gdybtxFragment;
     }
@@ -97,8 +116,8 @@ public class GdybtxFragment extends RxLazyFragment {
     }
 
     public void setImage() {
-        if (isStartPic != null)
-            isStartPic.setImageResource(R.drawable.app_start);
+        if (parent != null)
+            parent.setImageResource(R.drawable.app_start);
     }
 
 
@@ -115,25 +134,25 @@ public class GdybtxFragment extends RxLazyFragment {
             //取出保存的值
             type = getArguments().getString("type");
         }
-
+        initOneMenu();
         getTwoMenuInfo();
 
 
         getTestdata();
 
-        isStartPic.setOnClickListener(new View.OnClickListener() {
+        parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isStart == false) {
-                    isStartPic.setImageResource(R.drawable.app_end);
+                    parent.setImageResource(R.drawable.app_end);
                     Message message = uiHandler.obtainMessage();
                     message.what = 1;
-                    uiHandler.sendMessageDelayed(message,MyApplication.getInstance().auto_time);
+                    uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
                     isStart = true;
                     mViewPager.setScanScroll(false);
                 } else {
                     uiHandler.removeCallbacksAndMessages(null);
-                    isStartPic.setImageResource(R.drawable.app_start);
+                    parent.setImageResource(R.drawable.app_start);
                     isStart = false;
                     mViewPager.setScanScroll(true);
                 }
@@ -142,6 +161,46 @@ public class GdybtxFragment extends RxLazyFragment {
         });
 
     }
+
+    private void initOneMenu() {
+//        if(type.equals("rain"))
+//        tvShow.setText(menulist.get(0).getName());
+//        if(type.equals("temp"))
+//            tvShow.setText(menulist.get(1).getName());
+//        if(type.equals("wp"))
+//            tvShow.setText(menulist.get(2).getName());
+        for (int i = 0; i < menulist.size(); i++) {
+            oneMenu.add(menulist.get(i).getName());
+        }
+      /*新建适配器*/
+        spinAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, oneMenu);
+
+        /*adapter设置一个下拉列表样式，参数为系统子布局*/
+        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        /*spDown加载适配器*/
+        spDown.setAdapter(spinAdapter);
+
+        /*soDown的监听器*/
+        if (type.equals("rain"))
+            spDown.setSelection(0);
+        if (type.equals("temp"))
+            spDown.setSelection(1);
+        if (type.equals("wp"))
+            spDown.setSelection(2);
+        spDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                actviewpager.setCurrentItem(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
 
     private void getTwoMenuInfo() {
         RetrofitHelper.getForecastWarn()
@@ -153,21 +212,20 @@ public class GdybtxFragment extends RxLazyFragment {
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxTwoMenu.getData().getMenu();
                     List<DmcgjcmenuBeen.DataBean> dataBeans = new ArrayList<>();
                     for (int i = 0; i < menu.size(); i++) {
-                        DmcgjcmenuBeen.DataBean temp=new DmcgjcmenuBeen.DataBean();
+                        DmcgjcmenuBeen.DataBean temp = new DmcgjcmenuBeen.DataBean();
                         String menuname = menu.get(i).getName();
                         temp.setZnName(menuname);
-                        if(i==0) temp.setSelect(true);
+                        if (i == 0) temp.setSelect(true);
                         else
-                        temp.setSelect(false);
+                            temp.setSelect(false);
                         dataBeans.add(temp);
                     }
 
-                    if (menu!=null&&menu.size()>0){
-                       getAdapter1();
-                       mAdapter1.setNewData(dataBeans);
+                    if (menu != null && menu.size() > 0) {
+                        getAdapter1();
+                        mAdapter1.setNewData(dataBeans);
 
-                    }
-                    else mRecyclerView1.setVisibility(View.INVISIBLE);
+                    } else mRecyclerView1.setVisibility(View.INVISIBLE);
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -185,7 +243,7 @@ public class GdybtxFragment extends RxLazyFragment {
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
-                isStartPic.setImageResource(R.drawable.app_start);
+                parent.setImageResource(R.drawable.app_start);
 
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
@@ -199,35 +257,41 @@ public class GdybtxFragment extends RxLazyFragment {
 
                 TextView title = ((TextView) view);
                 String menu = title.getText().toString();
-                if (type.equals("wp")&&menu.equals("逐小时")) {
+                if (type.equals("wp") && menu.equals("逐小时")) {
                     type = "wp";
                 }
 
-                if (type.equals("wp")&&menu.equals("逐3小时")) {
+                if (type.equals("wp") && menu.equals("逐3小时")) {
                     type = "wp3";
                 }
 
-                if (type.equals("wp")&&menu.equals("逐6小时")) {
+                if (type.equals("wp") && menu.equals("逐6小时")) {
                     type = "wp6";
                 }
-                if (type.equals("wp")&&menu.equals("逐12小时")) {
+                if (type.equals("wp") && menu.equals("逐12小时")) {
                     type = "wp12";
                 }
 
-                if (type.equals("rain")&&menu.equals("逐小时")) {
+                if (type.equals("rain") && menu.equals("逐小时")) {
                     type = "rain";
                 }
-                if (type.equals("rain")&&menu.equals("逐3小时")) {
+                if (type.equals("rain") && menu.equals("逐3小时")) {
                     type = "rain3";
                 }
-                if (type.equals("rain")&&menu.equals("逐6小时")) {
+                if (type.equals("rain") && menu.equals("逐6小时")) {
                     type = "rain6";
                 }
-                if (type.equals("rain")&&menu.equals("逐12小时")) {
+                if (type.equals("rain") && menu.equals("逐12小时")) {
                     type = "rain12";
                 }
-                if (type.equals("rain")&&menu.equals("逐12小时")) {
+                if (type.equals("rain") && menu.equals("逐12小时")) {
                     type = "rain12";
+                }
+                if (type.equals("temp") && menu.equals("24小时最高温")) {
+                    type = "tmax24";
+                }
+                if (type.equals("temp") && menu.equals("24小时最低温")) {
+                    type = "tmin24";
                 }
 
 
@@ -241,8 +305,6 @@ public class GdybtxFragment extends RxLazyFragment {
 //                    type = "10uv12";
 //                }
 
-                progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-                progressDialog.setCancelable(true);
                 getTestdata();
             });
         }
@@ -252,7 +314,7 @@ public class GdybtxFragment extends RxLazyFragment {
 
     private DmcgjcAdapter3 getAdapter3() {
         if (mAdapter3 == null) {
-            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL){
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
                 @Override
                 public boolean canScrollVertically() {
                     return false;
@@ -260,6 +322,11 @@ public class GdybtxFragment extends RxLazyFragment {
             };
             mAdapter3 = new DmcgjcAdapter3(mData3);
             mRecyclerView3.setLayoutManager(layoutManager);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            LinearLayout linear = (LinearLayout) inflater.inflate(R.layout.gdybtxheader_layout, null);
+            parent = linear.findViewById(R.id.pic_ready);
+            linear.removeView(parent);
+            mAdapter3.addHeaderView(parent);
             mRecyclerView3.setAdapter(mAdapter3);
             mAdapter3.setOnItemChildClickListener((adapter, view, position) -> {
                 switch (view.getId()) {
@@ -292,6 +359,9 @@ public class GdybtxFragment extends RxLazyFragment {
     private void getTestdata() {
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
+        if (type.equals("temp")) {
+            type = "tmax24";
+        }
         getAdapter3();
         RetrofitHelper.getForecastWarn()
                 .getGdybt(type)

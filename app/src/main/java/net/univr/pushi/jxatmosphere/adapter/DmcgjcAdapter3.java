@@ -24,15 +24,12 @@ import java.util.List;
 public class DmcgjcAdapter3 extends BaseQuickAdapter<GkdmClickBeen, BaseViewHolder> {
 
 
-
     public int lastClickPosition = 0;
 
 
     public DmcgjcAdapter3(@Nullable List<GkdmClickBeen> data) {
         super(R.layout.item_recycle_horizontal_dmcgjc3_layout, data);
     }
-
-
 
     @Override
     protected void convert(BaseViewHolder helper, GkdmClickBeen item) {
@@ -47,7 +44,6 @@ public class DmcgjcAdapter3 extends BaseQuickAdapter<GkdmClickBeen, BaseViewHold
         }
 
         helper.addOnClickListener(R.id.time);
-
     }
 
 }
