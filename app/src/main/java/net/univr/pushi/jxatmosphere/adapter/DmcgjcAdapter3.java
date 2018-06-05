@@ -33,7 +33,7 @@ public class DmcgjcAdapter3 extends BaseQuickAdapter<GkdmClickBeen, BaseViewHold
 
     @Override
     protected void convert(BaseViewHolder helper, GkdmClickBeen item) {
-        TextView TextView =  helper.getView(R.id.time);
+        TextView TextView = helper.getView(R.id.time);
         TextView.setText(item.getText());
         if (item.getOnclick() == true) {
             TextView.setBackgroundColor(Color.parseColor("#0081e7"));

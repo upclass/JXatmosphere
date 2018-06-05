@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -18,22 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ToastUtils;
-import com.squareup.picasso.Picasso;
 
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.DmcgjcAdapter3;
-import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
 import net.univr.pushi.jxatmosphere.adapter.ViewpageAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
-import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
-import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
@@ -41,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,7 +62,7 @@ public class GdybtxFragment extends RxLazyFragment {
 
     ViewpageAdapter viewPagerAdapter;
 
-    private DmcgjcMenuAdapter mAdapter1;
+
     private DmcgjcAdapter3 mAdapter3;
     List<GkdmClickBeen> mData3 = new ArrayList<>();
     String type;
@@ -135,10 +123,10 @@ public class GdybtxFragment extends RxLazyFragment {
             type = getArguments().getString("type");
         }
         initOneMenu();
-        getTwoMenuInfo();
+//        getTwoMenuInfo();
 
 
-        getTestdata();
+//        getTestdata();
 
         parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,114 +190,8 @@ public class GdybtxFragment extends RxLazyFragment {
     }
 
 
-    private void getTwoMenuInfo() {
-        RetrofitHelper.getForecastWarn()
-                .getGdybtTwoMenu(type)
-                .compose(bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(gdybtxTwoMenu -> {
-                    List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxTwoMenu.getData().getMenu();
-                    List<DmcgjcmenuBeen.DataBean> dataBeans = new ArrayList<>();
-                    for (int i = 0; i < menu.size(); i++) {
-                        DmcgjcmenuBeen.DataBean temp = new DmcgjcmenuBeen.DataBean();
-                        String menuname = menu.get(i).getName();
-                        temp.setZnName(menuname);
-                        if (i == 0) temp.setSelect(true);
-                        else
-                            temp.setSelect(false);
-                        dataBeans.add(temp);
-                    }
-
-                    if (menu != null && menu.size() > 0) {
-                        getAdapter1();
-                        mAdapter1.setNewData(dataBeans);
-
-                    } else mRecyclerView1.setVisibility(View.INVISIBLE);
-                }, throwable -> {
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
-    }
-
-    private DmcgjcMenuAdapter getAdapter1() {
-        if (mAdapter1 == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
-            List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
-
-            mAdapter1 = new DmcgjcMenuAdapter(mData1);
-            mRecyclerView1.setLayoutManager(layoutManager);
-            mRecyclerView1.setAdapter(mAdapter1);
-            mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
-                isStart = false;
-                mViewPager.setScanScroll(true);
-                parent.setImageResource(R.drawable.app_start);
-
-                List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
-                int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
-                DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
-                DmcgjcmenuBeen.DataBean dataBean = data.get(position);
-                dataBeanlasted.setSelect(false);
-                dataBean.setSelect(true);
-                adapter.notifyItemChanged(lastclick);
-                adapter.notifyItemChanged(position);
-                ((DmcgjcMenuAdapter) adapter).setLastposition(position);
-
-                TextView title = ((TextView) view);
-                String menu = title.getText().toString();
-                if (type.equals("wp") && menu.equals("逐小时")) {
-                    type = "wp";
-                }
-
-                if (type.equals("wp") && menu.equals("逐3小时")) {
-                    type = "wp3";
-                }
-
-                if (type.equals("wp") && menu.equals("逐6小时")) {
-                    type = "wp6";
-                }
-                if (type.equals("wp") && menu.equals("逐12小时")) {
-                    type = "wp12";
-                }
-
-                if (type.equals("rain") && menu.equals("逐小时")) {
-                    type = "rain";
-                }
-                if (type.equals("rain") && menu.equals("逐3小时")) {
-                    type = "rain3";
-                }
-                if (type.equals("rain") && menu.equals("逐6小时")) {
-                    type = "rain6";
-                }
-                if (type.equals("rain") && menu.equals("逐12小时")) {
-                    type = "rain12";
-                }
-                if (type.equals("rain") && menu.equals("逐12小时")) {
-                    type = "rain12";
-                }
-                if (type.equals("temp") && menu.equals("24小时最高温")) {
-                    type = "tmax24";
-                }
-                if (type.equals("temp") && menu.equals("24小时最低温")) {
-                    type = "tmin24";
-                }
 
 
-//                if (type.equals("10uv")&&menu.equals("逐小时（001-024小时预报）")) {
-//                    type = "10uv";
-//                }
-//                if (type.equals("10uv")&&menu.equals("逐3小时(027-072小时预报）")) {
-//                    type = "10uv3";
-//                }
-//                if (type.equals("10uv")&&menu.equals("逐12小时（084-240小时预报）")) {
-//                    type = "10uv12";
-//                }
-
-                getTestdata();
-            });
-        }
-        return mAdapter1;
-    }
 
 
     private DmcgjcAdapter3 getAdapter3() {
@@ -356,84 +238,7 @@ public class GdybtxFragment extends RxLazyFragment {
     }
 
 
-    private void getTestdata() {
-        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
-        if (type.equals("temp")) {
-            type = "tmax24";
-        }
-        getAdapter3();
-        RetrofitHelper.getForecastWarn()
-                .getGdybt(type)
-                .compose(bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(gdybtx -> {
-                    progressDialog.dismiss();
-                    recycle_skipto_position = 1;
-                    now_postion = 0;
 
-
-                    list = new ArrayList<>();
-                    List<String> picList = gdybtx.getData().getPicList();
-                    for (int i = 0; i < picList.size(); i++) {
-                        ImageView imageView = new ImageView(getContext());
-                        Picasso.with(getContext()).load(picList.get(i)).placeholder(R.drawable.app_imageplacehold).into(imageView);
-                        list.add(imageView);
-                    }
-
-                    viewPagerAdapter = new ViewpageAdapter(list);
-                    // 绑定适配器
-                    mViewPager.setAdapter(viewPagerAdapter);
-                    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                        }
-
-                        @Override
-                        public void onPageSelected(int position) {
-                            GkdmClickBeen clickBeenStop = mData3.get(now_postion);
-                            clickBeenStop.setOnclick(false);
-                            GkdmClickBeen clickBeenNow = mData3.get(position);
-                            clickBeenNow.setOnclick(true);
-                            mData3.set(now_postion, clickBeenStop);
-                            mData3.set(position, clickBeenNow);
-                            mAdapter3.notifyItemChanged(now_postion);
-                            mAdapter3.notifyItemChanged(position);
-                            now_postion = position;
-                            mRecyclerView3.smoothScrollToPosition(position);
-                            recycle_skipto_position = position + 1;
-                            if (recycle_skipto_position > mData3.size() - 1)
-                                recycle_skipto_position = 0;
-                        }
-
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
-
-                        }
-                    });
-
-
-                    List<String> time = gdybtx.getData().getTimeList();
-                    mData3.clear();
-                    for (int i = 0; i < time.size(); i++) {
-                        GkdmClickBeen clickBeen = new GkdmClickBeen();
-                        if (i == 0)
-                            clickBeen.setOnclick(true);
-                        else clickBeen.setOnclick(false);
-                        clickBeen.setText(time.get(i));
-                        mData3.add(clickBeen);
-                    }
-                    getAdapter3().setNewData(mData3);
-                    //播放轮播
-
-                }, throwable -> {
-                    progressDialog.dismiss();
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
-    }
 
 
     private Handler uiHandler = new Handler() {

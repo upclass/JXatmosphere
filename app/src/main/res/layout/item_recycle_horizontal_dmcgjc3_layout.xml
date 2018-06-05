@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="40dp"
     android:layout_height="25dp"
-    android:layout_marginRight="@dimen/spacing_2">
+    android:layout_marginRight="@dimen/spacing_2"
+    android:orientation="horizontal">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/time"
