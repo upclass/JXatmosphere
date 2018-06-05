@@ -81,6 +81,10 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
+                    ((WeatherWarnFragment) list.get(1)).setImage();
+                    ((WeatherWarnFragment) list.get(1)).setStart(false);
+                    ((WeatherWarnFragment) list.get(2)).setImage();
+                    ((WeatherWarnFragment) list.get(2)).setStart(false);
                     title1.setTextSize(17);
                     tabline1.setVisibility(View.VISIBLE);
                     title2.setTextSize(15);
@@ -89,6 +93,10 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
                     tabline3.setVisibility(View.INVISIBLE);
                 }
                 if (position == 1) {
+                    ((WeatherWarnFragment) list.get(0)).setImage();
+                    ((WeatherWarnFragment) list.get(0)).setStart(false);
+                    ((WeatherWarnFragment) list.get(2)).setImage();
+                    ((WeatherWarnFragment) list.get(2)).setStart(false);
                     title2.setTextSize(17);
                     tabline2.setVisibility(View.VISIBLE);
                     title1.setTextSize(15);
@@ -97,6 +105,10 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
                     tabline3.setVisibility(View.INVISIBLE);
                 }
                 if (position == 2) {
+                    ((WeatherWarnFragment) list.get(0)).setImage();
+                    ((WeatherWarnFragment) list.get(0)).setStart(false);
+                    ((WeatherWarnFragment) list.get(1)).setImage();
+                    ((WeatherWarnFragment) list.get(1)).setStart(false);
                     title3.setTextSize(17);
                     tabline3.setVisibility(View.VISIBLE);
                     title2.setTextSize(15);
@@ -176,33 +188,5 @@ public class WeathWarnActivity extends BaseActivity implements View.OnClickListe
                 break;
         }
     }
-
-//    private void getTestData(String type) {
-//        if(type.equals("dz"))
-//        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
-//        progressDialog.setCancelable(true);
-//        RetrofitHelper.getForecastWarn()
-//                .getQxfx(type)
-//                .compose(bindToLifecycle())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(qxfxBeen -> {
-//                    if(progressDialog!=null)
-//                    progressDialog.dismiss();
-//                    image=new ImageView(context);
-//                    list.add(image);
-//                    adapter.notifyDataSetChanged();
-//                    String url = qxfxBeen.getData().get(0).getUrl();
-//                    Picasso.with(context).load(url).placeholder(R.drawable.app_imageplacehold).into(image);
-//
-//                }, throwable -> {
-//                    if(progressDialog!=null)
-//                    progressDialog.dismiss();
-//                    LogUtils.e(throwable);
-//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-//                });
-
-//    }
-
 
 }

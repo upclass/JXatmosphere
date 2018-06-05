@@ -40,7 +40,6 @@ public class MultiGdybTxAdapter extends BaseMultiItemQuickAdapter<MultiItemGdybT
                 TextView.setText(item.getContent().getText());
                 if (item.getContent().getOnclick() == true) {
                     TextView.setBackgroundColor(Color.parseColor("#0081e7"));
-
                 } else {
                     TextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 }
