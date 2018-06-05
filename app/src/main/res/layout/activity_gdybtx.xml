@@ -49,6 +49,7 @@
 
         <Spinner
             android:id="@+id/spDwon"
+            style="@style/two_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp" />
@@ -69,23 +70,25 @@
         android:orientation="horizontal">
 
         <!--<RelativeLayout-->
-            <!--android:id="@+id/start_par"-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="match_parent">-->
+        <!--android:id="@+id/start_par"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="match_parent">-->
 
-            <!--<ImageView-->
-                <!--android:id="@+id/pic_ready"-->
-                <!--android:layout_width="25dp"-->
-                <!--android:layout_height="25dp"-->
-                <!--android:layout_centerInParent="true"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:src="@drawable/app_start" />-->
+        <!--<ImageView-->
+        <!--android:id="@+id/pic_ready"-->
+        <!--android:layout_width="25dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@drawable/app_start" />-->
         <!--</RelativeLayout>-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:background="@color/white"></android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 

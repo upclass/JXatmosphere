@@ -46,14 +46,14 @@ public class DmcgjcMenuAdapter extends BaseQuickAdapter<DmcgjcmenuBeen.DataBean,
         title.setText(item.getZnName());
         if(item.isSelect()){
             view.setVisibility(View.VISIBLE);
-            title.setTextSize(15);
+//            title.setTextSize(15);
             title.setTextColor(Color.parseColor("#0081e7"));
         }
 
         else{
             view.setVisibility(View.INVISIBLE);
             title.setTextColor(Color.parseColor("#121111"));
-            title.setTextSize(13);
+//            title.setTextSize(13);
         }
 
         helper.addOnClickListener(R.id.title);

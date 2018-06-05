@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="35dp"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
+        android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="3dp">
-    <TextView
-        android:id="@+id/title"
-        style="@style/three_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@color/black"
-         />
-    <View
-        android:id="@+id/tabline"
-        android:layout_below="@+id/title"
-        android:layout_alignLeft="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="3dp"
-        android:visibility="invisible"
-        android:background="@color/toolbar_color">
-    </View>
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/two_title"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/black" />
+
+        <View
+            android:id="@+id/tabline"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/title"
+            android:layout_below="@+id/title"
+            android:background="@color/toolbar_color"
+            android:visibility="invisible"></View>
     </RelativeLayout>
 </RelativeLayout>
 

@@ -26,6 +26,7 @@ import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
 import net.univr.pushi.jxatmosphere.adapter.ViewpageAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
+import net.univr.pushi.jxatmosphere.beens.GdybtxBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
@@ -298,6 +299,22 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtx -> {
+                    GdybtxBeen.DataBean data = gdybtx.getData();
+                     List<String> timeList=new ArrayList<>();
+                     List<String> picListtemp=new ArrayList<>();
+
+                    for (int i = 0; i < gdybtx.getData().getTimeList().size(); i++) {
+                        String s = gdybtx.getData().getTimeList().get(i);
+                        if(Integer.valueOf(s)>72)
+                                break;
+                            else{
+                                timeList.add(gdybtx.getData().getTimeList().get(i));
+                                picListtemp.add(gdybtx.getData().getPicList().get(i));
+                            }
+                    }
+                    data.setPicList(picListtemp);
+                    data.setTimeList(timeList);
+                    gdybtx.setData(data);
                     progressDialog.dismiss();
                     recycle_skipto_position = 2;
                     now_postion = 1;

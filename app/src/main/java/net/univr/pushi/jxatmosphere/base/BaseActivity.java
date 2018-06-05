@@ -2,6 +2,7 @@ package net.univr.pushi.jxatmosphere.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -35,6 +36,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             // 得到Application对象
             application = (MyApplication) getApplication();
         }
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         addActivity();
         initViews(savedInstanceState);
     }
