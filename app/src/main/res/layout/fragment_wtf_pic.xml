@@ -10,13 +10,13 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:background="@color/light_white"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="80dp"
-        app:layout_anchor="@id/pic"
+        android:background="@color/light_white"
         android:visibility="gone"
+        app:layout_anchor="@id/pic"
         app:layout_anchorGravity="right|bottom"></android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
@@ -26,6 +26,7 @@
         android:layout_margin="20dp"
         android:backgroundTint="#0d61a6"
         android:src="@drawable/map_time"
+        android:visibility="gone"
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:fabSize="normal"

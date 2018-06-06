@@ -21,12 +21,13 @@ import com.blankj.utilcode.util.ToastUtils;
 
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.DmcgjcAdapter3;
 import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
+import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
+import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
@@ -49,8 +50,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @BindView(R.id.recycler3)
     RecyclerView mRecyclerView3;
 
-    @BindView(R.id.pic_ready)
-    ImageView isStartPic;
+//    @BindView(R.id.pic_ready)
+//    ImageView isStartPic;
 
     private Context mcontext;
 
@@ -60,18 +61,25 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     List<Fragment> fragmentList = new ArrayList<>();
     List<String> urls;
 
-    private DmcgjcAdapter3 mAdapter3;
-    List<GkdmClickBeen> mData3 = new ArrayList<>();
+    //    List<GkdmClickBeen> mData3 = new ArrayList<>();
     String type;
     String ctype;
+
+    //当前的位置
+    int now_postion ;
     //播放的下一位置
-    int recycle_skipto_position = 1;
+    int recycle_skipto_position ;
+
     //是否播放
     Boolean isStart = false;
 
-    //当前的位置
-    int now_postion;
+
     ProgressDialog progressDialog;
+
+    private MultiGdybTxAdapter mAdapter3;
+    List<MultiItemGdybTx> multitemList = new ArrayList<>();
+
+    ImageView isStartPic;
 
     @BindView(R.id.tv_1)
     TextView tv1;
@@ -103,7 +111,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
     ViewPager viewPager;
     List<Fragment> list;
-    Handler handler=new Handler();
+    Handler handler = new Handler();
 
     public static DMCGJCFragment newInstance(String type, String ctype, ViewPager viewPager, List<Fragment> list) {
         DMCGJCFragment dmcgjcFragment = new DMCGJCFragment();
@@ -176,25 +184,25 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
         getTestdata();
 
-        isStartPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isStart == false) {
-                    isStartPic.setImageResource(R.drawable.app_end);
-                    Message message = uiHandler.obtainMessage();
-                    message.what = 1;
-                    uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
-                    isStart = true;
-                    mViewPager.setScanScroll(false);
-                } else {
-                    uiHandler.removeCallbacksAndMessages(null);
-                    isStartPic.setImageResource(R.drawable.app_start);
-                    isStart = false;
-                    mViewPager.setScanScroll(true);
-                }
-
-            }
-        });
+//        isStartPic.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isStart == false) {
+//                    isStartPic.setImageResource(R.drawable.app_end);
+//                    Message message = uiHandler.obtainMessage();
+//                    message.what = 1;
+//                    uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
+//                    isStart = true;
+//                    mViewPager.setScanScroll(false);
+//                } else {
+//                    uiHandler.removeCallbacksAndMessages(null);
+//                    isStartPic.setImageResource(R.drawable.app_start);
+//                    isStart = false;
+//                    mViewPager.setScanScroll(true);
+//                }
+//
+//            }
+//        });
 
         tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
@@ -236,73 +244,47 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         initScrollView();
     }
 
-//    public void initScrollView(int position) {
-//        //获得屏幕宽度
-//        int screenWitdth = getResources().getDisplayMetrics().widthPixels;
-//        int resource = GetResourceInt.getResource("linear" + position, getContext(), "id");
-//        LinearLayout ll = scrollview.findViewById(resource);
-//        View currentView = ll.getChildAt(0);
-//
-//        int left = currentView.getLeft();     //获取点击控件与父控件左侧的距离
-//        int width = currentView.getMeasuredWidth();   //获得控件本身宽度
-//
-//        int scaleX = scrollview.getScrollX();// 获得X轴的位置
-//        int leftScreen = left - scaleX;
-//        int itemWidth = currentView.getWidth();
-//        int scrollViewWidth = screenWitdth;
-//
-//        scrollview.smoothScrollTo(currentView.getLeft() - (scrollViewWidth / 2 - itemWidth / 2), 0);
-//
-////        int toX = 0;
-////        if (left > screenWitdth) {
-////            toX = left - screenWitdth + width / 2 + screenWitdth / 2;
-////        }
-//
-//
-//        //使条目移动到居中显示
-////        scrollview.smoothScrollTo(toX, 0);
-//    }
 
     public void initScrollView() {
-        if(type.equals("rain")){
+        if (type.equals("rain")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(50,0);
+                    scrollview.scrollTo(50, 0);
                 }
-            },2000);
+            }, 2000);
         }
-        if(type.equals("temp")){
+        if (type.equals("temp")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(250,0);
+                    scrollview.scrollTo(250, 0);
                 }
-            },2000);
+            }, 2000);
         }
-        if(type.equals("wind")){
+        if (type.equals("wind")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(550,0);
+                    scrollview.scrollTo(550, 0);
                 }
-            },2000);
+            }, 2000);
         }
-        if(type.equals("humidity")){
+        if (type.equals("humidity")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(580,0);
+                    scrollview.scrollTo(580, 0);
                 }
-            },2000);
+            }, 2000);
         }
-        if(type.equals("pressure")){
+        if (type.equals("pressure")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollBy(580,0);
+                    scrollview.scrollBy(580, 0);
                 }
-            },2000);
+            }, 2000);
         }
     }
 
@@ -332,9 +314,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
                 TextView title = ((TextView) view);
                 String menu = title.getText().toString();
-//                if (menu.equals("累计降水")) {
-//                    ctype = "rain_sum";
-//                }
                 if (menu.equals("6分钟累计降水")) {
                     ctype = "rain_sum_6";
                 }
@@ -424,7 +403,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     }
 
 
-    private DmcgjcAdapter3 getAdapter3() {
+    private MultiGdybTxAdapter getAdapter3() {
         if (mAdapter3 == null) {
             ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
                 @Override
@@ -432,29 +411,34 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     return false;
                 }
             };
-            mAdapter3 = new DmcgjcAdapter3(mData3);
+            mAdapter3 = new MultiGdybTxAdapter(multitemList);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
             mAdapter3.setOnItemChildClickListener((adapter, view, position) -> {
                 switch (view.getId()) {
                     case R.id.time:
                         if (isStart == false) {
-                            mViewPager.setCurrentItem(position);
-                            //事件处理
-                            List data = adapter.getData();
-                            GkdmClickBeen clickBeenBefore = (GkdmClickBeen) (data.get(now_postion));
-                            clickBeenBefore.setOnclick(false);
-                            recycle_skipto_position = position + 1;
-                            if (recycle_skipto_position > mData3.size() - 1)
-                                recycle_skipto_position = 0;
-                            GkdmClickBeen clickBeenNow = (GkdmClickBeen) (data.get(position));
-                            clickBeenNow.setOnclick(true);
-                            mData3.set(now_postion, clickBeenBefore);
-                            mData3.set(position, clickBeenNow);
-                            adapter.notifyItemChanged(now_postion);
-                            adapter.notifyItemChanged(position);
+                            mViewPager.setCurrentItem(position - 1);
                         }
                         break;
+                    case R.id.pic_ready:
+                        if (isStart == false) {
+                            isStartPic = ((ImageView) view);
+                            isStartPic.setImageResource(R.drawable.app_end);
+                            Message message = uiHandler.obtainMessage();
+                            message.what = 1;
+                            uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
+                            isStart = true;
+                            mViewPager.setScanScroll(false);
+                        } else {
+                            uiHandler.removeCallbacksAndMessages(null);
+                            isStartPic.setImageResource(R.drawable.app_start);
+                            isStart = false;
+                            mViewPager.setScanScroll(true);
+                        }
+
+                        break;
+
                 }
             });
         }
@@ -471,7 +455,12 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
                     recycle_skipto_position = 1;
-                    now_postion = 0;
+                    now_postion = DmcgjcDeen.getData().get(0).getUrl().size()- 1;
+                    isStart = false;
+                    if(isStartPic!=null){
+                        isStartPic.setImageResource(R.drawable.app_start);
+                        mViewPager.setScanScroll(true);
+                    }
                     progressDialog.dismiss();
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {
@@ -496,19 +485,23 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
                         @Override
                         public void onPageSelected(int position) {
-                            GkdmClickBeen clickBeenStop = mData3.get(now_postion);
+                            MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
+                            GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                             clickBeenStop.setOnclick(false);
-                            GkdmClickBeen clickBeenNow = mData3.get(position);
+                            multiItemGdybTxStop.setContent(clickBeenStop);
+                            MultiItemGdybTx multiItemGdybTxNow = multitemList.get(position + 1);
+                            GkdmClickBeen clickBeenNow = multiItemGdybTxNow.getContent();
                             clickBeenNow.setOnclick(true);
-                            mData3.set(now_postion, clickBeenStop);
-                            mData3.set(position, clickBeenNow);
+                            multiItemGdybTxNow.setContent(clickBeenNow);
+                            multitemList.set(now_postion, multiItemGdybTxStop);
+                            multitemList.set(position + 1, multiItemGdybTxNow);
                             mAdapter3.notifyItemChanged(now_postion);
-                            mAdapter3.notifyItemChanged(position);
-                            now_postion = position;
-                            mRecyclerView3.smoothScrollToPosition(position);
-                            recycle_skipto_position = position + 1;
-                            if (recycle_skipto_position > mData3.size() - 1)
-                                recycle_skipto_position = 0;
+                            mAdapter3.notifyItemChanged(position + 1);
+                            now_postion = position + 1;
+                            mRecyclerView3.smoothScrollToPosition(position + 1);
+                            recycle_skipto_position = position + 2;
+                            if (recycle_skipto_position > multitemList.size() - 1)
+                                recycle_skipto_position = 1;
                         }
 
                         @Override
@@ -518,18 +511,28 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     });
 
 
+
+
+
+
                     List<String> time = DmcgjcDeen.getData().get(0).getTime();
-                    mData3.clear();
+                    multitemList.clear();
+                    MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                    multitemList.add(multiItemGdybTx);
                     for (int i = 0; i < time.size(); i++) {
+
                         GkdmClickBeen clickBeen = new GkdmClickBeen();
                         if (i == time.size()-1)
                             clickBeen.setOnclick(true);
                         else clickBeen.setOnclick(false);
                         clickBeen.setText(time.get(i));
-                        mData3.add(clickBeen);
+                        multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, clickBeen);
+                        multitemList.add(multiItemGdybTx);
                     }
-                    getAdapter3().setNewData(mData3);
-                    mViewPager.setCurrentItem(time.size()-1);
+                    getAdapter3().setNewData(multitemList);
+                    mViewPager.setCurrentItem(time.size() - 1);
+
+                    //播放轮播
 
                 }, throwable -> {
                     progressDialog.dismiss();
@@ -547,9 +550,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             if (mRecyclerView3 != null) {
                 switch (msg.what) {
                     case 1:
-                        mViewPager.setCurrentItem(recycle_skipto_position);
-                        if (recycle_skipto_position > mData3.size() - 1) {
-                            recycle_skipto_position = 0;
+                        mViewPager.setCurrentItem(recycle_skipto_position - 1);
+                        if (recycle_skipto_position > multitemList.size() - 1) {
+                            recycle_skipto_position = 1;
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
                             if (isStart == false) {
@@ -560,6 +563,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
                             if (isStart == false) {
+
                             } else {
                                 uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
                             }
@@ -575,7 +579,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         }
 
     };
-
 
     @Override
     public void onDestroy() {

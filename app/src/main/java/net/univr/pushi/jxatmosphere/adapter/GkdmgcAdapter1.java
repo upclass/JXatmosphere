@@ -49,7 +49,7 @@ public class GkdmgcAdapter1 extends BaseQuickAdapter<GkdmmenuBeen, BaseViewHolde
             helper.getView(R.id.tabline).setVisibility(View.VISIBLE);
         } else {
             view.setTextSize(13);
-            Color.parseColor("#0081e7");
+            view.setTextColor(Color.parseColor("#2c2a2a"));
             helper.getView(R.id.tabline).setVisibility(View.INVISIBLE);
         }
         view.setText(item.getText());

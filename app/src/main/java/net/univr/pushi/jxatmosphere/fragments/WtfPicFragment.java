@@ -47,15 +47,6 @@ public class WtfPicFragment extends RxLazyFragment {
     //判断当前是否点击就取消
     boolean isCancle;
 
-//    public static WtfPicFragment newInstance(String url, String type) {
-//        WtfPicFragment wtfPicFragment = new WtfPicFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("url", url);
-//        bundle.putString("type", type);
-//        wtfPicFragment.setArguments(bundle);
-//        return wtfPicFragment;
-//    }
-
 
     public static WtfPicFragment newInstance(String url, String type, WtfRapidFragment wtfRapidFragment) {
         WtfPicFragment wtfPicFragment = new WtfPicFragment();
