@@ -320,22 +320,24 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 }
 
                 if (menu.equals("1小时累计降水")) {
-                    ctype = "rain1";
+                    ctype = "rain_sum1";
                 }
                 if (menu.equals("3小时累计降水")) {
-                    ctype = "rain3";
+                    ctype = "rain_sum3";
                 }
                 if (menu.equals("6小时累计降水")) {
-                    ctype = "rain6";
+                    ctype = "rain_sum6";
                 }
                 if (menu.equals("12小时累计降水")) {
-                    ctype = "rain12";
+                    ctype = "rain_sum12";
                 }
                 if (menu.equals("24小时累计降水")) {
-                    ctype = "rain24";
+                    ctype = "rain_sum";
                 }
 
-
+                if (menu.equals("气温")) {
+                    ctype = "temp";
+                }
                 if (menu.equals("平均气温（20时-20时）")) {
                     ctype = "temp_avg_20";   //日期型
                 }
@@ -357,6 +359,12 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 if (menu.equals("1小时变温")) {
                     ctype = "temp_deta1";
                 }
+                if (menu.equals("体感温度")) {
+                    ctype = "body_feeling_temp";
+                }
+                if (menu.equals("最小水平能见度")) {
+                    ctype = "vis_min";
+                }
 
                 if (menu.equals("二分钟平均风速")) {
                     ctype = "wind_2minute_avg";
@@ -373,13 +381,30 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 if (menu.equals("一小时内最大风速")) {
                     ctype = "wind_max";
                 }
+                if (menu.equals("瞬时风速")) {
+                    ctype = "wind_inst";
+                }
+                if (menu.equals("极大风速")) {
+                    ctype = "wind_inst_max";
+                }
+                if (menu.equals("最大风速")) {
+                    ctype = "wind_max_5";
+                }
+                if (menu.equals("一分钟平均风速")) {
+                    ctype = "wind_1minute_avg";
+                }
 
 
+                if (menu.equals("相对湿度")) {
+                    ctype = "humidity";
+                }
                 if (menu.equals("最小相对湿度")) {
                     ctype = "humidity_min";
                 }
 
-
+                if (menu.equals("本站气压")) {
+                    ctype = "pressure";
+                }
                 if (menu.equals("3小时变压")) {
                     ctype = "pressure_deta3";
                 }

@@ -9,9 +9,12 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -33,7 +36,6 @@ import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
-import net.univr.pushi.jxatmosphere.widget.MySpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,13 +57,12 @@ public class WtfRapidFragment extends RxLazyFragment {
     @BindView(R.id.recycler3)
     RecyclerView mRecyclerView3;
 
-    //    @BindView(R.id.pic_ready)
-//    ImageView isStartPic;
-    @BindView(R.id.spDwon)
-    MySpinner spDown;
-    @BindView(R.id.pic_time)
-    ImageView spinnerTime;
-
+    @BindView(R.id.time)
+    TextView time;
+    List<String>menuTime;
+    private ListPopupWindow popupWindow;
+    private ArrayAdapter timeAdapter;
+    Boolean oneMenu=true;
 
     private Context mcontext;
 
@@ -82,11 +83,8 @@ public class WtfRapidFragment extends RxLazyFragment {
     //当前的位置
     int now_postion = 1;
     ProgressDialog progressDialog;
-    private List<String> oneMenu;
-    private ArrayAdapter<String> spinAdapter;
-    Boolean isFristMenu = true;//是否第一次加载一级菜单，第一次加载默认选中第一选，能取消调用
-    //    Boolean isFristTwoMenu = true;//是否第一次加载二级菜单
-    Boolean isOneMenu = true;//是否是一级菜单
+
+
 
     private MultiGdybTxAdapter mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
@@ -135,6 +133,8 @@ public class WtfRapidFragment extends RxLazyFragment {
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
         getAdapter1();
+        initSpinner();
+        getOneTime();
         RetrofitHelper.getDataForecastAPI()
                 .getOneMenu(type)
                 .compose(bindToLifecycle())
@@ -165,76 +165,48 @@ public class WtfRapidFragment extends RxLazyFragment {
 
         getTestdata();
 
-//        isStartPic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (isStart == false) {
-//                    isStartPic.setImageResource(R.drawable.app_end);
-//                    Message message = uiHandler.obtainMessage();
-//                    message.what = 1;
-//                    uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
-//                    isStart = true;
-//                    mViewPager.setScanScroll(false);
-//                } else {
-//                    uiHandler.removeCallbacksAndMessages(null);
-//                    isStartPic.setImageResource(R.drawable.app_start);
-//                    isStart = false;
-//                    mViewPager.setScanScroll(true);
-//                }
-//
-//            }
-//        });
-        spinnerTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinnerTime.setVisibility(View.GONE);
-                spDown.setVisibility(View.VISIBLE);
-                initSpinner();
-                getOneTime();
-            }
-        });
     }
 
 
     private void initSpinner() {
-        oneMenu = new ArrayList<>();
-        spinAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, oneMenu);
-        /*adapter设置一个下拉列表样式，参数为系统子布局*/
-        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        /*spDown加载适配器*/
-        spDown.setAdapter(spinAdapter);
-        spDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String day = ((String) spDown.getSelectedItem());
-//                Toast.makeText(mcontext, "11111", Toast.LENGTH_SHORT).show();
-                if (isFristMenu) isFristMenu = false;
-                else {
-                    if (isOneMenu) {
-                        isOneMenu = false;
-                        getTwoTime(day);
-                    } else {
-//                        if (isFristTwoMenu) isFristTwoMenu = false;
-//                        else {
-                        //第一次初始化spinner是选中第一项，请求二级菜单却不默认选中第一项，有毒。
-                        getTestDataBytime(day);
-                        isFristMenu = true;
-//                            isFristTwoMenu = true;
-                        isOneMenu = true;
-                        getOneTime();
-                        spinnerTime.setVisibility(View.VISIBLE);
-                        spDown.setVisibility(View.GONE);
-//                        }
-                    }
-                }
-            }
+        menuTime = new ArrayList<>();
+        popupWindow = new ListPopupWindow(getContext());
+        timeAdapter=new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,menuTime);
+        popupWindow.setAdapter(timeAdapter);
+        popupWindow.setAnchorView(time);
+        popupWindow.setWidth(370);   //WRAP_CONTENT会出错
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setDropDownGravity(Gravity.END);
+        popupWindow.setModal(true);
+        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                if(oneMenu){
+                    getTwoTime(menuTime.get(position));
+                    oneMenu=false;
+                }
+                else{
+                    getTestDataBytime(menuTime.get(position));
+                    getOneTime();
+                    oneMenu=true;
+                }
+
+
+                popupWindow.dismiss();
+
+            }
+        });
+        time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.show();
 
             }
         });
     }
+
 
     public void getOneTime() {
         RetrofitHelper.getDataForecastAPI()
@@ -243,12 +215,13 @@ public class WtfRapidFragment extends RxLazyFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(wtfOneMenu -> {
-                    oneMenu.clear();
+                    menuTime.clear();
                     List<String> menu = wtfOneMenu.getData();
                     for (int i = 0; i < menu.size(); i++) {
-                        oneMenu.add(menu.get(i));
+                        menuTime.add(menu.get(i));
                     }
-                    spinAdapter.notifyDataSetChanged();
+                    timeAdapter.notifyDataSetChanged();
+                    time.setText(menuTime.get(0));
 
                 }, throwable -> {
                     throwable.printStackTrace();
@@ -256,21 +229,20 @@ public class WtfRapidFragment extends RxLazyFragment {
                 });
     }
 
-    private void getTwoTime(String time) {
+    private void getTwoTime(String param) {
         RetrofitHelper.getDataForecastAPI()
-                .getDataForecastContentBytime1(type, time)
+                .getDataForecastContentBytime1(type, param)
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timeTwoMenu -> {
-
-                    oneMenu.clear();
+                    menuTime.clear();
                     List<String> data = timeTwoMenu.getData();
                     for (int i = 0; i < data.size(); i++) {
-                        oneMenu.add(data.get(i));
+                        menuTime.add(data.get(i));
                     }
-
-                    spinAdapter.notifyDataSetChanged();
+                    timeAdapter.notifyDataSetChanged();
+                    time.setText(menuTime.get(0));
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -289,8 +261,8 @@ public class WtfRapidFragment extends RxLazyFragment {
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
-                if(isStartPic!=null)
-                isStartPic.setImageResource(R.drawable.app_start);
+                if (isStartPic != null)
+                    isStartPic.setImageResource(R.drawable.app_start);
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
                 DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
