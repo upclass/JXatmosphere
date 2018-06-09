@@ -140,5 +140,5 @@ dependencies {
     //蒲公英
     compile 'com.pgyersdk:sdk:2.8.1'
     //加入arcgis
-    implementation 'com.esri.arcgisruntime:arcgis-android:100.2.1'
+//    implementation 'com.esri.arcgisruntime:arcgis-android:100.2.1'
 }

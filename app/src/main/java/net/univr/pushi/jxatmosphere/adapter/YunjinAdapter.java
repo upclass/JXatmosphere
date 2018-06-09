@@ -41,8 +41,8 @@ public class YunjinAdapter extends BaseQuickAdapter<YuJinXinhaoBeen.DataBean, Ba
         String picName = getPicName(substring);
         String picNameDest = picName ;
         int resource = GetResourceInt.getResource(picNameDest, context);
-
         helper.setImageResource(R.id.image,resource);
+        helper.addOnClickListener(R.id.layout);
     }
 
     String getPicName(String name) {

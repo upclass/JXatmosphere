@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -73,7 +72,6 @@ public class WtfRapidFragment extends RxLazyFragment {
     List<String> urls;
 
 
-    List<GkdmClickBeen> mData3 = new ArrayList<>();
     String type;
     String ctype;
     //播放的下一位置
@@ -209,7 +207,7 @@ public class WtfRapidFragment extends RxLazyFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String day = ((String) spDown.getSelectedItem());
-                Toast.makeText(mcontext, "11111", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mcontext, "11111", Toast.LENGTH_SHORT).show();
                 if (isFristMenu) isFristMenu = false;
                 else {
                     if (isOneMenu) {
@@ -291,8 +289,8 @@ public class WtfRapidFragment extends RxLazyFragment {
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
+                if(isStartPic!=null)
                 isStartPic.setImageResource(R.drawable.app_start);
-
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
                 DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);

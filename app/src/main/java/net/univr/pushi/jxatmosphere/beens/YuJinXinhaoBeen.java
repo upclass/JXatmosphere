@@ -1,5 +1,8 @@
 package net.univr.pushi.jxatmosphere.beens;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -46,7 +49,7 @@ public class YuJinXinhaoBeen {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Parcelable {
         /**
          * alarmType : null
          * cexiao : 2018-05-31T10:49:15
@@ -86,6 +89,36 @@ public class YuJinXinhaoBeen {
         private String yonghu;
         private String yubaoyuan;
         private String ztname;
+
+        protected DataBean(Parcel in) {
+            cexiao = in.readString();
+            citySelect = in.readString();
+            clickFlag = in.readString();
+            danwei = in.readString();
+            fabu = in.readString();
+            id = in.readInt();
+            jielun = in.readString();
+            noticeIp = in.readString();
+            provinceSelect = in.readString();
+            qianfaren = in.readString();
+            subclass = in.readString();
+            ttime = in.readString();
+            yonghu = in.readString();
+            yubaoyuan = in.readString();
+            ztname = in.readString();
+        }
+
+        public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
+            @Override
+            public DataBean createFromParcel(Parcel in) {
+                return new DataBean(in);
+            }
+
+            @Override
+            public DataBean[] newArray(int size) {
+                return new DataBean[size];
+            }
+        };
 
         public Object getAlarmType() {
             return alarmType;
@@ -229,6 +262,30 @@ public class YuJinXinhaoBeen {
 
         public void setZtname(String ztname) {
             this.ztname = ztname;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(cexiao);
+            dest.writeString(citySelect);
+            dest.writeString(clickFlag);
+            dest.writeString(danwei);
+            dest.writeString(fabu);
+            dest.writeInt(id);
+            dest.writeString(jielun);
+            dest.writeString(noticeIp);
+            dest.writeString(provinceSelect);
+            dest.writeString(qianfaren);
+            dest.writeString(subclass);
+            dest.writeString(ttime);
+            dest.writeString(yonghu);
+            dest.writeString(yubaoyuan);
+            dest.writeString(ztname);
         }
     }
 }

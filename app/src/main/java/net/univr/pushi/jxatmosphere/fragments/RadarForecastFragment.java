@@ -82,7 +82,7 @@ public class RadarForecastFragment extends RxLazyFragment {
 
 
     public void setImage() {
-        if(isStart!=null)
+        if(isStartPic!=null)
         isStartPic.setImageResource(R.drawable.app_start);
     }
 

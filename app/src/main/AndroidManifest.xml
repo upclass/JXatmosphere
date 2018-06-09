@@ -34,7 +34,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application xmlns:tools="http://schemas.android.com/tools"
         android:name=".MyApplication"
@@ -141,7 +143,10 @@
         <activity android:name=".feature.SettingActivity" />
         <activity
             android:name=".feature.RadarForecastActivity"
-            android:label="@string/title_activity_radar_forecast"></activity>
+            android:label="@string/title_activity_radar_forecast" />
+        <activity
+            android:name=".feature.YujinInfoActivity"
+            android:label="@string/title_activity_yujin_info"></activity>
     </application>
 
 </manifest>

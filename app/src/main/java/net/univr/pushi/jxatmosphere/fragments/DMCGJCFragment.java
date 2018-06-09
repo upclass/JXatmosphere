@@ -300,6 +300,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
+                if(isStartPic!=null)
                 isStartPic.setImageResource(R.drawable.app_start);
 
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();

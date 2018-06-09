@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import com.blankj.utilcode.util.SPUtils;
 
-import net.univr.pushi.jxatmosphere.LoginActivity;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 
@@ -46,15 +45,17 @@ public class StartupActivity extends BaseActivity {
 
     private void finishTask() {
 //        startActivity(new Intent(StartupActivity.this, LoginActivity.class));
-        if (isFristLogin) {
-            startActivity(new Intent(StartupActivity.this, LoginActivity.class));
-            finish();
-        } else {
-            startActivity(new Intent(StartupActivity.this, MainActivity.class));
-            finish();
-        }
 
 
+//        if (isFristLogin) {
+//            startActivity(new Intent(StartupActivity.this, LoginActivity.class));
+//            finish();
+//        } else {
+//            startActivity(new Intent(StartupActivity.this, MainActivity.class));
+//            finish();
+//        }
+
+        startActivity(new Intent(StartupActivity.this, MainActivity.class));
     }
 
 
