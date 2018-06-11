@@ -17,15 +17,11 @@ public class StartupActivity extends BaseActivity {
 
 
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_startup;
-    }
-
-    @Override
     public void initViews(Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
         isFristLogin = SPUtils.getInstance().getBoolean("isFirstLogin", true);
     }
+
 
     @Override
     protected void onResume() {
@@ -56,7 +52,12 @@ public class StartupActivity extends BaseActivity {
 //        }
 
         startActivity(new Intent(StartupActivity.this, MainActivity.class));
+        finish();
     }
 
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_startup;
+    }
 }

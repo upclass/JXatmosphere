@@ -64,7 +64,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         SWZDYLFragment fragment = SWZDYLFragment.newInstance(viewPager,list);
 
         String type1 = "rain";
-        String ctype1="rain_sum_6";
+        String ctype1="rain_sum";
         fragment1 = DMCGJCFragment.newInstance(type1,ctype1,viewPager,list);
         String type2 = "temp";
         String ctype2="temp";

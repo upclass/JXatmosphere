@@ -6,12 +6,14 @@
     tools:context="net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment">
 
     <LinearLayout
+        android:id="@+id/menu1"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/light_white"
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
+            android:background="@color/white"
             android:id="@+id/recycler1"
             android:layout_width="match_parent"
             android:layout_height="35dp"></android.support.v7.widget.RecyclerView>
@@ -34,28 +36,28 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/toolbar_bg">
+        <!--<RelativeLayout-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:background="@drawable/toolbar_bg">-->
 
-            <ImageView
-                android:id="@+id/pic_ready"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:src="@drawable/app_start" />
-        </RelativeLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/pic_ready"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:src="@drawable/app_start" />-->
+        <!--</RelativeLayout>-->
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/spacing_2"></android.support.v7.widget.RecyclerView>
 
     </LinearLayout>

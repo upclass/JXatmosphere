@@ -109,6 +109,9 @@ public class WeatherWarnFragment extends RxLazyFragment {
                         GkdmClickBeen clickBeen = new GkdmClickBeen();
                         String temp = QxfxBeen.getData().getTime().get(i);
                         String time = temp.substring(length - 4, length);
+                        StringBuilder timeBuilder=new StringBuilder(time);
+                        timeBuilder.insert(2,":");
+                        time=timeBuilder.toString();
                         clickBeen.setText(time);
                         if (i == 0) clickBeen.setOnclick(true);
                         else clickBeen.setOnclick(false);

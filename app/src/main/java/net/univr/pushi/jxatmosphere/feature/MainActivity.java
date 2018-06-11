@@ -181,6 +181,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 Intent intent=new Intent(context,SettingActivity.class);
                 startActivity(intent);
             }
+            if(itemId==R.id.nav_about){
+                Intent intent=new Intent(context,AboutOursActivity.class);
+                startActivity(intent);
+            }
             drawerLayout.closeDrawer(navigationView);
             return true;
         });

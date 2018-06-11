@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.squareup.picasso.Picasso;
 
 import net.univr.pushi.jxatmosphere.R;
@@ -151,20 +150,20 @@ public class WtfPicFragment extends RxLazyFragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter1);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        mAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                String time = ((WtfNewInfoAdapter) adapter).getData().get(position);
-                if(wtfRapidFragment!=null){
-                    wtfRapidFragment.getTestDataBytime(time);
-                }else{
-                    ecxwgFragment.getTestdataByTime(time);
-                }
-
-                recyclerView.setVisibility(View.GONE);
-                isCancle=false;
-            }
-        });
+//        mAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+//                String time = ((WtfNewInfoAdapter) adapter).getData().get(position);
+//                if(wtfRapidFragment!=null){
+//                    wtfRapidFragment.getTestDataBytime(time);
+//                }else{
+//                    ecxwgFragment.getTestdataByTime(time);
+//                }
+//
+//                recyclerView.setVisibility(View.GONE);
+//                isCancle=false;
+//            }
+//        });
 
 
         return mAdapter1;

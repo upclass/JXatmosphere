@@ -66,9 +66,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     String ctype;
 
     //当前的位置
-    int now_postion ;
+    int now_postion;
     //播放的下一位置
-    int recycle_skipto_position ;
+    int recycle_skipto_position;
 
     //是否播放
     Boolean isStart = false;
@@ -300,8 +300,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
-                if(isStartPic!=null)
-                isStartPic.setImageResource(R.drawable.app_start);
+                if (isStartPic != null)
+                    isStartPic.setImageResource(R.drawable.app_start);
 
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
@@ -481,9 +481,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
                     recycle_skipto_position = 1;
-                    now_postion = DmcgjcDeen.getData().get(0).getUrl().size()- 1;
+                    now_postion = DmcgjcDeen.getData().getUrls().size() ;
                     isStart = false;
-                    if(isStartPic!=null){
+                    if (isStartPic != null) {
                         isStartPic.setImageResource(R.drawable.app_start);
                         mViewPager.setScanScroll(true);
                     }
@@ -494,7 +494,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                         HuancunfragmentList.add(fragment);
                     }
                     fragmentList.clear();
-                    urls = DmcgjcDeen.getData().get(0).getUrl();
+                    urls = DmcgjcDeen.getData().getUrls();
                     for (int i = 0; i < urls.size(); i++) {
                         PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i));
                         fragmentList.add(fragment);
@@ -537,21 +537,17 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     });
 
 
-
-
-
-
-                    List<String> time = DmcgjcDeen.getData().get(0).getTime();
+                    List<String> time = DmcgjcDeen.getData().getTimes();
                     multitemList.clear();
                     MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
                     multitemList.add(multiItemGdybTx);
                     for (int i = 0; i < time.size(); i++) {
-
                         GkdmClickBeen clickBeen = new GkdmClickBeen();
-                        if (i == time.size()-1)
+                        if (i == time.size() - 1)
                             clickBeen.setOnclick(true);
                         else clickBeen.setOnclick(false);
                         clickBeen.setText(time.get(i));
+
                         multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, clickBeen);
                         multitemList.add(multiItemGdybTx);
                     }
@@ -577,7 +573,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 switch (msg.what) {
                     case 1:
                         mViewPager.setCurrentItem(recycle_skipto_position - 1);
-                        if (recycle_skipto_position > multitemList.size() - 1) {
+                        if (recycle_skipto_position > multitemList.size() -1) {
                             recycle_skipto_position = 1;
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;

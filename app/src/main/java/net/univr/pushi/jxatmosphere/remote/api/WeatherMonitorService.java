@@ -32,7 +32,7 @@ public interface WeatherMonitorService {
     @POST("dmcgjc!getMenu.do")
     Observable<DmcgjcmenuBeen> getDmcgjcMenu(@Query("type")String type);
     //地面监测数据
-    @POST("dmcgjc!getUrlByIndex.do")
+    @POST("dmcgjc!getUrl.do")
     Observable<DmcgjcBeen> getDmcgjc(@Query("type")String type,@Query("ctype")String ctype);
     //卫星云图
     @POST("wxyt.do")

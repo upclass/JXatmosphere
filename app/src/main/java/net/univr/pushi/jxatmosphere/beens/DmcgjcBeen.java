@@ -15,14 +15,22 @@ public class DmcgjcBeen {
 
 
     /**
-     * data : [{"time":["06:00","12:00","18:00","24:00","30:00","36:00","42:00","48:00","54:00","00:00","06:00","12:00"],"ctype":"rain_sum_6","type":"rain","url":["http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181506.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181512.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181518.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181524.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181530.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181536.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181542.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181548.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181554.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181600.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181606.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181612.png"]}]
+     * data : {"times":["10:40","10:35","10:30","10:25","10:20","10:15","10:10","10:05","10:00","09:55","09:50"],"urls":["http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111040_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111035_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111030_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111025_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111020_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111015_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111010_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806111005_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/2018061110_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806110955_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806110950_01.png","http://stwx.jxgis.cn/sk/rain/rain_sum1/201806110945_01.png"]}
      * errmsg : success
      * errcode : 0
      */
 
+    private DataBean data;
     private String errmsg;
     private String errcode;
-    private List<DataBean> data;
+
+    public DataBean getData() {
+        return data;
+    }
+
+    public void setData(DataBean data) {
+        this.data = data;
+    }
 
     public String getErrmsg() {
         return errmsg;
@@ -40,57 +48,24 @@ public class DmcgjcBeen {
         this.errcode = errcode;
     }
 
-    public List<DataBean> getData() {
-        return data;
-    }
-
-    public void setData(List<DataBean> data) {
-        this.data = data;
-    }
-
     public static class DataBean {
-        /**
-         * time : ["06:00","12:00","18:00","24:00","30:00","36:00","42:00","48:00","54:00","00:00","06:00","12:00"]
-         * ctype : rain_sum_6
-         * type : rain
-         * url : ["http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181506.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181512.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181518.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181524.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181530.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181536.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181542.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181548.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181554.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181600.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181606.png","http://stwx.jxgis.cn/sk/rain/rain_sum_6/201805181612.png"]
-         */
+        private List<String> times;
+        private List<String> urls;
 
-        private String ctype;
-        private String type;
-        private List<String> time;
-        private List<String> url;
-
-        public String getCtype() {
-            return ctype;
+        public List<String> getTimes() {
+            return times;
         }
 
-        public void setCtype(String ctype) {
-            this.ctype = ctype;
+        public void setTimes(List<String> times) {
+            this.times = times;
         }
 
-        public String getType() {
-            return type;
+        public List<String> getUrls() {
+            return urls;
         }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public List<String> getTime() {
-            return time;
-        }
-
-        public void setTime(List<String> time) {
-            this.time = time;
-        }
-
-        public List<String> getUrl() {
-            return url;
-        }
-
-        public void setUrl(List<String> url) {
-            this.url = url;
+        public void setUrls(List<String> urls) {
+            this.urls = urls;
         }
     }
 }

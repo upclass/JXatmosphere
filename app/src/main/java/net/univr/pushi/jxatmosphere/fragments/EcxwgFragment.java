@@ -10,8 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -19,13 +21,15 @@ import com.blankj.utilcode.util.ToastUtils;
 
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.DmcgjcAdapter3;
 import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
+import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
+import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -46,29 +50,33 @@ public class EcxwgFragment extends RxLazyFragment {
     CustomViewPager mViewPager;
     @BindView(R.id.recycler3)
     RecyclerView mRecyclerView3;
+    @BindView(R.id.menu1)
+    LinearLayout menu1Linear;
 
-    @BindView(R.id.pic_ready)
-    ImageView isStartPic;
 
     private Context mcontext;
 
     private DmcgjcMenuAdapter mAdapter1;
 
+
+    private MultiGdybTxAdapter mAdapter3;
+    List<MultiItemGdybTx> multitemList = new ArrayList<>();
+
+    ImageView isStartPic;
+
     MyPagerAdapter viewPagerAdapter;
     List<Fragment> fragmentList = new ArrayList<>();
     List<String> urls;
 
-    private DmcgjcAdapter3 mAdapter3;
-    List<GkdmClickBeen> mData3 = new ArrayList<>();
     String ctype1;
     String ctype2;
     //播放的下一位置
-    int recycle_skipto_position = 1;
+    int recycle_skipto_position = 2;
     //是否播放
     Boolean isStart = false;
 
     //现在的位置
-    int now_postion;
+    int now_postion = 1;
     ProgressDialog progressDialog;
 
 
@@ -122,32 +130,19 @@ public class EcxwgFragment extends RxLazyFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ectwomenu -> {
                     List<DmcgjcmenuBeen.DataBean> menu = ectwomenu.getData();
-//                    if(menu1==null){
-//                        ctype=null;
-//                    }
-//                    List<DmcgjcmenuBeen.DataBean> menu = new ArrayList<>();
-
-
-//                    for (int i = 0; i < menu1.size(); i++) {
-//                        EcOneMenu.DataBean.MenuBean bean1 = menu1.get(i);
-//                        DmcgjcmenuBeen.DataBean been=new DmcgjcmenuBeen.DataBean();
-//                        been.setId(bean1.getId());
-//                        been.setName(bean1.getName());
-//                        been.setPaname(bean1.getPaname());
-//                        been.setType(bean1.getType());
-//                        been.setZnName(bean1.getZnName());
-//                        menu.add(been);
-//                    }
-
-                    for (int i = 0; i < menu.size(); i++) {
-                        if (i == 0) {
-                            DmcgjcmenuBeen.DataBean temp = menu.get(i);
-                            temp.setSelect(true);
-                            menu.set(i, temp);
-                        } else {
-                            DmcgjcmenuBeen.DataBean temp = menu.get(i);
-                            temp.setSelect(false);
-                            menu.set(i, temp);
+                    if (menu == null || menu.size() == 0)
+                        menu1Linear.setVisibility(View.GONE);
+                    else {
+                        for (int i = 0; i < menu.size(); i++) {
+                            if (i == 0) {
+                                DmcgjcmenuBeen.DataBean temp = menu.get(i);
+                                temp.setSelect(true);
+                                menu.set(i, temp);
+                            } else {
+                                DmcgjcmenuBeen.DataBean temp = menu.get(i);
+                                temp.setSelect(false);
+                                menu.set(i, temp);
+                            }
                         }
                     }
 
@@ -159,27 +154,6 @@ public class EcxwgFragment extends RxLazyFragment {
                 });
 
         getTestdata();
-
-        isStartPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isStart == false) {
-                    isStartPic.setImageResource(R.drawable.app_end);
-                    Message message = uiHandler.obtainMessage();
-                    message.what = 1;
-                    uiHandler.sendMessageDelayed(message,MyApplication.getInstance().auto_time);
-                    isStart = true;
-                    mViewPager.setScanScroll(false);
-                } else {
-                    uiHandler.removeCallbacksAndMessages(null);
-                    isStartPic.setImageResource(R.drawable.app_start);
-                    isStart = false;
-                    mViewPager.setScanScroll(true);
-                }
-
-            }
-        });
-
     }
 
     private DmcgjcMenuAdapter getAdapter1() {
@@ -193,7 +167,8 @@ public class EcxwgFragment extends RxLazyFragment {
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
-                isStartPic.setImageResource(R.drawable.app_start);
+                if (isStartPic != null)
+                    isStartPic.setImageResource(R.drawable.app_start);
 
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
@@ -398,36 +373,43 @@ public class EcxwgFragment extends RxLazyFragment {
     }
 
 
-    private DmcgjcAdapter3 getAdapter3() {
+    private MultiGdybTxAdapter getAdapter3() {
 
         if (mAdapter3 == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
-            mAdapter3 = new DmcgjcAdapter3(mData3);
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
+                @Override
+                public boolean canScrollVertically() {
+                    return false;
+                }
+            };
+            mAdapter3 = new MultiGdybTxAdapter(multitemList);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
             mAdapter3.setOnItemChildClickListener((adapter, view, position) -> {
                 switch (view.getId()) {
                     case R.id.time:
                         if (isStart == false) {
-                            adapter.notifyItemChanged(position);
-                            mViewPager.setCurrentItem(position);
-                            //事件处理
-                            List data = adapter.getData();
-                            GkdmClickBeen clickBeenBefore = (GkdmClickBeen) (data.get(now_postion));
-                            clickBeenBefore.setOnclick(false);
-                            recycle_skipto_position = position + 1;
-                            if (recycle_skipto_position > mData3.size() - 1)
-                                recycle_skipto_position = 0;
-                            GkdmClickBeen clickBeenNow = (GkdmClickBeen) (data.get(position));
-                            clickBeenNow.setOnclick(true);
-
-                            mData3.set(now_postion, clickBeenBefore);
-                            mData3.set(position, clickBeenNow);
-
-                            adapter.notifyItemChanged(now_postion);
-                            adapter.notifyItemChanged(position);
+                            mViewPager.setCurrentItem(position - 1);
                         }
                         break;
+                    case R.id.pic_ready:
+                        if (isStart == false) {
+                            isStartPic = ((ImageView) view);
+                            isStartPic.setImageResource(R.drawable.app_end);
+                            Message message = uiHandler.obtainMessage();
+                            message.what = 1;
+                            uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
+                            isStart = true;
+                            mViewPager.setScanScroll(false);
+                        } else {
+                            uiHandler.removeCallbacksAndMessages(null);
+                            isStartPic.setImageResource(R.drawable.app_start);
+                            isStart = false;
+                            mViewPager.setScanScroll(true);
+                        }
+
+                        break;
+
                 }
             });
         }
@@ -444,87 +426,14 @@ public class EcxwgFragment extends RxLazyFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ecBeen -> {
                     progressDialog.dismiss();
-                    recycle_skipto_position = 1;
-                    now_postion = 0;
-                    List<Fragment> HuancunfragmentList = new ArrayList<>();
-                    for (int i = 0; i < fragmentList.size(); i++) {
-                        Fragment fragment = fragmentList.get(i);
-                        HuancunfragmentList.add(fragment);
+                    recycle_skipto_position = 2;
+                    now_postion = 1;
+                    isStart = false;
+                    if (isStartPic != null) {
+                        isStartPic.setImageResource(R.drawable.app_start);
+                        mViewPager.setScanScroll(true);
                     }
-                    fragmentList.clear();
-                    urls = ecBeen.getData().getUrl();
-                    for (int i = 0; i < urls.size(); i++) {
-                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin",this);
-                        fragmentList.add(fragment);
-                    }
-                    viewPagerAdapter = new MyPagerAdapter(
-                            getChildFragmentManager(), fragmentList, HuancunfragmentList);
-                    // 绑定适配器
-                    mViewPager.setAdapter(viewPagerAdapter);
-                    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                        }
-
-                        @Override
-                        public void onPageSelected(int position) {
-                            GkdmClickBeen clickBeenStop = mData3.get(now_postion);
-                            clickBeenStop.setOnclick(false);
-                            GkdmClickBeen clickBeenNow = mData3.get(position);
-                            clickBeenNow.setOnclick(true);
-                            mData3.set(now_postion, clickBeenStop);
-                            mData3.set(position, clickBeenNow);
-                            mAdapter3.notifyItemChanged(now_postion);
-                            mAdapter3.notifyItemChanged(position);
-                            now_postion = position;
-                            mRecyclerView3.smoothScrollToPosition(position);
-                            recycle_skipto_position = position + 1;
-                            if (recycle_skipto_position > mData3.size() - 1)
-                                recycle_skipto_position = 0;
-                        }
-
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
-
-                        }
-                    });
-
-
-                    List<String> time = ecBeen.getData().getTime();
-                    mData3.clear();
-                    for (int i = 0; i < time.size(); i++) {
-                        GkdmClickBeen clickBeen = new GkdmClickBeen();
-                        if (i == 0)
-                            clickBeen.setOnclick(true);
-                        else clickBeen.setOnclick(false);
-                        clickBeen.setText(time.get(i));
-                        mData3.add(clickBeen);
-                    }
-                    getAdapter3().setNewData(mData3);
-                    //播放轮播
-
-                }, throwable -> {
-                    progressDialog.dismiss();
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
-    }
-
-
-    public void getTestdataByTime(String timePs) {
-        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
-        getAdapter3();
-        RetrofitHelper.getDataForecastAPI()
-                .getEcContent3("ecmwf_thin", ctype1, ctype2, timePs)
-                .compose(bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ecBeen -> {
-                    progressDialog.dismiss();
-                    recycle_skipto_position = 1;
-                    now_postion = 0;
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {
                         Fragment fragment = fragmentList.get(i);
@@ -548,19 +457,24 @@ public class EcxwgFragment extends RxLazyFragment {
 
                         @Override
                         public void onPageSelected(int position) {
-                            GkdmClickBeen clickBeenStop = mData3.get(now_postion);
+
+                            MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
+                            GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                             clickBeenStop.setOnclick(false);
-                            GkdmClickBeen clickBeenNow = mData3.get(position);
+                            multiItemGdybTxStop.setContent(clickBeenStop);
+                            MultiItemGdybTx multiItemGdybTxNow = multitemList.get(position + 1);
+                            GkdmClickBeen clickBeenNow = multiItemGdybTxNow.getContent();
                             clickBeenNow.setOnclick(true);
-                            mData3.set(now_postion, clickBeenStop);
-                            mData3.set(position, clickBeenNow);
+                            multiItemGdybTxNow.setContent(clickBeenNow);
+                            multitemList.set(now_postion, multiItemGdybTxStop);
+                            multitemList.set(position + 1, multiItemGdybTxNow);
                             mAdapter3.notifyItemChanged(now_postion);
-                            mAdapter3.notifyItemChanged(position);
-                            now_postion = position;
-                            mRecyclerView3.smoothScrollToPosition(position);
-                            recycle_skipto_position = position + 1;
-                            if (recycle_skipto_position > mData3.size() - 1)
-                                recycle_skipto_position = 0;
+                            mAdapter3.notifyItemChanged(position + 1);
+                            now_postion = position + 1;
+                            mRecyclerView3.smoothScrollToPosition(position + 1);
+                            recycle_skipto_position = position + 2;
+                            if (recycle_skipto_position > multitemList.size() - 1)
+                                recycle_skipto_position = 1;
                         }
 
                         @Override
@@ -571,16 +485,20 @@ public class EcxwgFragment extends RxLazyFragment {
 
 
                     List<String> time = ecBeen.getData().getTime();
-                    mData3.clear();
+                    multitemList.clear();
+                    MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                    multitemList.add(multiItemGdybTx);
                     for (int i = 0; i < time.size(); i++) {
+
                         GkdmClickBeen clickBeen = new GkdmClickBeen();
                         if (i == 0)
                             clickBeen.setOnclick(true);
                         else clickBeen.setOnclick(false);
                         clickBeen.setText(time.get(i));
-                        mData3.add(clickBeen);
+                        multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, clickBeen);
+                        multitemList.add(multiItemGdybTx);
                     }
-                    getAdapter3().setNewData(mData3);
+                    getAdapter3().setNewData(multitemList);
                     //播放轮播
 
                 }, throwable -> {
@@ -599,9 +517,9 @@ public class EcxwgFragment extends RxLazyFragment {
             if (mRecyclerView3 != null) {
                 switch (msg.what) {
                     case 1:
-                        mViewPager.setCurrentItem(recycle_skipto_position);
-                        if (recycle_skipto_position > mData3.size() - 1) {
-                            recycle_skipto_position = 0;
+                        mViewPager.setCurrentItem(recycle_skipto_position - 1);
+                        if (recycle_skipto_position > multitemList.size() - 1) {
+                            recycle_skipto_position = 1;
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
                             if (isStart == false) {
