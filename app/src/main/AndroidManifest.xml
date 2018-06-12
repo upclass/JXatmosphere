@@ -149,7 +149,10 @@
             android:label="@string/title_activity_yujin_info" />
         <activity
             android:name=".feature.AboutOursActivity"
-            android:label="@string/title_activity_about_ours"></activity>
+            android:label="@string/title_activity_about_ours" />
+        <activity
+            android:name=".feature.PersonalInfoActivity"
+            android:label="@string/title_activity_personal_info"></activity>
     </application>
 
 </manifest>

@@ -83,9 +83,8 @@ public class MyApplication extends Application {
      * 销毁所有的Activity
      */
     public void removeALLActivity_() {
-        //通过循环，把集合中的所有Activity销毁
-        for (Activity activity : activityList) {
-            activity.finish();
+        for (int i = activityList.size()-1; i>=0 ; i--) {
+            activityList.get(i).finish();
         }
     }
 

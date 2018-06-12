@@ -174,24 +174,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         radarForecast.setOnClickListener(this);
         YujinXinhao.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
-//            Toast.makeText(MainActivity.this, item.getTitle().toString(), Toast.LENGTH_SHORT).show();
             int itemId = item.getItemId();
 
-            if(itemId==R.id.nav_set){
-                Intent intent=new Intent(context,SettingActivity.class);
+            if (itemId == R.id.nav_set) {
+                Intent intent = new Intent(context, SettingActivity.class);
                 startActivity(intent);
             }
-            if(itemId==R.id.nav_about){
-                Intent intent=new Intent(context,AboutOursActivity.class);
+            if (itemId == R.id.nav_about) {
+                Intent intent = new Intent(context, AboutOursActivity.class);
                 startActivity(intent);
             }
             drawerLayout.closeDrawer(navigationView);
             return true;
         });
 
+        View nav_header = navigationView.inflateHeaderView(R.layout.head_slip_layout);
+        LinearLayout user_linear = nav_header.findViewById(R.id.user_linear);
+        user_linear.setOnClickListener(v -> {
+            Intent intent = new Intent(context, PersonalInfoActivity.class);
+            startActivity(intent);
+            drawerLayout.closeDrawer(navigationView);
+        });
 
-
-//        getIntent().getStringExtra("phone");
 
         List<String> permissionList = new ArrayList<>();
 
@@ -223,7 +227,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void rememberLoginState() {
-        SPUtils.getInstance().put("isFirstLogin",false);
+        SPUtils.getInstance().put("isFirstLogin", false);
     }
 
     @Override
@@ -437,7 +441,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                         address = aMapLocation.getProvince() + aMapLocation.getCity();
                         lat = String.valueOf(aMapLocation.getLatitude());//获取纬度
-                        lon =String.valueOf(aMapLocation.getLongitude());//获取经度
+                        lon = String.valueOf(aMapLocation.getLongitude());//获取经度
                         location.setText(address);
 //                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //                        Date date = new Date(aMapLocation.getTime());

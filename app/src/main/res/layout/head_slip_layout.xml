@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/spacing_100">
+    android:layout_height="@dimen/spacing_100"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_weight="1"
+        android:id="@+id/user_linear"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <net.univr.pushi.jxatmosphere.widget.CircleImg
-        android:id="@+id/myphoto"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/spacing_12"
-        android:layout_width="@dimen/spacing_40"
-        android:layout_height="@dimen/spacing_40"
-        android:src="@drawable/app_logo" />
-    <TextView
-        android:layout_marginLeft="@dimen/spacing_20"
-        android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_17"
-        android:textColor="@color/white"
-        android:text="@string/user"/>
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
+        <net.univr.pushi.jxatmosphere.widget.CircleImg
+            android:id="@+id/myphoto"
+            android:layout_width="@dimen/spacing_40"
+            android:layout_height="@dimen/spacing_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/spacing_12"
+            android:src="@drawable/app_logo" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/spacing_20"
+            android:text="@string/user"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_17" />
+
+    </LinearLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/spacing_2"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:layout_marginLeft="@dimen/text_size_20"-->
-        <!--android:layout_gravity="bottom"/>-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/spacing_2"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:layout_marginLeft="@dimen/text_size_20"-->
+    <!--android:layout_gravity="bottom"/>-->
 </LinearLayout>

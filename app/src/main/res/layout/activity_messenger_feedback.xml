@@ -93,13 +93,26 @@
 
         <Button
             android:id="@+id/feedback_submit"
+            style="@style/two_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/spacing_40"
+            android:layout_height="40dp"
             android:layout_gravity="center"
-            android:background="@drawable/app_btn_backimage"
+            android:background="@drawable/loginout_bg"
             android:text="@string/feedback_submit"
             android:textColor="@color/white"
-            app:layout_widthPercent="80%" />
+            app:layout_marginLeftPercent="10%"
+            app:layout_marginRightPercent="10%"
+            app:layout_widthPercent="80%"></Button>
+
+        <!--<Button-->
+        <!--android:id="@+id/feedback_submit"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/spacing_40"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@drawable/app_btn_backimage"-->
+        <!--android:text="@string/feedback_submit"-->
+        <!--android:textColor="@color/white"-->
+        <!--app:layout_widthPercent="80%" />-->
     </android.support.percent.PercentFrameLayout>
 
 

@@ -15,7 +15,6 @@
         android:layout_gravity="left"
         android:background="@color/toolbar_color"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/head_slip_layout"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:menu="@menu/slip_menu">
