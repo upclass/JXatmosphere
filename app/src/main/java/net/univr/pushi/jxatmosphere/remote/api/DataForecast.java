@@ -43,6 +43,7 @@ public interface DataForecast {
     //得到数值预报页面
     @POST("szyb!getUrl.do")
     Observable<EcBeen> getEcContent2(@Query("type")String type, @Query("ctype1")String type1,@Query("time")String time);
+
     //得到一级时间菜单
     @POST("szyb!getDays.do")
     Observable<DateMenuOneBeen> getDataForecastContentBytime(@Query("type")String type);

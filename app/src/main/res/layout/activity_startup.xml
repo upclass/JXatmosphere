@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/startup_bg"
+    android:fitsSystemWindows="true"
     tools:context="net.univr.pushi.jxatmosphere.feature.StartupActivity">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        app:layout_marginTopPercent="16%"
-        android:background="@drawable/app_logo" />
+        android:background="@drawable/app_logo"
+        app:layout_marginTopPercent="16%" />
 
 
 </android.support.percent.PercentRelativeLayout>

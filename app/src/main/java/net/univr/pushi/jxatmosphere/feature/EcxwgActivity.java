@@ -219,8 +219,6 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
-
-
     }
 
 

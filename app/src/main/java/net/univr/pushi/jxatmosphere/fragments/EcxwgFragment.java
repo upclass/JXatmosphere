@@ -9,9 +9,14 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,7 +72,7 @@ public class EcxwgFragment extends RxLazyFragment {
     MyPagerAdapter viewPagerAdapter;
     List<Fragment> fragmentList = new ArrayList<>();
     List<String> urls;
-
+    String type = "ecmwf_thin";
     String ctype1;
     String ctype2;
     //播放的下一位置
@@ -78,6 +83,14 @@ public class EcxwgFragment extends RxLazyFragment {
     //现在的位置
     int now_postion = 1;
     ProgressDialog progressDialog;
+
+
+    @BindView(R.id.time)
+    TextView time;
+    List<String> menuTime;
+    private ListPopupWindow popupWindow;
+    private ArrayAdapter timeAdapter;
+    Boolean oneMenu = true;
 
 
     public static EcxwgFragment newInstance(String ctype1, String ctype2) {
@@ -123,6 +136,8 @@ public class EcxwgFragment extends RxLazyFragment {
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
         getAdapter1();
+        initSpinner();
+        getOneTime();
         RetrofitHelper.getDataForecastAPI()
                 .getTwoMenu("ecmwf_thin", ctype1)
                 .compose(bindToLifecycle())
@@ -373,6 +388,87 @@ public class EcxwgFragment extends RxLazyFragment {
     }
 
 
+    private void initSpinner() {
+        menuTime = new ArrayList<>();
+        popupWindow = new ListPopupWindow(getContext());
+        timeAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, menuTime);
+        popupWindow.setAdapter(timeAdapter);
+        popupWindow.setAnchorView(time);
+        popupWindow.setWidth(370);   //WRAP_CONTENT会出错
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setDropDownGravity(Gravity.END);
+        popupWindow.setModal(true);
+        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                if (oneMenu) {
+                    getTwoTime(menuTime.get(position));
+                    oneMenu = false;
+                } else {
+                    getTestDataBytime(menuTime.get(position));
+                    getOneTime();
+                    oneMenu = true;
+                }
+
+
+                popupWindow.dismiss();
+
+            }
+        });
+        time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.show();
+
+            }
+        });
+    }
+
+
+    public void getOneTime() {
+        RetrofitHelper.getDataForecastAPI()
+                .getDataForecastContentBytime(type)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(wtfOneMenu -> {
+                    menuTime.clear();
+                    List<String> menu = wtfOneMenu.getData();
+                    for (int i = 0; i < menu.size(); i++) {
+                        menuTime.add(menu.get(i));
+                    }
+                    timeAdapter.notifyDataSetChanged();
+                    time.setText(menuTime.get(0));
+
+                }, throwable -> {
+                    throwable.printStackTrace();
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
+    private void getTwoTime(String param) {
+        RetrofitHelper.getDataForecastAPI()
+                .getDataForecastContentBytime1(type, param)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(timeTwoMenu -> {
+                    menuTime.clear();
+                    List<String> data = timeTwoMenu.getData();
+                    for (int i = 0; i < data.size(); i++) {
+                        menuTime.add(data.get(i));
+                    }
+                    timeAdapter.notifyDataSetChanged();
+                    time.setText(menuTime.get(0));
+                }, throwable -> {
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
+
     private MultiGdybTxAdapter getAdapter3() {
 
         if (mAdapter3 == null) {
@@ -503,6 +599,97 @@ public class EcxwgFragment extends RxLazyFragment {
 
                 }, throwable -> {
                     progressDialog.dismiss();
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
+    public void getTestDataBytime(String timePs) {
+        getAdapter3();
+        RetrofitHelper.getDataForecastAPI()
+                .getEcContent3(type, ctype1,ctype2, timePs)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ecBeen -> {
+                    progressDialog.dismiss();
+                    recycle_skipto_position = 2;
+                    now_postion = 1;
+                    isStart = false;
+                    if (isStartPic != null) {
+                        isStartPic.setImageResource(R.drawable.app_start);
+                        mViewPager.setScanScroll(true);
+                    }
+
+                    List<Fragment> HuancunfragmentList = new ArrayList<>();
+                    for (int i = 0; i < fragmentList.size(); i++) {
+                        Fragment fragment = fragmentList.get(i);
+                        HuancunfragmentList.add(fragment);
+                    }
+                    fragmentList.clear();
+                    urls = ecBeen.getData().getUrl();
+                    for (int i = 0; i < urls.size(); i++) {
+                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this);
+                        fragmentList.add(fragment);
+                    }
+                    viewPagerAdapter = new MyPagerAdapter(
+                            getChildFragmentManager(), fragmentList, HuancunfragmentList);
+                    // 绑定适配器
+                    mViewPager.setAdapter(viewPagerAdapter);
+                    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+
+                            MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
+                            GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
+                            clickBeenStop.setOnclick(false);
+                            multiItemGdybTxStop.setContent(clickBeenStop);
+                            MultiItemGdybTx multiItemGdybTxNow = multitemList.get(position + 1);
+                            GkdmClickBeen clickBeenNow = multiItemGdybTxNow.getContent();
+                            clickBeenNow.setOnclick(true);
+                            multiItemGdybTxNow.setContent(clickBeenNow);
+                            multitemList.set(now_postion, multiItemGdybTxStop);
+                            multitemList.set(position + 1, multiItemGdybTxNow);
+                            mAdapter3.notifyItemChanged(now_postion);
+                            mAdapter3.notifyItemChanged(position + 1);
+                            now_postion = position + 1;
+                            mRecyclerView3.smoothScrollToPosition(position + 1);
+                            recycle_skipto_position = position + 2;
+                            if (recycle_skipto_position > multitemList.size() - 1)
+                                recycle_skipto_position = 1;
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+
+                        }
+                    });
+
+
+                    List<String> time = ecBeen.getData().getTime();
+                    multitemList.clear();
+                    MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                    multitemList.add(multiItemGdybTx);
+                    for (int i = 0; i < time.size(); i++) {
+
+                        GkdmClickBeen clickBeen = new GkdmClickBeen();
+                        if (i == 0)
+                            clickBeen.setOnclick(true);
+                        else clickBeen.setOnclick(false);
+                        clickBeen.setText(time.get(i));
+                        multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, clickBeen);
+                        multitemList.add(multiItemGdybTx);
+                    }
+                    getAdapter3().setNewData(multitemList);
+                    //播放轮播
+
+
+                }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });

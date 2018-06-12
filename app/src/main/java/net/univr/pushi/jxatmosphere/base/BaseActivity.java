@@ -30,6 +30,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+
         setContentView(getLayoutId());
         bind = ButterKnife.bind(this);
         if (application == null) {
@@ -39,6 +40,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         addActivity();
         initViews(savedInstanceState);
+
     }
 
     public abstract int getLayoutId();
