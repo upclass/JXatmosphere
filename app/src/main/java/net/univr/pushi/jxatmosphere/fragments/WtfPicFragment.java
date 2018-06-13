@@ -1,6 +1,7 @@
 package net.univr.pushi.jxatmosphere.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.WtfNewInfoAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
+import net.univr.pushi.jxatmosphere.feature.PicDealActivity;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 
 import java.util.ArrayList;
@@ -84,6 +86,15 @@ public class WtfPicFragment extends RxLazyFragment {
             type = getArguments().getString("type");
         }
         Picasso.with(getActivity()).load(url).placeholder(R.drawable.app_imageplacehold).into(pic);
+        String finalUrl = url;
+        pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PicDealActivity.class);
+                intent.putExtra("url", finalUrl);
+                startActivity(intent);
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

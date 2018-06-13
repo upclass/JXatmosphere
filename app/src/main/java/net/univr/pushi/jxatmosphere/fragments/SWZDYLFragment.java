@@ -2,6 +2,7 @@ package net.univr.pushi.jxatmosphere.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
+import net.univr.pushi.jxatmosphere.feature.PicDealActivity;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 
 import java.util.List;
@@ -109,6 +111,12 @@ public class SWZDYLFragment extends RxLazyFragment implements View.OnClickListen
                     Picasso.with(getContext())
                             .load(url).placeholder(R.drawable.ic_placeholder)
                             .into(image);
+                    image.setOnClickListener(v -> {
+                                Intent intent = new Intent(getActivity(), PicDealActivity.class);
+                                intent.putExtra("url", url);
+                                startActivity(intent);
+                            }
+                    );
 
 
                 }, throwable -> {

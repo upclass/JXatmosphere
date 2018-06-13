@@ -27,10 +27,12 @@ import com.blankj.utilcode.util.ToastUtils;
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
+import net.univr.pushi.jxatmosphere.adapter.EcxwgOneMenuAdapter;
 import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
+import net.univr.pushi.jxatmosphere.beens.EcOneMenu;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
@@ -57,6 +59,12 @@ public class EcxwgFragment extends RxLazyFragment {
     RecyclerView mRecyclerView3;
     @BindView(R.id.menu1)
     LinearLayout menu1Linear;
+    @BindView(R.id.recyclerView)
+    RecyclerView recycleView;
+    EcxwgOneMenuAdapter madapter;
+    CustomViewPager oneMenuViewpager;
+    List<Fragment> oneMenuFragmentList;
+    int whichFragment;
 
 
     private Context mcontext;
@@ -93,12 +101,16 @@ public class EcxwgFragment extends RxLazyFragment {
     Boolean oneMenu = true;
 
 
-    public static EcxwgFragment newInstance(String ctype1, String ctype2) {
+    public static EcxwgFragment newInstance(String ctype1, String ctype2, CustomViewPager oneMenuViewpager, List<Fragment> oneMenuFragmentList,int whichFragment) {
         EcxwgFragment ecxwgFragment = new EcxwgFragment();
         Bundle bundle = new Bundle();
         bundle.putString("ctype1", ctype1);
         bundle.putString("ctype2", ctype2);
         ecxwgFragment.setArguments(bundle);
+        ecxwgFragment.oneMenuViewpager = oneMenuViewpager;
+        ecxwgFragment.oneMenuFragmentList = oneMenuFragmentList;
+        ecxwgFragment.whichFragment=whichFragment;
+
         return ecxwgFragment;
     }
 
@@ -122,6 +134,7 @@ public class EcxwgFragment extends RxLazyFragment {
         return R.layout.fragment_ecxwg;
     }
 
+
     @Override
     public void finishCreateView(Bundle state) {
 
@@ -135,6 +148,7 @@ public class EcxwgFragment extends RxLazyFragment {
 
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
+        getRecycleInfo();
         getAdapter1();
         initSpinner();
         getOneTime();
@@ -512,6 +526,61 @@ public class EcxwgFragment extends RxLazyFragment {
         return mAdapter3;
     }
 
+    public void getRecycleInfo() {
+        RetrofitHelper.getDataForecastAPI()
+                .getOneMenu("ecmwf_thin")
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ecOneMenu -> {
+                    List<EcOneMenu.DataBean.MenuBean> menu = ecOneMenu.getData().getMenu();
+                    for (int i = 0; i < menu.size(); i++) {
+                        EcOneMenu.DataBean.MenuBean menuBean = menu.get(i);
+                        if (i == whichFragment) {
+                            menuBean.setSelect(true);
+                            menu.set(i, menuBean);
+                        } else {
+                            menuBean.setSelect(false);
+                            menu.set(i, menuBean);
+                        }
+
+                    }
+
+                    if (madapter == null) {
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                        madapter = new EcxwgOneMenuAdapter(menu);
+                        recycleView.setLayoutManager(layoutManager);
+                        recycleView.setAdapter(madapter);
+                        recycleView.smoothScrollToPosition(whichFragment);
+                        madapter.setOnItemChildClickListener((adapter, view, position) -> {
+//                            List<EcOneMenu.DataBean.MenuBean> data = adapter.getData();
+//                            int lastclick = ((EcxwgOneMenuAdapter) adapter).getLastposition();
+//                            EcOneMenu.DataBean.MenuBean dataBeanlasted = data.get(lastclick);
+//                            dataBeanlasted.setSelect(false);
+//                            EcOneMenu.DataBean.MenuBean dataBean = data.get(position);
+//                            dataBean.setSelect(true);
+//                            adapter.notifyItemChanged(lastclick);
+//                            adapter.notifyItemChanged(position);
+//                            ((EcxwgOneMenuAdapter) adapter).setLastposition(position);
+
+                            oneMenuViewpager.setCurrentItem(position);
+                            for (int i = 0; i < oneMenuFragmentList.size(); i++) {
+                                if (position == i) {
+                                } else {
+                                    EcxwgFragment fragment = (EcxwgFragment) oneMenuFragmentList.get(i);
+                                    fragment.setStart(false);
+                                    fragment.setImage();
+                                }
+                            }
+                        });
+                    }
+
+                }, throwable -> {
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
 
     private void getTestdata() {
         getAdapter3();
@@ -607,7 +676,7 @@ public class EcxwgFragment extends RxLazyFragment {
     public void getTestDataBytime(String timePs) {
         getAdapter3();
         RetrofitHelper.getDataForecastAPI()
-                .getEcContent3(type, ctype1,ctype2, timePs)
+                .getEcContent3(type, ctype1, ctype2, timePs)
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

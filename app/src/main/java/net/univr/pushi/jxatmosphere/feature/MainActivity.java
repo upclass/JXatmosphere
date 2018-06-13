@@ -31,6 +31,7 @@ import com.pgyersdk.update.PgyUpdateManager;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
+import net.univr.pushi.jxatmosphere.beens.BdskBeen;
 import net.univr.pushi.jxatmosphere.beens.DutyBeen;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 
@@ -53,6 +54,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     ImageView imageView;
     @BindView(R.id.see_more_schedule)
     TextView see_more_chedule;
+    @BindView(R.id.temp)
+    TextView temp;
 
     @BindView(R.id.main_feture_item0)
     PercentRelativeLayout mainFetureItem0;
@@ -443,6 +446,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         lat = String.valueOf(aMapLocation.getLatitude());//获取纬度
                         lon = String.valueOf(aMapLocation.getLongitude());//获取经度
                         location.setText(address);
+                        getTemp();
 //                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //                        Date date = new Date(aMapLocation.getTime());
 //                        df.format(date);//定位时间
@@ -458,6 +462,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
 
 
+    }
+
+
+    public void getTemp() {
+
+        RetrofitHelper.getForecastWarn()
+                .getbdsk(String.valueOf(lat), String.valueOf(lon))
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bdskBeen -> {
+                    BdskBeen.DataBean data = bdskBeen.getData().get(0);
+                    temp.setText(data.getTEM()+"℃");
+
+                }, throwable -> {
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
     }
 
 

@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/spacing_40"
-    android:background="@drawable/toolbar_bg"
+    android:background="@color/toolbar_color"
     android:orientation="vertical">
 
     <LinearLayout
@@ -49,7 +49,7 @@
         <ImageView
             android:id="@+id/tabline"
             android:layout_width="@dimen/spacing_100"
-            android:layout_height="@dimen/spacing_3"
+            android:layout_height="1dp"
             android:background="@drawable/bg_underline" />
     </LinearLayout>
 

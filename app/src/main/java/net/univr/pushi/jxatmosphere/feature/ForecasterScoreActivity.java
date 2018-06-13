@@ -32,7 +32,7 @@ public class ForecasterScoreActivity extends BaseActivity implements View.OnClic
     @BindView(R.id.tabline)
     ImageView tabline;
 //    @BindView(R.id.share_to)
-    ImageView share_to;
+//    ImageView share_to;
     @BindView(R.id.back)
     ImageView leave;
 
@@ -73,7 +73,7 @@ public class ForecasterScoreActivity extends BaseActivity implements View.OnClic
         list = new ArrayList<>();
         main_tv.setOnClickListener(this);
         vice_tv.setOnClickListener(this);
-        share_to.setOnClickListener(this);
+//        share_to.setOnClickListener(this);
         leave.setOnClickListener(this);
 
         // 设置参数

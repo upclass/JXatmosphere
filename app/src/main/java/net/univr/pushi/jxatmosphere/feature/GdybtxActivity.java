@@ -1,6 +1,7 @@
 package net.univr.pushi.jxatmosphere.feature;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -329,6 +330,15 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                     for (int i = 0; i < picList.size(); i++) {
                         ImageView imageView = new ImageView(context);
                         Picasso.with(context).load(picList.get(i)).placeholder(R.drawable.app_imageplacehold).into(imageView);
+                        int finalI = i;
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, PicDealActivity.class);
+                                intent.putExtra("url", picList.get(finalI));
+                                startActivity(intent);
+                            }
+                        });
                         list.add(imageView);
                     }
 

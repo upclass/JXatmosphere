@@ -2,8 +2,6 @@ package net.univr.pushi.jxatmosphere.feature;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -37,8 +35,8 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
 //    ImageView share_to;
     @BindView(R.id.back)
     ImageView leave;
-    @BindView(R.id.recyclerView)
-    RecyclerView recycleView;
+//    @BindView(R.id.recyclerView)
+//    RecyclerView recycleView;
 
 
     EcxwgOneMenuAdapter madapter;
@@ -110,13 +108,13 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                     List<EcOneMenu.DataBean.MenuBean> menu = ecOneMenu.getData().getMenu();
                     for (int i = 0; i < menu.size(); i++) {
                         EcOneMenu.DataBean.MenuBean menuBean = menu.get(i);
-                        if (i == 0) {
-                            menuBean.setSelect(true);
-                            menu.set(i, menuBean);
-                        } else {
-                            menuBean.setSelect(false);
-                            menu.set(i, menuBean);
-                        }
+//                        if (i == 0) {
+//                            menuBean.setSelect(true);
+//                            menu.set(i, menuBean);
+//                        } else {
+//                            menuBean.setSelect(false);
+//                            menu.set(i, menuBean);
+//                        }
                         if (menuBean.getName().equals("rain")) {
                             ctype2="rain03";
                         }
@@ -177,7 +175,7 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                         if (menuBean.getName().equals("windchill")) {
                             ctype2="";
                         }
-                        EcxwgFragment fragment = EcxwgFragment.newInstance(menuBean.getName(),ctype2);
+                        EcxwgFragment fragment = EcxwgFragment.newInstance(menuBean.getName(),ctype2,viewPager,list,i);
                         list.add(fragment);
                     }
 
@@ -187,33 +185,33 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                     viewPager.setAdapter(viewpagerAdapter);
 
 
-                    if (madapter == null) {
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                        madapter = new EcxwgOneMenuAdapter(menu);
-                        recycleView.setLayoutManager(layoutManager);
-                        recycleView.setAdapter(madapter);
-                        madapter.setOnItemChildClickListener((adapter, view, position) -> {
-                            List<EcOneMenu.DataBean.MenuBean> data = adapter.getData();
-                            int lastclick = ((EcxwgOneMenuAdapter) adapter).getLastposition();
-                            EcOneMenu.DataBean.MenuBean dataBeanlasted = data.get(lastclick);
-                            dataBeanlasted.setSelect(false);
-                            EcOneMenu.DataBean.MenuBean dataBean = data.get(position);
-                            dataBean.setSelect(true);
-                            adapter.notifyItemChanged(lastclick);
-                            adapter.notifyItemChanged(position);
-                            ((EcxwgOneMenuAdapter) adapter).setLastposition(position);
-
-                            viewPager.setCurrentItem(position);
-                            for (int i = 0; i < list.size(); i++) {
-                                if (position == i) {
-                                } else {
-                                    EcxwgFragment fragment = (EcxwgFragment) list.get(i);
-                                    fragment.setStart(false);
-                                    fragment.setImage();
-                                }
-                            }
-                        });
-                    }
+//                    if (madapter == null) {
+//                        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+//                        madapter = new EcxwgOneMenuAdapter(menu);
+//                        recycleView.setLayoutManager(layoutManager);
+//                        recycleView.setAdapter(madapter);
+//                        madapter.setOnItemChildClickListener((adapter, view, position) -> {
+//                            List<EcOneMenu.DataBean.MenuBean> data = adapter.getData();
+//                            int lastclick = ((EcxwgOneMenuAdapter) adapter).getLastposition();
+//                            EcOneMenu.DataBean.MenuBean dataBeanlasted = data.get(lastclick);
+//                            dataBeanlasted.setSelect(false);
+//                            EcOneMenu.DataBean.MenuBean dataBean = data.get(position);
+//                            dataBean.setSelect(true);
+//                            adapter.notifyItemChanged(lastclick);
+//                            adapter.notifyItemChanged(position);
+//                            ((EcxwgOneMenuAdapter) adapter).setLastposition(position);
+//
+//                            viewPager.setCurrentItem(position);
+//                            for (int i = 0; i < list.size(); i++) {
+//                                if (position == i) {
+//                                } else {
+//                                    EcxwgFragment fragment = (EcxwgFragment) list.get(i);
+//                                    fragment.setStart(false);
+//                                    fragment.setImage();
+//                                }
+//                            }
+//                        });
+//                    }
 
                 }, throwable -> {
                     LogUtils.e(throwable);
