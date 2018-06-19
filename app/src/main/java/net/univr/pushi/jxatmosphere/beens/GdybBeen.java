@@ -13,8 +13,9 @@ import java.util.List;
 
 public class GdybBeen {
 
+
     /**
-     * data : [{"allCloud":null,"forecastTime":"2018/5/8 21:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"19.2","visible":"1.3","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/8 22:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"18.4","visible":"1.1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/8 23:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"17.6","visible":"0.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 0:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"17.4","visible":"0.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 1:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"17.1","visible":"0.7","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 2:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.9","visible":"0.7","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 3:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.6","visible":"0.8","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 4:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.4","visible":"0.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 5:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.2","visible":"1.1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 6:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.8","visible":"1.2","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 7:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"17.3","visible":"1.4","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 8:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"17.9","visible":"1.6","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 9:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"19.1","visible":"1.6","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 10:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"20.6","visible":"1.6","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 11:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"22.1","visible":"1.6","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 12:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"23","visible":"1.6","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 13:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"23.8","visible":"1.7","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 14:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.7","visible":"1.8","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 15:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.7","visible":"1.7","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 16:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.7","visible":"1.5","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 17:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.7","visible":"1.4","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 18:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"23","visible":"1.5","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 19:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"21.2","visible":"1.7","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 20:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"19.5","visible":"1.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 21:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"18.6","visible":"1.6","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 22:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"17.8","visible":"1.4","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/9 23:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.9","visible":"1.2","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 0:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.7","visible":"1.1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 1:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.5","visible":"1.1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 2:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.3","visible":"1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 3:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.3","visible":"1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 4:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.3","visible":"0.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 5:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.3","visible":"0.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 6:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.5","visible":"1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 7:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"16.8","visible":"1.1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 8:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"17","visible":"1.2","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 9:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"18.8","visible":"0.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 10:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"20.5","visible":"0.7","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 11:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"22.1","visible":"0.5","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 12:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"23","visible":"0.8","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 13:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"23.9","visible":"1.2","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 14:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.8","visible":"1.6","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 15:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.7","visible":"1.4","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 16:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.5","visible":"1.4","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 17:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.4","visible":"1.3","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 18:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"23.7","visible":"1.3","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 19:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"22.9","visible":"1.1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 20:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"22.1","visible":"1.1","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 21:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 22:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/10 23:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"20.1","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 0:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 1:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 2:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"19","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 3:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 4:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 5:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"18.2","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 6:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 7:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 8:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"19.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 9:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 10:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 11:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"22.8","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 12:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 13:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 14:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"24.8","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 15:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 16:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 17:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"23.3","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 18:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 19:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"999.9","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null},{"allCloud":null,"forecastTime":"2018/5/11 20:00:00","heightTemper":null,"humidity":null,"lowTemper":null,"rain":null,"temper":"22.1","visible":"999.9","weatherDesc":null,"windDir":null,"windSpeed":null}]
+     * data : [{"allCloud":"90","forecastTime":"2018/5/8 11:00:00","heightTemper":"0","humidity":"78","lowTemper":"0","rain":"0","temper":"22.7","visible":"0","weatherDesc":"阴","windDir":"40.6","windSpeed":"0.9"},{"allCloud":"91","forecastTime":"2018/5/8 14:00:00","heightTemper":"0","humidity":"72.8","lowTemper":"0","rain":"0","temper":"24.7","visible":"0","weatherDesc":"阴","windDir":"34.7","windSpeed":"1.6"},{"allCloud":"68","forecastTime":"2018/5/8 17:00:00","heightTemper":"0","humidity":"71.8","lowTemper":"0","rain":"0","temper":"23.9","visible":"0","weatherDesc":"多云","windDir":"42","windSpeed":"1.3"},{"allCloud":"91","forecastTime":"2018/5/8 20:00:00","heightTemper":"0","humidity":"77.7","lowTemper":"0","rain":"0","temper":"20","visible":"0","weatherDesc":"阴","windDir":"47.7","windSpeed":"1.5"},{"allCloud":"74","forecastTime":"2018/5/8 23:00:00","heightTemper":"0","humidity":"84.1","lowTemper":"0","rain":"0","temper":"17.6","visible":"0","weatherDesc":"多云","windDir":"40.6","windSpeed":"0.9"},{"allCloud":"92","forecastTime":"2018/5/9 2:00:00","heightTemper":"0","humidity":"87.7","lowTemper":"0","rain":"0","temper":"16.9","visible":"0","weatherDesc":"阴","windDir":"26.6","windSpeed":"0.7"},{"allCloud":"80","forecastTime":"2018/5/9 5:00:00","heightTemper":"0","humidity":"85.8","lowTemper":"0","rain":"0","temper":"16.2","visible":"0","weatherDesc":"阴","windDir":"33.7","windSpeed":"1.1"},{"allCloud":"92","forecastTime":"2018/5/9 8:00:00","heightTemper":"24.7","humidity":"77.5","lowTemper":"16.2","rain":"0","temper":"17.9","visible":"0","weatherDesc":"阴","windDir":"55.3","windSpeed":"1.6"},{"allCloud":"24","forecastTime":"2018/5/9 11:00:00","heightTemper":"0","humidity":"58.2","lowTemper":"0","rain":"0","temper":"22.1","visible":"0","weatherDesc":"晴","windDir":"45","windSpeed":"1.6"},{"allCloud":"5","forecastTime":"2018/5/9 14:00:00","heightTemper":"0","humidity":"65","lowTemper":"0","rain":"0","temper":"24.7","visible":"0","weatherDesc":"晴","windDir":"56.3","windSpeed":"1.8"},{"allCloud":"11","forecastTime":"2018/5/9 17:00:00","heightTemper":"0","humidity":"64.2","lowTemper":"0","rain":"0","temper":"24.7","visible":"0","weatherDesc":"晴","windDir":"54","windSpeed":"1.4"},{"allCloud":"55","forecastTime":"2018/5/9 20:00:00","heightTemper":"0","humidity":"76.9","lowTemper":"0","rain":"0","temper":"19.5","visible":"0","weatherDesc":"多云","windDir":"36.3","windSpeed":"1.9"},{"allCloud":"40","forecastTime":"2018/5/9 23:00:00","heightTemper":"0","humidity":"80.2","lowTemper":"0","rain":"0","temper":"16.9","visible":"0","weatherDesc":"多云","windDir":"41.6","windSpeed":"1.2"},{"allCloud":"76","forecastTime":"2018/5/10 2:00:00","heightTemper":"0","humidity":"85.5","lowTemper":"0","rain":"0","temper":"16.3","visible":"0","weatherDesc":"多云","windDir":"45","windSpeed":"1"},{"allCloud":"54","forecastTime":"2018/5/10 5:00:00","heightTemper":"0","humidity":"89.3","lowTemper":"0","rain":"0","temper":"16.3","visible":"0","weatherDesc":"多云","windDir":"49.4","windSpeed":"0.9"},{"allCloud":"76","forecastTime":"2018/5/10 8:00:00","heightTemper":"24.7","humidity":"83.7","lowTemper":"16.3","rain":"0","temper":"17","visible":"0","weatherDesc":"多云","windDir":"55","windSpeed":"1.2"},{"allCloud":"81","forecastTime":"2018/5/10 11:00:00","heightTemper":"0","humidity":"69.7","lowTemper":"0","rain":"0","temper":"22.1","visible":"0","weatherDesc":"阴","windDir":"0","windSpeed":"0"},{"allCloud":"85","forecastTime":"2018/5/10 14:00:00","heightTemper":"0","humidity":"76.5","lowTemper":"0","rain":"0","temper":"24.8","visible":"0","weatherDesc":"阴","windDir":"0","windSpeed":"0"},{"allCloud":"67","forecastTime":"2018/5/10 17:00:00","heightTemper":"0","humidity":"76.3","lowTemper":"0","rain":"0","temper":"24.4","visible":"0","weatherDesc":"多云","windDir":"0","windSpeed":"0"},{"allCloud":"85","forecastTime":"2018/5/10 20:00:00","heightTemper":"0","humidity":"85.9","lowTemper":"0","rain":"0","temper":"22.1","visible":"0","weatherDesc":"阴","windDir":"0","windSpeed":"0"},{"allCloud":"26","forecastTime":"2018/5/10 23:00:00","heightTemper":"0","humidity":"91.8","lowTemper":"0","rain":"0","temper":"20.1","visible":"0","weatherDesc":"晴","windDir":"0","windSpeed":"0"},{"allCloud":"10","forecastTime":"2018/5/11 2:00:00","heightTemper":"0","humidity":"93.3","lowTemper":"0","rain":"0","temper":"19","visible":"0","weatherDesc":"晴","windDir":"0","windSpeed":"0"},{"allCloud":"50","forecastTime":"2018/5/11 5:00:00","heightTemper":"0","humidity":"92.8","lowTemper":"0","rain":"0","temper":"18.2","visible":"0","weatherDesc":"多云","windDir":"0","windSpeed":"0"},{"allCloud":"50","forecastTime":"2018/5/11 8:00:00","heightTemper":"24.8","humidity":"83.9","lowTemper":"18.2","rain":"0","temper":"19.9","visible":"0","weatherDesc":"多云","windDir":"0","windSpeed":"0"}]
      * errmsg : success
      * errcode : 0
      */
@@ -49,36 +50,36 @@ public class GdybBeen {
 
     public static class DataBean {
         /**
-         * allCloud : null
-         * forecastTime : 2018/5/8 21:00:00
-         * heightTemper : null
-         * humidity : null
-         * lowTemper : null
-         * rain : null
-         * temper : 19.2
-         * visible : 1.3
-         * weatherDesc : null
-         * windDir : null
-         * windSpeed : null
+         * allCloud : 90
+         * forecastTime : 2018/5/8 11:00:00
+         * heightTemper : 0
+         * humidity : 78
+         * lowTemper : 0
+         * rain : 0
+         * temper : 22.7
+         * visible : 0
+         * weatherDesc : 阴
+         * windDir : 40.6
+         * windSpeed : 0.9
          */
 
-        private Object allCloud;
+        private String allCloud;
         private String forecastTime;
-        private Object heightTemper;
-        private Object humidity;
-        private Object lowTemper;
-        private Object rain;
+        private String heightTemper;
+        private String humidity;
+        private String lowTemper;
+        private String rain;
         private String temper;
         private String visible;
-        private Object weatherDesc;
-        private Object windDir;
-        private Object windSpeed;
+        private String weatherDesc;
+        private String windDir;
+        private String windSpeed;
 
-        public Object getAllCloud() {
+        public String getAllCloud() {
             return allCloud;
         }
 
-        public void setAllCloud(Object allCloud) {
+        public void setAllCloud(String allCloud) {
             this.allCloud = allCloud;
         }
 
@@ -90,35 +91,35 @@ public class GdybBeen {
             this.forecastTime = forecastTime;
         }
 
-        public Object getHeightTemper() {
+        public String getHeightTemper() {
             return heightTemper;
         }
 
-        public void setHeightTemper(Object heightTemper) {
+        public void setHeightTemper(String heightTemper) {
             this.heightTemper = heightTemper;
         }
 
-        public Object getHumidity() {
+        public String getHumidity() {
             return humidity;
         }
 
-        public void setHumidity(Object humidity) {
+        public void setHumidity(String humidity) {
             this.humidity = humidity;
         }
 
-        public Object getLowTemper() {
+        public String getLowTemper() {
             return lowTemper;
         }
 
-        public void setLowTemper(Object lowTemper) {
+        public void setLowTemper(String lowTemper) {
             this.lowTemper = lowTemper;
         }
 
-        public Object getRain() {
+        public String getRain() {
             return rain;
         }
 
-        public void setRain(Object rain) {
+        public void setRain(String rain) {
             this.rain = rain;
         }
 
@@ -138,27 +139,27 @@ public class GdybBeen {
             this.visible = visible;
         }
 
-        public Object getWeatherDesc() {
+        public String getWeatherDesc() {
             return weatherDesc;
         }
 
-        public void setWeatherDesc(Object weatherDesc) {
+        public void setWeatherDesc(String weatherDesc) {
             this.weatherDesc = weatherDesc;
         }
 
-        public Object getWindDir() {
+        public String getWindDir() {
             return windDir;
         }
 
-        public void setWindDir(Object windDir) {
+        public void setWindDir(String windDir) {
             this.windDir = windDir;
         }
 
-        public Object getWindSpeed() {
+        public String getWindSpeed() {
             return windSpeed;
         }
 
-        public void setWindSpeed(Object windSpeed) {
+        public void setWindSpeed(String windSpeed) {
             this.windSpeed = windSpeed;
         }
     }
