@@ -1,7 +1,5 @@
 package net.univr.pushi.jxatmosphere.interfaces;
 
-import android.graphics.drawable.Drawable;
-
 /**
  * author : Administrator wl
  * e-mail : 389456264@qq.com
@@ -11,7 +9,8 @@ import android.graphics.drawable.Drawable;
  */
 
 
-public interface DispatchDrawable {
+public interface BrightnessActivity{
 
-    void onDispatchBitmap(Drawable drawable);
+    void onDispatchDarken();
+    void onDispatchLight();
 }

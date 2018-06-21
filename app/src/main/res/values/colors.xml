@@ -16,6 +16,7 @@
     <item name="gray_holo_light" type="color">#ffd0d0d0</item>
     <color name="login_light_blue">#88c8f7</color>
     <color name="toolbar_color">#0081e7</color><!--题头颜色 -->
+    <color name="translucent_background">#00000000</color>
 
 
 

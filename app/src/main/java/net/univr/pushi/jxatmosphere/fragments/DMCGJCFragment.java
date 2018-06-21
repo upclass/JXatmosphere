@@ -28,6 +28,7 @@ import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
+import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
@@ -496,7 +497,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     fragmentList.clear();
                     urls = DmcgjcDeen.getData().getUrls();
                     for (int i = 0; i < urls.size(); i++) {
-                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i));
+                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -511,6 +512,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
                         @Override
                         public void onPageSelected(int position) {
+                            if (CallBackUtil.picdispath!=null) {
+                                CallBackUtil.doDispathPic(position);
+                            }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
                             GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                             clickBeenStop.setOnclick(false);

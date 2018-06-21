@@ -1,5 +1,6 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -31,6 +34,8 @@ import net.univr.pushi.jxatmosphere.beens.GdybtxBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
+import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
+import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
@@ -98,6 +103,44 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         initSpinner();
         getOneMenu();
         initOnclick();
+
+        CallBackUtil.setBrightness(new BrightnessActivity() {
+            @Override
+            public void onDispatchDarken() {
+                final Window window = getWindow();
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.5f);
+                valueAnimator.setDuration(500);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        WindowManager.LayoutParams params = window.getAttributes();
+                        params.alpha = (Float) animation.getAnimatedValue();
+                        window.setAttributes(params);
+                    }
+                });
+
+                valueAnimator.start();
+            }
+
+            @Override
+            public void onDispatchLight() {
+                final Window window = getWindow();
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.5f, 1.0f);
+                valueAnimator.setDuration(500);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        WindowManager.LayoutParams params = window.getAttributes();
+                        params.alpha = (Float) animation.getAnimatedValue();
+                        window.setAttributes(params);
+                    }
+                });
+
+                valueAnimator.start();
+            }
+        });
+
+
     }
 
     private void initOnclick() {
@@ -327,7 +370,9 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
                     list = new ArrayList<>();
                     List<String> picList = gdybtx.getData().getPicList();
+                    ArrayList<String>picTemp=new ArrayList<>();
                     for (int i = 0; i < picList.size(); i++) {
+                        picTemp.add(picList.get(i));
                         ImageView imageView = new ImageView(context);
                         Picasso.with(context).load(picList.get(i)).placeholder(R.drawable.app_imageplacehold).into(imageView);
                         int finalI = i;
@@ -336,6 +381,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, PicDealActivity.class);
                                 intent.putExtra("url", picList.get(finalI));
+                                intent.putStringArrayListExtra("urls",picTemp);
                                 startActivity(intent);
                             }
                         });
@@ -353,6 +399,9 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
                         @Override
                         public void onPageSelected(int position) {
+                            if (CallBackUtil.picdispath!=null) {
+                                CallBackUtil.doDispathPic(position);
+                            }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
                             GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                             clickBeenStop.setOnclick(false);

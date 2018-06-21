@@ -20,6 +20,7 @@ import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
+import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
@@ -127,7 +128,7 @@ public class WeatherWarnFragment extends RxLazyFragment {
                     }
                     list.clear();
                     for (int i = 0; i < url.size(); i++) {
-                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(url.get(i));
+                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(url.get(i),url);
                         list.add(picLoadFragment);
                     }
                     pagerAdapter = new MyPagerAdapter(getChildFragmentManager(), list, fragmentHuancun);
@@ -140,6 +141,9 @@ public class WeatherWarnFragment extends RxLazyFragment {
 
                         @Override
                         public void onPageSelected(int position) {
+                            if (CallBackUtil.picdispath!=null) {
+                                CallBackUtil.doDispathPic(position);
+                            }
                             MultiItemGdybTx multiItemGdybTxStop = multiItemGdybTxList.get(now_postion);
                             GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                             clickBeenStop.setOnclick(false);

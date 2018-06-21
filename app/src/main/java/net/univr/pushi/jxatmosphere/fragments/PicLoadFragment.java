@@ -12,6 +12,9 @@ import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.feature.PicDealActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 
 /**
@@ -21,14 +24,20 @@ public class PicLoadFragment extends RxLazyFragment {
 
     @BindView(R.id.pic)
     ImageView pic;
-//    @BindView(R.id.frame)
+    private static ArrayList<String> temp;
+    //    @BindView(R.id.frame)
 //    FrameLayout frameLayout;
 //    ImageView imageView;
 
-    public static PicLoadFragment newInstance(String url) {
+    public static PicLoadFragment newInstance(String url, List<String > urls) {
         PicLoadFragment picLoadFragment = new PicLoadFragment();
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
+        temp = new ArrayList<>();
+        for (int i = 0; i < urls.size(); i++) {
+            temp.add(urls.get(i));
+        }
+        bundle.putStringArrayList("urls", temp);
         picLoadFragment.setArguments(bundle);
         return picLoadFragment;
     }
@@ -56,6 +65,7 @@ public class PicLoadFragment extends RxLazyFragment {
             try {
                 Intent intent = new Intent(getActivity(), PicDealActivity.class);
                 intent.putExtra("url", finalUrl);
+                intent.putStringArrayListExtra("urls",temp);
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <!-- 必选 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序录制音频 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -122,7 +123,8 @@
         <activity android:name=".feature.LdptRadarActivity" />
         <activity
             android:name=".feature.GdybActivity"
-            android:label="@string/title_activity_gdyb" />
+            android:label="@string/title_activity_gdyb"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".feature.EcxwgActivity"
             android:label="@string/title_activity_ecxwg" />
@@ -155,7 +157,9 @@
             android:label="@string/title_activity_personal_info" />
         <activity
             android:name=".feature.PicDealActivity"
-            android:label="@string/title_activity_pic_deal"></activity>
+            android:exported="true"
+            android:label="@string/title_activity_pic_deal"
+            android:theme="@style/TranslucentTheme"></activity>
     </application>
 
 </manifest>
