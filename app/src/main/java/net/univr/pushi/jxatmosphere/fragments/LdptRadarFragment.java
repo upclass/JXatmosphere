@@ -2,7 +2,10 @@ package net.univr.pushi.jxatmosphere.fragments;
 
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -26,6 +29,13 @@ import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,9 +178,19 @@ public class LdptRadarFragment extends RxLazyFragment {
 
                         urls = LdptBeen.getData().getImageUrl();
                         for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i), urls);
                             fragmentList.add(fragment);
                         }
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 0; i < urls.size(); i++) {
+                                    Bitmap bitmap = decodeUriAsBitmapFromNet(urls.get(i));
+                                    saveBitMap(bitmap, urls.get(i));
+                                }
+                            }
+                        }).start();
 
                         viewPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragmentList, huancunFragments);
                         mViewPager.setAdapter(viewPagerAdapter);
@@ -182,7 +202,9 @@ public class LdptRadarFragment extends RxLazyFragment {
 
                             @Override
                             public void onPageSelected(int position) {
-
+                                if (CallBackUtil.picdispath != null) {
+                                    CallBackUtil.doDispathPic(position);
+                                }
                                 MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
                                 GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                                 clickBeenStop.setOnclick(false);
@@ -251,10 +273,20 @@ public class LdptRadarFragment extends RxLazyFragment {
                         fragmentList.clear();
 
                         urls = wxytBeen.getData().getImageUrl();
-                        for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            for (int i = 0; i < urls.size(); i++) {
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i), urls);
                             fragmentList.add(fragment);
                         }
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 0; i < urls.size(); i++) {
+                                    Bitmap bitmap = decodeUriAsBitmapFromNet(urls.get(i));
+                                    saveBitMap(bitmap, urls.get(i));
+                                }
+                            }
+                        }).start();
 
                         viewPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragmentList, huancunFragments);
                         mViewPager.setAdapter(viewPagerAdapter);
@@ -266,7 +298,7 @@ public class LdptRadarFragment extends RxLazyFragment {
 
                             @Override
                             public void onPageSelected(int position) {
-                                if (CallBackUtil.picdispath!=null) {
+                                if (CallBackUtil.picdispath != null) {
                                     CallBackUtil.doDispathPic(position);
                                 }
                                 MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
@@ -358,6 +390,50 @@ public class LdptRadarFragment extends RxLazyFragment {
         }
 
     };
+
+    private Bitmap decodeUriAsBitmapFromNet(String url) {
+        URL fileUrl = null;
+        Bitmap bitmap = null;
+
+        try {
+            fileUrl = new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            HttpURLConnection conn = (HttpURLConnection) fileUrl
+                    .openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+
+    }
+
+    public void saveBitMap(Bitmap bitmap, String name) {
+        int i = name.lastIndexOf("/");
+        name = name.substring(i + 1, name.length());
+        File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/images");//设置保存路径
+        if (!PHOTO_DIR.exists())
+            PHOTO_DIR.mkdirs();
+        File avaterFile = new File(PHOTO_DIR, name);//设置文件名称
+        try {
+            FileOutputStream fos = new FileOutputStream(avaterFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     @Override
     public void onDestroy() {

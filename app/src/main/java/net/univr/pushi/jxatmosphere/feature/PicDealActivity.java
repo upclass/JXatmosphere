@@ -3,22 +3,24 @@ package net.univr.pushi.jxatmosphere.feature;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.interfaces.Picdispath;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,37 +88,21 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
         CallBackUtil.setPicdispath(new Picdispath() {
             @Override
             public void onDispatchPic(int position) {
-                Picasso.with(mContext).load(urls.get(position)).placeholder(R.drawable.app_imageplaceholdsmall).memoryPolicy(MemoryPolicy.NO_STORE).into(image);
+//                Picasso.with(mContext).load(urls.get(position)).placeholder(R.drawable.app_imageplaceholdsmall).memoryPolicy(MemoryPolicy.NO_STORE).into(image);
+                Bitmap bitmap = readLocalImage(urls.get(position));
+                if(image!=null)
+                image.setImageBitmap(bitmap);
             }
         });
 
         Picasso.with(this).load(url).placeholder(R.drawable.app_imageplacehold).into(image);
         image.setOnTouchListener(this);
 
-//        CallBackUtil.setDispatchDrawable(this);
-//      try {
-//          Intent intent = getIntent();
-//          if (intent != null) {
-//              byte [] mypics = intent.getByteArrayExtra("picture");
-//              Bitmap bitmap = BitmapFactory.decodeByteArray(mypics,0,mypics.length);
-//              image.setImageBitmap(bitmap);
-//          }
-//      }catch (Exception e){
-//          e.printStackTrace();
-//      }
     }
 
 
     @Override
     public boolean onTouch(View v, MotionEvent motionEvent) {
-        //注意这一句的写法，用在多点触控中
-//        float pp1[] = new float[9];
-//        currentMatrix.getValues(pp1);
-//        float leftPosition1 = pp1[2];//图片左边的位置
-//        float upPostion2 = pp1[5];//图片顶部的位置
-//        if(motionEvent.getX()<leftPosition1||motionEvent.getX()>(leftPosition1+imageWidth)||motionEvent.getY()<upPostion2||motionEvent.getY()>(upPostion2+imageHeight)){
-//             finish();
-//        }
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             // 在这里解释一下，在程序中我们将单点控制移动和双点控制缩放区分开（但是双点也是可以
             // 控制移动的)flag 的作用很简单，主要是用在单点移动时判断是否此次点击是否将要移动（不好描述，请读者自行细想一下）
@@ -250,8 +236,34 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
 
     @Override
     public void finish() {
-        super.finish();
+        CallBackUtil.picdispath=null;
         CallBackUtil.doDispatchLight();
+        super.finish();
+    }
+
+
+
+
+
+
+    //读取本地图片
+    public Bitmap readLocalImage(String name) {
+        int i = name.lastIndexOf("/");
+        name = name.substring(i + 1, name.length());
+        File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+ "/images");//设置保存路径
+        Bitmap bitmap = null;
+        try {
+            File avaterFile = new File(PHOTO_DIR, name);
+            if (avaterFile.exists()) {
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+                opts.inJustDecodeBounds = true;
+                bitmap = BitmapFactory.decodeFile(PHOTO_DIR +"/" +name);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+
     }
 
 }
