@@ -47,24 +47,35 @@ public class WtfPicFragment extends RxLazyFragment {
     EcxwgFragment ecxwgFragment;
     //判断当前是否点击就取消
     boolean isCancle;
+    private static ArrayList<String> temp;
 
 
-    public static WtfPicFragment newInstance(String url, String type, WtfRapidFragment wtfRapidFragment) {
+    public static WtfPicFragment newInstance(String url, String type, WtfRapidFragment wtfRapidFragment, List<String> urls) {
         WtfPicFragment wtfPicFragment = new WtfPicFragment();
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
         bundle.putString("type", type);
+        temp = new ArrayList<>();
+        for (int i = 0; i < urls.size(); i++) {
+            temp.add(urls.get(i));
+        }
+        bundle.putStringArrayList("urls", temp);
         wtfPicFragment.wtfRapidFragment = wtfRapidFragment;
         wtfPicFragment.setArguments(bundle);
         return wtfPicFragment;
     }
 
 
-    public static WtfPicFragment newInstance(String url, String type, EcxwgFragment ecxwgFragment) {
+    public static WtfPicFragment newInstance(String url, String type, EcxwgFragment ecxwgFragment, List<String> urls) {
         WtfPicFragment wtfPicFragment = new WtfPicFragment();
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
         bundle.putString("type", type);
+        temp = new ArrayList<>();
+        for (int i = 0; i < urls.size(); i++) {
+            temp.add(urls.get(i));
+        }
+        bundle.putStringArrayList("urls", temp);
         wtfPicFragment.ecxwgFragment = ecxwgFragment;
         wtfPicFragment.setArguments(bundle);
         return wtfPicFragment;
@@ -83,6 +94,7 @@ public class WtfPicFragment extends RxLazyFragment {
         if (getArguments() != null) {
             //取出保存的值
             url = getArguments().getString("url");
+            temp = getArguments().getStringArrayList("urls");
             type = getArguments().getString("type");
         }
         Picasso.with(getActivity()).load(url).placeholder(R.drawable.app_imageplacehold).into(pic);
@@ -92,18 +104,19 @@ public class WtfPicFragment extends RxLazyFragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PicDealActivity.class);
                 intent.putExtra("url", finalUrl);
+                intent.putStringArrayListExtra("urls", temp);
                 startActivity(intent);
             }
         });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isCancle==true){
+                if (isCancle == true) {
                     recyclerView.setVisibility(View.GONE);
                     fab.setImageResource(R.drawable.map_time);
-                    isCancle=false;
-                }else
-                getOneMenu();
+                    isCancle = false;
+                } else
+                    getOneMenu();
             }
         });
     }
@@ -116,7 +129,7 @@ public class WtfPicFragment extends RxLazyFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timeOneMenu -> {
-                    isCancle=true;
+                    isCancle = true;
                     fab.setImageResource(R.drawable.map_error);
                     List<String> data = timeOneMenu.getData();
                     mAdapter.setNewData(data);

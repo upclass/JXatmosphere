@@ -98,6 +98,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
                 getSupportFragmentManager(), list);
         // 绑定适配器
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
 
         CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override

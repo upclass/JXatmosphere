@@ -182,7 +182,9 @@ public class LdptRadarFragment extends RxLazyFragment {
 
                             @Override
                             public void onPageSelected(int position) {
-
+                                if (CallBackUtil.picdispath!=null) {
+                                    CallBackUtil.doDispathPic(position);
+                                }
                                 MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
                                 GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                                 clickBeenStop.setOnclick(false);

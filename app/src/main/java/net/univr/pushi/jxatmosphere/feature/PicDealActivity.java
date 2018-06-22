@@ -251,6 +251,7 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
     @Override
     public void finish() {
         super.finish();
+        CallBackUtil.picdispath=null;
         CallBackUtil.doDispatchLight();
     }
 

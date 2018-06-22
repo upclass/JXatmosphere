@@ -1,8 +1,11 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -14,6 +17,8 @@ import net.univr.pushi.jxatmosphere.adapter.EcxwgOneMenuAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.EcOneMenu;
 import net.univr.pushi.jxatmosphere.fragments.EcxwgFragment;
+import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
+import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
@@ -63,7 +68,42 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
         leave.setOnClickListener(this);
         list = new ArrayList<>();
         getTestData();
-    }
+        CallBackUtil.setBrightness(new BrightnessActivity() {
+            @Override
+            public void onDispatchDarken() {
+                final Window window = getWindow();
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.5f);
+                valueAnimator.setDuration(500);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        WindowManager.LayoutParams params = window.getAttributes();
+                        params.alpha = (Float) animation.getAnimatedValue();
+                        window.setAttributes(params);
+                    }
+                });
+
+                valueAnimator.start();
+            }
+
+            @Override
+            public void onDispatchLight() {
+                final Window window = getWindow();
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.5f, 1.0f);
+                valueAnimator.setDuration(500);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        WindowManager.LayoutParams params = window.getAttributes();
+                        params.alpha = (Float) animation.getAnimatedValue();
+                        window.setAttributes(params);
+                    }
+                });
+
+                valueAnimator.start();
+            }
+        });
+}
 
     @Override
     public void onClick(View v) {

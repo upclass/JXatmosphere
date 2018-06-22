@@ -166,6 +166,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dmcgjcBeen -> {
                     List<DmcgjcmenuBeen.DataBean> data = dmcgjcBeen.getData();
+                    DmcgjcmenuBeen.DataBean swzd=new DmcgjcmenuBeen.DataBean();
+                    swzd.setZnName("气象水文站点");
+                    data.add(swzd);
                     for (int i = 0; i < data.size(); i++) {
                         if (i == 0) {
                             DmcgjcmenuBeen.DataBean temp = data.get(i);
@@ -247,14 +250,14 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
 
     public void initScrollView() {
-        if (type.equals("rain")) {
-            handler.postAtTime(new Runnable() {
-                @Override
-                public void run() {
-                    scrollview.scrollTo(50, 0);
-                }
-            }, 2000);
-        }
+//        if (type.equals("rain")) {
+//            handler.postAtTime(new Runnable() {
+//                @Override
+//                public void run() {
+//                    scrollview.scrollTo(50, 0);
+//                }
+//            }, 2000);
+//        }
         if (type.equals("temp")) {
             handler.postAtTime(new Runnable() {
                 @Override
@@ -316,6 +319,10 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
                 TextView title = ((TextView) view);
                 String menu = title.getText().toString();
+                if (menu.equals("气象水文站点")) {
+                    viewPager.setCurrentItem(0);
+                }
+
                 if (menu.equals("6分钟累计降水")) {
                     ctype = "rain_sum_6";
                 }

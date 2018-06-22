@@ -35,6 +35,7 @@ import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.EcOneMenu;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
+import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
@@ -160,7 +161,9 @@ public class EcxwgFragment extends RxLazyFragment {
                 .subscribe(ectwomenu -> {
                     List<DmcgjcmenuBeen.DataBean> menu = ectwomenu.getData();
                     if (menu == null || menu.size() == 0)
-                        menu1Linear.setVisibility(View.GONE);
+//                        menu1Linear.setVisibility(View.GONE);
+                        mRecyclerView1.setVisibility(View.GONE);
+
                     else {
                         for (int i = 0; i < menu.size(); i++) {
                             if (i == 0) {
@@ -607,7 +610,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this);
+                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this,urls);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -622,7 +625,9 @@ public class EcxwgFragment extends RxLazyFragment {
 
                         @Override
                         public void onPageSelected(int position) {
-
+                            if (CallBackUtil.picdispath!=null) {
+                                CallBackUtil.doDispathPic(position);
+                            }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
                             GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                             clickBeenStop.setOnclick(false);
@@ -698,7 +703,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this);
+                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this,urls);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -713,7 +718,9 @@ public class EcxwgFragment extends RxLazyFragment {
 
                         @Override
                         public void onPageSelected(int position) {
-
+                            if (CallBackUtil.picdispath!=null) {
+                                CallBackUtil.doDispathPic(position);
+                            }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
                             GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                             clickBeenStop.setOnclick(false);
