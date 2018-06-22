@@ -16,6 +16,7 @@ public class CallBackUtil {
     public static void setBrightness(BrightnessActivity brightness1) {
         brightness = brightness1;
     }
+
     public static void setPicdispath(Picdispath picdispath1) {
         picdispath = picdispath1;
     }
@@ -23,12 +24,14 @@ public class CallBackUtil {
     public static void doDispatchDarken() {
         brightness.onDispatchDarken();
     }
+
     public static void doDispatchLight() {
         brightness.onDispatchLight();
     }
 
 
-    public static void doDispathPic(int  position) {
+    public static void doDispathPic(int position) {
         picdispath.onDispatchPic(position);
     }
+
 }
