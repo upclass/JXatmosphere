@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -40,10 +39,16 @@
         android:layout_height="0dp"
         android:layout_weight="3">
 
-        <ImageView
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/colorAccent" />-->
+        <com.esri.arcgisruntime.mapping.view.MapView
+            android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorAccent" />
+            android:layout_height="match_parent">
+
+        </com.esri.arcgisruntime.mapping.view.MapView>
 
         <LinearLayout
             android:layout_height="35dp"
@@ -83,6 +88,7 @@
         </LinearLayout>
 
         <android.support.percent.PercentRelativeLayout
+            android:id="@+id/weizhi_relative"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="bottom"
@@ -106,7 +112,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/province_txt"
                 android:gravity="center"
-                android:text="江西省"
+                android:text="加载中"
                 android:textColor="@color/white" />
 
             <TextView
@@ -128,7 +134,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/city_txt"
                 android:gravity="center"
-                android:text="抚州市"
+                android:text="加载中"
                 android:textColor="@color/white" />
 
             <TextView
@@ -150,10 +156,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/town_txt"
                 android:gravity="center"
-                android:text="崇仁县"
+                android:text="加载中"
                 android:textColor="@color/white" />
 
             <ImageView
+                android:id="@+id/delete"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_centerVertical="true"
@@ -194,16 +201,18 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/one_hour"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/gd_text_bg1"
+                android:background="@drawable/gd_text_bg1_select"
                 android:gravity="center"
                 android:text="1h"
-                android:textColor="@color/toolbar_color"
+                android:textColor="@color/white"
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/three_hour"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -215,6 +224,7 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/six_hour"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -226,6 +236,7 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/twelve_hour"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -237,6 +248,7 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/twentyfour_hour"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -256,17 +268,19 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tuxin_tv"
                 style="@style/three_title"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/gd_text_bg1"
+                android:background="@drawable/gd_text_bg1_select"
                 android:gravity="center"
                 android:text="图形"
-                android:textColor="@color/toolbar_color" />
+                android:textColor="@color/white" />
 
             <TextView
+                android:id="@+id/biaoge_tv"
                 style="@style/three_title"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
@@ -297,12 +311,13 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="15dp"
                 android:gravity="center"
-                android:text="2018-06-14 08:00:00"
+                android:text="加载中"
                 android:textColor="@color/black" />
 
         </LinearLayout>
 
         <HorizontalScrollView
+            android:id="@+id/scroll"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
@@ -312,13 +327,16 @@
 
                 <net.univr.pushi.jxatmosphere.widget.NoScrollWebView
                     android:id="@+id/webView"
-                    android:layout_width="1500dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
             </LinearLayout>
 
 
         </HorizontalScrollView>
 
-
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
     </LinearLayout>
 </LinearLayout>

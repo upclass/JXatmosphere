@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="时间"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tqms"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="天气描述"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="气温(℃)"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/rain"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="降雨量(cm)"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/windspeed"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="风速(m/s)"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/humitity"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="相对湿度(%)"
+        android:textColor="@color/black" />
+
+</LinearLayout>

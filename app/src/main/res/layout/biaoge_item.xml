@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="14日09时"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tqms"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="多云"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="24.2℃"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/rain"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/windspeed"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="1.3"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/humitity"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="85.1"
+        android:textColor="@color/black" />
+
+</LinearLayout>

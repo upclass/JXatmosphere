@@ -140,7 +140,7 @@ dependencies {
     //蒲公英
     compile 'com.pgyersdk:sdk:2.8.1'
     //加入arcgis
-//    implementation 'com.esri.arcgisruntime:arcgis-android:100.2.1'
+    implementation 'com.esri.arcgisruntime:arcgis-android:100.2.1'
     // ECharts - Java类库 http://git.oschina.net/free/ECharts
     compile 'com.github.abel533:ECharts:2.2.7'
     compile 'com.google.code.gson:gson:2.7'
