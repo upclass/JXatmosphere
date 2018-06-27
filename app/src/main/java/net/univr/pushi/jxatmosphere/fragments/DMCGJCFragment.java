@@ -166,9 +166,11 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dmcgjcBeen -> {
                     List<DmcgjcmenuBeen.DataBean> data = dmcgjcBeen.getData();
-                    DmcgjcmenuBeen.DataBean swzd=new DmcgjcmenuBeen.DataBean();
-                    swzd.setZnName("气象水文站点");
-                    data.add(swzd);
+                    if (type.equals("rain")) {
+                        DmcgjcmenuBeen.DataBean swzd = new DmcgjcmenuBeen.DataBean();
+                        swzd.setZnName("气象水文站点");
+                        data.add(swzd);
+                    }
                     for (int i = 0; i < data.size(); i++) {
                         if (i == 0) {
                             DmcgjcmenuBeen.DataBean temp = data.get(i);
@@ -489,7 +491,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
                     recycle_skipto_position = 1;
-                    now_postion = DmcgjcDeen.getData().getUrls().size() ;
+                    now_postion = DmcgjcDeen.getData().getUrls().size();
                     isStart = false;
                     if (isStartPic != null) {
                         isStartPic.setImageResource(R.drawable.app_start);
@@ -504,7 +506,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     fragmentList.clear();
                     urls = DmcgjcDeen.getData().getUrls();
                     for (int i = 0; i < urls.size(); i++) {
-                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i), urls);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -519,7 +521,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
                         @Override
                         public void onPageSelected(int position) {
-                            if (CallBackUtil.picdispath!=null) {
+                            if (CallBackUtil.picdispath != null) {
                                 CallBackUtil.doDispathPic(position);
                             }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
@@ -584,7 +586,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 switch (msg.what) {
                     case 1:
                         mViewPager.setCurrentItem(recycle_skipto_position - 1);
-                        if (recycle_skipto_position > multitemList.size() -1) {
+                        if (recycle_skipto_position > multitemList.size() - 1) {
                             recycle_skipto_position = 1;
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;

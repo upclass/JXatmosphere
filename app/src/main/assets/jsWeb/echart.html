@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ECharts">
+    <title>ECharts · Example</title>
+    <script src="http://echarts.baidu.com/echarts2/doc/example/www/js/echarts.js"></script>
+    <script src="./android.js"></script>
+
+</head>
+
+<body onload="loadALineChart()">
+<script type="text/javascript">
+
+        // 路径配置
+        require.config({
+          paths: {
+            echarts: 'http://echarts.baidu.com/echarts2/doc/example/www/js'
+            //echarts: './www/js'
+          }
+        });
+
+
+        // 使用
+        require(
+          [
+            'echarts',
+            'echarts/chart/line', // 使用柱状图就加载line模块，按需加载
+          ]
+        )
+
+
+
+</script>
+
+<hr/>
+<p>
+<div id="chart2" style="height:180px;width:100%"/>
+</p>
+
+</body>
+</html>
