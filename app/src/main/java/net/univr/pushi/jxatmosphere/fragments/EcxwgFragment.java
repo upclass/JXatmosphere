@@ -99,10 +99,12 @@ public class EcxwgFragment extends RxLazyFragment {
     List<String> menuTime;
     private ListPopupWindow popupWindow;
     private ArrayAdapter timeAdapter;
+    List<String> oneTime = new ArrayList<>();
+    List<String> twoTime = new ArrayList<>();
     Boolean oneMenu = true;
 
 
-    public static EcxwgFragment newInstance(String ctype1, String ctype2, CustomViewPager oneMenuViewpager, List<Fragment> oneMenuFragmentList,int whichFragment) {
+    public static EcxwgFragment newInstance(String ctype1, String ctype2, CustomViewPager oneMenuViewpager, List<Fragment> oneMenuFragmentList, int whichFragment) {
         EcxwgFragment ecxwgFragment = new EcxwgFragment();
         Bundle bundle = new Bundle();
         bundle.putString("ctype1", ctype1);
@@ -110,7 +112,7 @@ public class EcxwgFragment extends RxLazyFragment {
         ecxwgFragment.setArguments(bundle);
         ecxwgFragment.oneMenuViewpager = oneMenuViewpager;
         ecxwgFragment.oneMenuFragmentList = oneMenuFragmentList;
-        ecxwgFragment.whichFragment=whichFragment;
+        ecxwgFragment.whichFragment = whichFragment;
 
         return ecxwgFragment;
     }
@@ -421,17 +423,20 @@ public class EcxwgFragment extends RxLazyFragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if (oneMenu) {
-                    getTwoTime(menuTime.get(position));
+                    String s = menuTime.get(position);
+                    getTwoTime1(s);
                     oneMenu = false;
                 } else {
                     getTestDataBytime(menuTime.get(position));
-                    getOneTime();
+                    time.setText(menuTime.get(position));
+                    menuTime.clear();
+                    for (int i = 0; i < oneTime.size(); i++) {
+                        menuTime.add(oneTime.get(i));
+                    }
+                    timeAdapter.notifyDataSetChanged();
                     oneMenu = true;
                 }
-
-
                 popupWindow.dismiss();
-
             }
         });
         time.setOnClickListener(new View.OnClickListener() {
@@ -451,14 +456,8 @@ public class EcxwgFragment extends RxLazyFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(wtfOneMenu -> {
-                    menuTime.clear();
-                    List<String> menu = wtfOneMenu.getData();
-                    for (int i = 0; i < menu.size(); i++) {
-                        menuTime.add(menu.get(i));
-                    }
-                    timeAdapter.notifyDataSetChanged();
-                    time.setText(menuTime.get(0));
-
+                    oneTime = wtfOneMenu.getData();
+                    getTwoTime(oneTime.get(0));
                 }, throwable -> {
                     throwable.printStackTrace();
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -472,13 +471,33 @@ public class EcxwgFragment extends RxLazyFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timeTwoMenu -> {
+                    twoTime = timeTwoMenu.getData();
+                    time.setText(twoTime.get(0));
                     menuTime.clear();
-                    List<String> data = timeTwoMenu.getData();
-                    for (int i = 0; i < data.size(); i++) {
-                        menuTime.add(data.get(i));
+                    for (int i = 0; i < oneTime.size(); i++) {
+                        menuTime.add(oneTime.get(i));
                     }
                     timeAdapter.notifyDataSetChanged();
-                    time.setText(menuTime.get(0));
+                }, throwable -> {
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
+    private void getTwoTime1(String param) {
+        RetrofitHelper.getDataForecastAPI()
+                .getDataForecastContentBytime1(type, param)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(timeTwoMenu -> {
+                    twoTime = timeTwoMenu.getData();
+                    menuTime.clear();
+                    for (int i = 0; i < twoTime.size(); i++) {
+                        menuTime.add(twoTime.get(i));
+                    }
+                    timeAdapter.notifyDataSetChanged();
+                    time.setText(param);
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -610,7 +629,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this,urls);
+                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this, urls);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -625,7 +644,7 @@ public class EcxwgFragment extends RxLazyFragment {
 
                         @Override
                         public void onPageSelected(int position) {
-                            if (CallBackUtil.picdispath!=null) {
+                            if (CallBackUtil.picdispath != null) {
                                 CallBackUtil.doDispathPic(position);
                             }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
@@ -703,7 +722,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this,urls);
+                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), "ecmwf_thin", this, urls);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -718,7 +737,7 @@ public class EcxwgFragment extends RxLazyFragment {
 
                         @Override
                         public void onPageSelected(int position) {
-                            if (CallBackUtil.picdispath!=null) {
+                            if (CallBackUtil.picdispath != null) {
                                 CallBackUtil.doDispathPic(position);
                             }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);

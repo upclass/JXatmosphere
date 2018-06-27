@@ -161,13 +161,37 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                     type = "rain";
                     testType = "rain";
                 }
-                if ((spDown.getSelectedItem()).equals("气温")) {
-                    type = "temp";
+                if ((spDown.getSelectedItem()).equals("最高温")) {
+                    type = "tmax24";
                     testType = "tmax24";
+                }
+                if ((spDown.getSelectedItem()).equals("最低温")) {
+                    type = "tmin24";
+                    testType = "tmin24";
                 }
                 if ((spDown.getSelectedItem()).equals("天气现象")) {
                     type = "wp";
                     testType = "wp";
+                }
+                if ((spDown.getSelectedItem()).equals("2米温度")) {
+                    type = "t2m";
+                    testType = "t2m";
+                }
+                if ((spDown.getSelectedItem()).equals("雾")) {
+                    type = "vis";
+                    testType = "vis";
+                }
+                if ((spDown.getSelectedItem()).equals("10米风")) {
+                    type = "10uv";
+                    testType = "10uv";
+                }
+                if ((spDown.getSelectedItem()).equals("2米湿度")) {
+                    type = "rh2m";
+                    testType = "rh2m";
+                }
+                if ((spDown.getSelectedItem()).equals("总云量")) {
+                    type = "tcc";
+                    testType = "tcc";
                 }
                 getTwoMenu();
             }
@@ -318,14 +342,67 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 if (type.equals("rain") && menu.equals("逐12小时")) {
                     testType = "rain12";
                 }
-                if (type.equals("rain") && menu.equals("逐12小时")) {
-                    testType = "rain12";
+                if (type.equals("rain") && menu.equals("逐24小时")) {
+                    testType = "rain24";
                 }
-                if (type.equals("temp") && menu.equals("24小时最高温")) {
+                if (type.equals("tmax24") && menu.equals("24小时最高温")) {
                     testType = "tmax24";
                 }
-                if (type.equals("temp") && menu.equals("24小时最低温")) {
+                if (type.equals("tmin24") && menu.equals("24小时最低温")) {
                     testType = "tmin24";
+                }
+                if (type.equals("t2m") && menu.equals("逐小时")) {
+                    testType = "t2m";
+                }
+
+                if (type.equals("vis") && menu.equals("逐小时")) {
+                    testType = "vis";
+                }
+                if (type.equals("vis") && menu.equals("逐3小时")) {
+                    testType = "vis3";
+                }
+                if (type.equals("vis") && menu.equals("逐6小时")) {
+                    testType = "vis6";
+                }
+                if (type.equals("vis") && menu.equals("逐12小时")) {
+                    testType = "vis12";
+                }
+                if (type.equals("vis") && menu.equals("逐24小时")) {
+                    testType = "vis24";
+                }
+
+                if (type.equals("10uv") && menu.equals("逐小时")) {
+                    testType = "10uv";
+                }
+                if (type.equals("10uv") && menu.equals("逐3小时")) {
+                    testType = "10uv3";
+                }
+                if (type.equals("10uv") && menu.equals("逐6小时")) {
+                    testType = "10uv6";
+                }
+                if (type.equals("10uv") && menu.equals("逐12小时")) {
+                    testType = "10uv12";
+                }
+                if (type.equals("10uv") && menu.equals("逐24小时")) {
+                    testType = "10uv24";
+                }
+                if (type.equals("rh2m") && menu.equals("逐小时")) {
+                    testType = "rh2m";
+                }
+                if (type.equals("tcc") && menu.equals("逐小时")) {
+                    testType = "tcc";
+                }
+                if (type.equals("tcc") && menu.equals("逐3小时")) {
+                    testType = "tcc3";
+                }
+                if (type.equals("tcc") && menu.equals("逐6小时")) {
+                    testType = "tcc6";
+                }
+                if (type.equals("tcc") && menu.equals("逐12小时")) {
+                    testType = "tcc12";
+                }
+                if (type.equals("tcc") && menu.equals("逐24小时")) {
+                    testType = "tcc24";
                 }
                 getTestdata();
             });

@@ -107,12 +107,13 @@ public class WeatherWarnFragment extends RxLazyFragment {
                     multiItemGdybTxList.add(multiItemGdybTx);
                     for (int i = 0; i < length; i++) {
                         MultiItemGdybTx multiItemGdybTx1 = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, null);
-                        GkdmClickBeen clickBeen = new GkdmClickBeen();
                         String temp = QxfxBeen.getData().getTime().get(i);
-                        String time = temp.substring(length - 4, length);
-                        StringBuilder timeBuilder=new StringBuilder(time);
-                        timeBuilder.insert(2,":");
-                        time=timeBuilder.toString();
+                        GkdmClickBeen clickBeen = new GkdmClickBeen();
+                        String time = temp;
+//                        String time = temp.substring(length - 4, length);
+//                        StringBuilder timeBuilder = new StringBuilder(time);
+//                        timeBuilder.insert(2, ":");
+//                        time = timeBuilder.toString();
                         clickBeen.setText(time);
                         if (i == 0) clickBeen.setOnclick(true);
                         else clickBeen.setOnclick(false);
@@ -128,7 +129,7 @@ public class WeatherWarnFragment extends RxLazyFragment {
                     }
                     list.clear();
                     for (int i = 0; i < url.size(); i++) {
-                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(url.get(i),url);
+                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(url.get(i), url);
                         list.add(picLoadFragment);
                     }
                     pagerAdapter = new MyPagerAdapter(getChildFragmentManager(), list, fragmentHuancun);
@@ -141,7 +142,7 @@ public class WeatherWarnFragment extends RxLazyFragment {
 
                         @Override
                         public void onPageSelected(int position) {
-                            if (CallBackUtil.picdispath!=null) {
+                            if (CallBackUtil.picdispath != null) {
                                 CallBackUtil.doDispathPic(position);
                             }
                             MultiItemGdybTx multiItemGdybTxStop = multiItemGdybTxList.get(now_postion);
