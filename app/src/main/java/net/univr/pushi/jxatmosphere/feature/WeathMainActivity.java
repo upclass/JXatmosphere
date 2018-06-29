@@ -1,14 +1,22 @@
 package net.univr.pushi.jxatmosphere.feature;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
@@ -18,7 +26,10 @@ import net.univr.pushi.jxatmosphere.adapter.WeathMainBdybAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.BdskBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
+import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.GetResourceInt;
+import net.univr.pushi.jxatmosphere.utils.YujinWeiZhi;
 import net.univr.pushi.jxatmosphere.widget.FullyLinearLayoutManager;
 
 import java.text.SimpleDateFormat;
@@ -29,12 +40,12 @@ import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class WeathMainActivity extends BaseActivity implements View.OnClickListener {
+public class WeathMainActivity extends BaseActivity implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
 
 
     @BindView(R.id.work_schedule_leave)
     ImageView workScheduleLeave;
-//    @BindView(R.id.share_to)
+    //    @BindView(R.id.share_to)
 //    ImageView shareTo;
     @BindView(R.id.date)
     TextView date;
@@ -56,10 +67,24 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     RecyclerView bdybRecycle;
     WeathMainAdapter mAdapter;
     WeathMainBdybAdapter mbdybAdapter;
+    @BindView(R.id.tqms)
+    TextView tqms;
+    @BindView(R.id.fbdw)
+    TextView fbdw;
+    @BindView(R.id.bd_tqtp)
+    ImageView bd_tqtp;
+    @BindView(R.id.yjxh)
+    LinearLayout yjxh;
+    @BindView(R.id.yjxh1)
+    LinearLayout yjxh1;
+
+
     private int mDay;
     private String lat;
     private String lon;
     String adress;
+    GeocodeSearch geocoderSearch;
+    String city;
 
     @Override
     public int getLayoutId() {
@@ -71,16 +96,22 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         super.initViews(savedInstanceState);
 //        shareTo.setOnClickListener(this);
         workScheduleLeave.setOnClickListener(this);
+        geocoderSearch = new GeocodeSearch(this);
+        geocoderSearch.setOnGeocodeSearchListener(this);
         Intent intent = getIntent();
         lat = intent.getStringExtra("lat");
         lon = intent.getStringExtra("lon");
         adress = intent.getStringExtra("address");
-        if(lat==null)
-            Toast.makeText(context, "没有定位权限", Toast.LENGTH_SHORT).show();
         initDate();
-        getTestData();
-        getTestData1();
-        getTestData2();
+        if (lat == null)
+            Toast.makeText(context, "没有定位权限", Toast.LENGTH_SHORT).show();
+        else {
+            getAddress(new LatLonPoint(Double.valueOf(lat), Double.valueOf(lon)));
+            getTestData();
+            getTestData1();
+            getTestData2();
+        }
+
     }
 
     //    private  WeathMainAdapter getAdapter{
@@ -273,7 +304,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
 
                     List<GdybBeen.DataBean> data = gdybBeen.getData();
                     bdybRecycle.setLayoutManager(layoutManagerVertical);
-                    mbdybAdapter = new WeathMainBdybAdapter(context,data);
+                    mbdybAdapter = new WeathMainBdybAdapter(context, data);
                     bdybRecycle.setAdapter(mbdybAdapter);
                     bdybRecycle.setHasFixedSize(true);
                     bdybRecycle.setNestedScrollingEnabled(false);
@@ -282,7 +313,54 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
+    }
+
+    public void getTestData3() {
+        RetrofitHelper.getForecastWarn()
+                .getYujinInfoToBdsk(city)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(yuJinXinhaoBeen -> {
+                    List<YuJinXinhaoBeen.DataBean> data = yuJinXinhaoBeen.getData();
+                    if (data.size() > 0) yjxh1.setVisibility(View.VISIBLE);
+                    else yjxh.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < data.size(); i++) {
+                        String danwei = data.get(i).getDanwei();
+                        String subclass = data.get(i).getSubclass();
+                        String citySelect = data.get(i).getCitySelect();
+                        if (citySelect.contains(city)) {
+                            tqms.setText(subclass);
+                            fbdw.setText(danwei);
+                            String substring = subclass.substring(0, subclass.length() - 4);
+                            String picName = YujinWeiZhi.getPicName(substring);
+                            int resource = GetResourceInt.getResource(picName, context);
+                            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
+                            bd_tqtp.setImageBitmap(bitmap);
+                        }
+                    }
+                }, throwable -> {
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+
+    }
+
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+        city = regeocodeResult.getRegeocodeAddress().getTownship();
+        getTestData3();
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+    }
 
 
+    public void getAddress(final LatLonPoint latLonPoint) {
+        RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500,
+                GeocodeSearch.AMAP);
+        geocoderSearch.getFromLocationAsyn(query);
     }
 }

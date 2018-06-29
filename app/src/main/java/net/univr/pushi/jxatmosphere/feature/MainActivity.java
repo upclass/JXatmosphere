@@ -92,6 +92,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //卫星雷达
     @BindView(R.id.main_content_item1_1)
     PercentRelativeLayout ldpt_Wx;
+    @BindView(R.id.main_content_item2_2)
+    PercentRelativeLayout Zytqyb;
     //ec细网格
     @BindView(R.id.main_content_item0_1)
     PercentRelativeLayout ecxwg;
@@ -176,6 +178,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         more_weath.setOnClickListener(this);
         radarForecast.setOnClickListener(this);
         YujinXinhao.setOnClickListener(this);
+        Zytqyb.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -370,6 +373,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 intentMoreWeath.putExtra("lat", lat);
                 intentMoreWeath.putExtra("lon", lon);
                 startActivity(intentMoreWeath);
+                break;
+            case R.id.main_content_item2_2:
+                Intent zytqyb = new Intent(context, ZytqybActivity.class);
+                startActivity(zytqyb);
                 break;
             case R.id.main_content_item2_3:
                 Intent radarForecast = new Intent(context, RadarForecastActivity.class);

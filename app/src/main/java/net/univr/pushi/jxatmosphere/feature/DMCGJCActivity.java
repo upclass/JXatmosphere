@@ -41,6 +41,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
     DMCGJCFragment fragment3;
     DMCGJCFragment fragment4;
     DMCGJCFragment fragment5;
+    DMCGJCFragment fragment6;
 
 
     @Override
@@ -83,6 +84,9 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         String type5 = "pressure";
         String ctype5="pressure";
         fragment5 = DMCGJCFragment.newInstance(type5,ctype5,viewPager,list);
+        String type6 = "vis";
+        String ctype6="vis_min";
+        fragment6 = DMCGJCFragment.newInstance(type6,ctype6,viewPager,list);
 
 
         list.add(fragment);
@@ -91,6 +95,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         list.add(fragment3);
         list.add(fragment4);
         list.add(fragment5);
+        list.add(fragment6);
 
 
         // 设置适配器

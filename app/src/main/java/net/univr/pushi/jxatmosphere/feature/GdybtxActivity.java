@@ -13,10 +13,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -56,18 +53,21 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
     @BindView(R.id.back)
     ImageView leave;
 
-    @BindView(R.id.spDwon)
-    Spinner spDown;
+//    @BindView(R.id.spDwon)
+//    Spinner spDown;
 
     @BindView(R.id.recycler1)
     RecyclerView mRecyclerView1;
     @BindView(R.id.recycler3)
     RecyclerView mRecyclerView3;
+    @BindView(R.id.menu)
+    RecyclerView menuRecycleview;
 
-    private ArrayAdapter<String> spinAdapter;
-    private List<String> oneMenu;
+//    private ArrayAdapter<String> spinAdapter;
+//    private List<String> oneMenu=new ArrayList<>();
 
     private DmcgjcMenuAdapter mAdapter1;
+    private DmcgjcMenuAdapter menuAdapter;
     private MultiGdybTxAdapter mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
 
@@ -100,9 +100,13 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
 
     private void initView() {
-        initSpinner();
+//        initSpinner();
+
         getOneMenu();
         initOnclick();
+        type="rain";
+        testType = "rain";
+        getTwoMenu();
 
         CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override
@@ -147,61 +151,25 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         leave.setOnClickListener(this);
     }
 
-    private void initSpinner() {
-        oneMenu = new ArrayList<>();
-        spinAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, oneMenu);
-        /*adapter设置一个下拉列表样式，参数为系统子布局*/
-        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        /*spDown加载适配器*/
-        spDown.setAdapter(spinAdapter);
-        spDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if ((spDown.getSelectedItem()).equals("降水量")) {
-                    type = "rain";
-                    testType = "rain";
-                }
-                if ((spDown.getSelectedItem()).equals("最高温")) {
-                    type = "tmax24";
-                    testType = "tmax24";
-                }
-                if ((spDown.getSelectedItem()).equals("最低温")) {
-                    type = "tmin24";
-                    testType = "tmin24";
-                }
-                if ((spDown.getSelectedItem()).equals("天气现象")) {
-                    type = "wp";
-                    testType = "wp";
-                }
-                if ((spDown.getSelectedItem()).equals("2米温度")) {
-                    type = "t2m";
-                    testType = "t2m";
-                }
-                if ((spDown.getSelectedItem()).equals("雾")) {
-                    type = "vis";
-                    testType = "vis";
-                }
-                if ((spDown.getSelectedItem()).equals("10米风")) {
-                    type = "10uv";
-                    testType = "10uv";
-                }
-                if ((spDown.getSelectedItem()).equals("2米湿度")) {
-                    type = "rh2m";
-                    testType = "rh2m";
-                }
-                if ((spDown.getSelectedItem()).equals("总云量")) {
-                    type = "tcc";
-                    testType = "tcc";
-                }
-                getTwoMenu();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
+//    private void initSpinner() {
+//        oneMenu = new ArrayList<>();
+//        spinAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, oneMenu);
+//        /*adapter设置一个下拉列表样式，参数为系统子布局*/
+//        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        /*spDown加载适配器*/
+//        spDown.setAdapter(spinAdapter);
+//        spDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//    }
 
 
     public void setStart(Boolean start) {
@@ -228,19 +196,25 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void getOneMenu() {
+        getMenuAdapter();
         RetrofitHelper.getForecastWarn()
                 .getGdybtOneMenu()
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxOneMenu -> {
-                    oneMenu.clear();
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxOneMenu.getData().getMenu();
-                    type = menu.get(0).getType();
+                    List<DmcgjcmenuBeen.DataBean >destmenu=new ArrayList<>();
                     for (int i = 0; i < menu.size(); i++) {
-                        oneMenu.add(menu.get(i).getName());
+                        DmcgjcmenuBeen.DataBean dataBean=new DmcgjcmenuBeen.DataBean();
+                        if(i==0){
+                            dataBean.setSelect(true);
+                        }
+
+                        dataBean.setZnName(menu.get(i).getName());
+                        destmenu.add(dataBean);
                     }
-                    spinAdapter.notifyDataSetChanged();
+                    menuAdapter.setNewData(destmenu);
 
                 }, throwable -> {
                     throwable.printStackTrace();
@@ -259,7 +233,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribe(gdybtxTwoMenu -> {
                     getAdapter1().setLastposition(0);
                     isStart = false;
-                    if(isStartPic!=null){
+                    if (isStartPic != null) {
                         isStartPic.setImageResource(R.drawable.app_start);
                         mViewPager.setScanScroll(true);
                     }
@@ -298,7 +272,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
             mRecyclerView1.setAdapter(mAdapter1);
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
-                if(isStartPic!=null){
+                if (isStartPic != null) {
                     isStartPic.setImageResource(R.drawable.app_start);
                     mViewPager.setScanScroll(true);
                 }
@@ -410,6 +384,70 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         return mAdapter1;
     }
 
+    private DmcgjcMenuAdapter getMenuAdapter() {
+        if (menuAdapter == null) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
+
+            menuAdapter = new DmcgjcMenuAdapter(mData1);
+            menuRecycleview.setLayoutManager(layoutManager);
+            menuRecycleview.setAdapter(menuAdapter);
+            menuAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+
+                List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
+                int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
+                DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
+                DmcgjcmenuBeen.DataBean dataBean = data.get(position);
+                dataBeanlasted.setSelect(false);
+                dataBean.setSelect(true);
+                adapter.notifyItemChanged(lastclick);
+                adapter.notifyItemChanged(position);
+                ((DmcgjcMenuAdapter) adapter).setLastposition(position);
+
+                TextView title = ((TextView) view);
+                String menu = title.getText().toString();
+                if (menu.equals("降水量")) {
+                    type = "rain";
+                    testType = "rain";
+                }
+                if (menu.equals("最高温")) {
+                    type = "tmax24";
+                    testType = "tmax24";
+                }
+                if (menu.equals("最低温")) {
+                    type = "tmin24";
+                    testType = "tmin24";
+                }
+                if (menu.equals("天气现象")) {
+                    type = "wp";
+                    testType = "wp";
+                }
+                if (menu.equals("2米温度")) {
+                    type = "t2m";
+                    testType = "t2m";
+                }
+                if (menu.equals("雾")) {
+                    type = "vis";
+                    testType = "vis";
+                }
+                if (menu.equals("10米风")) {
+                    type = "10uv";
+                    testType = "10uv";
+                }
+                if (menu.equals("2米湿度")) {
+                    type = "rh2m";
+                    testType = "rh2m";
+                }
+                if (menu.equals("总云量")) {
+                    type = "tcc";
+                    testType = "tcc";
+                }
+                getTwoMenu();
+            });
+        }
+        return menuAdapter;
+    }
+
     private void getTestdata() {
         progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
@@ -421,17 +459,12 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtx -> {
                     GdybtxBeen.DataBean data = gdybtx.getData();
-                     List<String> timeList=new ArrayList<>();
-                     List<String> picListtemp=new ArrayList<>();
+                    List<String> timeList = new ArrayList<>();
+                    List<String> picListtemp = new ArrayList<>();
 
                     for (int i = 0; i < gdybtx.getData().getTimeList().size(); i++) {
-                        String s = gdybtx.getData().getTimeList().get(i);
-                        if(Integer.valueOf(s)>72)
-                                break;
-                            else{
-                                timeList.add(gdybtx.getData().getTimeList().get(i));
-                                picListtemp.add(gdybtx.getData().getPicList().get(i));
-                            }
+                        timeList.add(gdybtx.getData().getTimeList().get(i));
+                        picListtemp.add(gdybtx.getData().getPicList().get(i));
                     }
                     data.setPicList(picListtemp);
                     data.setTimeList(timeList);
@@ -440,14 +473,14 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
-                    if(isStartPic!=null){
+                    if (isStartPic != null) {
                         isStartPic.setImageResource(R.drawable.app_start);
                         mViewPager.setScanScroll(true);
                     }
 
                     list = new ArrayList<>();
                     List<String> picList = gdybtx.getData().getPicList();
-                    ArrayList<String>picTemp=new ArrayList<>();
+                    ArrayList<String> picTemp = new ArrayList<>();
                     for (int i = 0; i < picList.size(); i++) {
                         picTemp.add(picList.get(i));
                         ImageView imageView = new ImageView(context);
@@ -458,7 +491,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, PicDealActivity.class);
                                 intent.putExtra("url", picList.get(finalI));
-                                intent.putStringArrayListExtra("urls",picTemp);
+                                intent.putStringArrayListExtra("urls", picTemp);
                                 startActivity(intent);
                             }
                         });
@@ -476,7 +509,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
                         @Override
                         public void onPageSelected(int position) {
-                            if (CallBackUtil.picdispath!=null) {
+                            if (CallBackUtil.picdispath != null) {
                                 CallBackUtil.doDispathPic(position);
                             }
                             MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);

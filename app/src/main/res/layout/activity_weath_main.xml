@@ -5,9 +5,9 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        style="@style/header_color"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_40"
-        style="@style/header_color"
         android:paddingLeft="@dimen/spacing_12"
         android:paddingRight="@dimen/spacing_12">
 
@@ -33,17 +33,17 @@
             android:textColor="@color/white" />
 
         <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="horizontal">-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="horizontal">-->
 
-            <!--<ImageView-->
-                <!--android:id="@+id/share_to"-->
-                <!--style="@style/feture_pic"-->
-                <!--android:src="@drawable/nav_share" />-->
+        <!--<ImageView-->
+        <!--android:id="@+id/share_to"-->
+        <!--style="@style/feture_pic"-->
+        <!--android:src="@drawable/nav_share" />-->
 
         <!--</LinearLayout>-->
 
@@ -110,20 +110,20 @@
                         android:orientation="vertical">
 
                         <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="0dp"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="N/A"-->
-                            <!--android:textColor="@color/black" />-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:text="N/A"-->
+                        <!--android:textColor="@color/black" />-->
 
                         <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="0dp"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="未知"-->
-                            <!--android:textColor="@color/black" />-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:text="未知"-->
+                        <!--android:textColor="@color/black" />-->
 
 
                     </LinearLayout>
@@ -329,10 +329,10 @@
                 android:layout_height="wrap_content">
 
                 <android.support.v7.widget.RecyclerView
-                    android:layout_marginTop="20dp"
                     android:id="@+id/bdybRecycle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
                     android:scrollbars="none" />
 
             </RelativeLayout>
@@ -344,9 +344,11 @@
                 android:background="@color/white" />
 
             <LinearLayout
+                android:id="@+id/yjxh"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="vertical">
+                android:layout_height="90dp"
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -356,6 +358,82 @@
                     android:text="预警信号"
                     android:textColor="@color/black"
                     android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="当前位置暂无预警信息"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/yjxh1"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:text="预警信号"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/bd_tqtp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/red_code_wave" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tqms"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="高温黄色预警新海"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="发布单位:"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/fbdw"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="发布单位"
+                                android:textColor="@color/black" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
 

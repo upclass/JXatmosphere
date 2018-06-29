@@ -204,6 +204,34 @@
                         android:visibility="invisible"></View>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linear7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_7"
+                        style="@style/two_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/spacing_15"
+                        android:layout_marginRight="@dimen/spacing_15"
+                        android:text="能见度"
+                        android:textColor="@color/black" />
+
+                    <View
+                        android:id="@+id/tabline7"
+                        android:layout_width="42dp"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="@dimen/spacing_3"
+                        android:background="@color/toolbar_color"
+                        android:visibility="invisible"></View>
+                </LinearLayout>
+
+
 
             </LinearLayout>
 

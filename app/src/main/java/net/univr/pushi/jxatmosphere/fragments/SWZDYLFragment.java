@@ -49,6 +49,8 @@ public class SWZDYLFragment extends RxLazyFragment implements View.OnClickListen
     TextView tv5;
     @BindView(R.id.tv_6)
     TextView tv6;
+    @BindView(R.id.tv_7)
+    TextView tv7;
 
     @BindView(R.id.tabline1)
     View tabline1;
@@ -62,7 +64,8 @@ public class SWZDYLFragment extends RxLazyFragment implements View.OnClickListen
     View tabline5;
     @BindView(R.id.tabline6)
     View tabline6;
-
+    @BindView(R.id.tabline7)
+    View tabline7;
     ViewPager viewPager;
     List<Fragment> list;
 
@@ -85,6 +88,7 @@ public class SWZDYLFragment extends RxLazyFragment implements View.OnClickListen
         tv4.setOnClickListener(this);
         tv5.setOnClickListener(this);
         tv6.setOnClickListener(this);
+        tv7.setOnClickListener(this);
 
     }
 
@@ -177,7 +181,7 @@ public class SWZDYLFragment extends RxLazyFragment implements View.OnClickListen
                 break;
 
             case R.id.tv_3:
-//                viewPager.setCurrentItem(2);
+                viewPager.setCurrentItem(2);
 //                ((DMCGJCActivity) getContext()).setIsPalyInit(2);
 //                tv3.setTextSize(17);
 //                tv3.setTextColor(getResources().getColor(R.color.toolbar_color));
@@ -244,6 +248,8 @@ public class SWZDYLFragment extends RxLazyFragment implements View.OnClickListen
                 break;
             case R.id.tv_6:
                 viewPager.setCurrentItem(5);
+            case R.id.tv_7:
+                viewPager.setCurrentItem(6);
 //                ((DMCGJCActivity) getContext()).setIsPalyInit(5);
 //                tv6.setTextSize(17);
 //                tv6.setTextColor(getResources().getColor(R.color.toolbar_color));

@@ -94,6 +94,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     TextView tv5;
     @BindView(R.id.tv_6)
     TextView tv6;
+    @BindView(R.id.tv_7)
+    TextView tv7;
 
     @BindView(R.id.tabline1)
     View tabline1;
@@ -107,6 +109,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     View tabline5;
     @BindView(R.id.tabline6)
     View tabline6;
+    @BindView(R.id.tabline7)
+    View tabline7;
     @BindView(R.id.scrollview)
     HorizontalScrollView scrollview;
 
@@ -216,6 +220,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         tv4.setOnClickListener(this);
         tv5.setOnClickListener(this);
         tv6.setOnClickListener(this);
+        tv7.setOnClickListener(this);
 
         initOneMenu();
 
@@ -246,6 +251,11 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             tv6.setTextColor(getResources().getColor(R.color.toolbar_color));
             tv6.setTextSize(17);
             tabline6.setVisibility(View.VISIBLE);
+        }
+        if (type.equals("vis")) {
+            tv7.setTextColor(getResources().getColor(R.color.toolbar_color));
+            tv7.setTextSize(17);
+            tabline7.setVisibility(View.VISIBLE);
         }
         initScrollView();
     }
@@ -292,6 +302,14 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 }
             }, 2000);
         }
+        if (type.equals("vis")) {
+            handler.postAtTime(new Runnable() {
+                @Override
+                public void run() {
+                    scrollview.scrollBy(580, 0);
+                }
+            }, 2000);
+        }
     }
 
 
@@ -308,131 +326,132 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 mViewPager.setScanScroll(true);
                 if (isStartPic != null)
                     isStartPic.setImageResource(R.drawable.app_start);
-
-                List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
-                int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
-                DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
-                DmcgjcmenuBeen.DataBean dataBean = data.get(position);
-                dataBeanlasted.setSelect(false);
-                dataBean.setSelect(true);
-                adapter.notifyItemChanged(lastclick);
-                adapter.notifyItemChanged(position);
-                ((DmcgjcMenuAdapter) adapter).setLastposition(position);
-
                 TextView title = ((TextView) view);
                 String menu = title.getText().toString();
                 if (menu.equals("气象水文站点")) {
                     viewPager.setCurrentItem(0);
-                }
+                    SWZDYLFragment swzdylFragment = (SWZDYLFragment) list.get(0);
+                    swzdylFragment.setIsPalyInit();
+                } else {
+                    List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
+                    int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
+                    DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
+                    DmcgjcmenuBeen.DataBean dataBean = data.get(position);
+                    dataBeanlasted.setSelect(false);
+                    dataBean.setSelect(true);
+                    adapter.notifyItemChanged(lastclick);
+                    adapter.notifyItemChanged(position);
+                    ((DmcgjcMenuAdapter) adapter).setLastposition(position);
 
-                if (menu.equals("6分钟累计降水")) {
-                    ctype = "rain_sum_6";
-                }
+                    if (menu.equals("6分钟累计降水")) {
+                        ctype = "rain_sum_6";
+                    }
 
-                if (menu.equals("1小时累计降水")) {
-                    ctype = "rain_sum1";
-                }
-                if (menu.equals("3小时累计降水")) {
-                    ctype = "rain_sum3";
-                }
-                if (menu.equals("6小时累计降水")) {
-                    ctype = "rain_sum6";
-                }
-                if (menu.equals("12小时累计降水")) {
-                    ctype = "rain_sum12";
-                }
-                if (menu.equals("24小时累计降水")) {
-                    ctype = "rain_sum";
-                }
+                    if (menu.equals("1小时累计降水")) {
+                        ctype = "rain_sum1";
+                    }
+                    if (menu.equals("3小时累计降水")) {
+                        ctype = "rain_sum3";
+                    }
+                    if (menu.equals("6小时累计降水")) {
+                        ctype = "rain_sum6";
+                    }
+                    if (menu.equals("12小时累计降水")) {
+                        ctype = "rain_sum12";
+                    }
+                    if (menu.equals("24小时累计降水")) {
+                        ctype = "rain_sum";
+                    }
 
-                if (menu.equals("气温")) {
-                    ctype = "temp";
-                }
-                if (menu.equals("平均气温（20时-20时）")) {
-                    ctype = "temp_avg_20";   //日期型
-                }
-                if (menu.equals("最高气温")) {
-                    ctype = "temp_max";
-                }
-                if (menu.equals("最高气温（20时-20时）")) {
-                    ctype = "temp_max_20";//日期型
-                }
-                if (menu.equals("最低气温")) {
-                    ctype = "temp_min";
-                }
-                if (menu.equals("最低气温（20时-20时）")) {
-                    ctype = "temp_min_20";//日期型
-                }
-                if (menu.equals("24小时变温")) {
-                    ctype = "temp_deta24";
-                }
-                if (menu.equals("1小时变温")) {
-                    ctype = "temp_deta1";
-                }
-                if (menu.equals("体感温度")) {
-                    ctype = "body_feeling_temp";
-                }
-                if (menu.equals("最小水平能见度")) {
-                    ctype = "vis_min";
-                }
+                    if (menu.equals("气温")) {
+                        ctype = "temp";
+                    }
+                    if (menu.equals("平均气温（20时-20时）")) {
+                        ctype = "temp_avg_20";   //日期型
+                    }
+                    if (menu.equals("最高气温")) {
+                        ctype = "temp_max";
+                    }
+                    if (menu.equals("最高气温（20时-20时）")) {
+                        ctype = "temp_max_20";//日期型
+                    }
+                    if (menu.equals("最低气温")) {
+                        ctype = "temp_min";
+                    }
+                    if (menu.equals("最低气温（20时-20时）")) {
+                        ctype = "temp_min_20";//日期型
+                    }
+                    if (menu.equals("24小时变温")) {
+                        ctype = "temp_deta24";
+                    }
+                    if (menu.equals("1小时变温")) {
+                        ctype = "temp_deta1";
+                    }
+                    if (menu.equals("体感温度")) {
+                        ctype = "body_feeling_temp";
+                    }
+                    if (menu.equals("最小水平能见度")) {
+                        ctype = "vis_min";
+                    }
 
-                if (menu.equals("二分钟平均风速")) {
-                    ctype = "wind_2minute_avg";
-                }
-                if (menu.equals("十分钟平均风速")) {
-                    ctype = "wind_10minute_avg";
-                }
-                if (menu.equals("一小时内极大风速")) {
-                    ctype = "wind_great";
-                }
-                if (menu.equals("极大风速（20时-20时）")) {
-                    ctype = "wind_great_20";//日期型
-                }
-                if (menu.equals("一小时内最大风速")) {
-                    ctype = "wind_max";
-                }
-                if (menu.equals("瞬时风速")) {
-                    ctype = "wind_inst";
-                }
-                if (menu.equals("极大风速")) {
-                    ctype = "wind_inst_max";
-                }
-                if (menu.equals("最大风速")) {
-                    ctype = "wind_max_5";
-                }
-                if (menu.equals("一分钟平均风速")) {
-                    ctype = "wind_1minute_avg";
-                }
+                    if (menu.equals("二分钟平均风速")) {
+                        ctype = "wind_2minute_avg";
+                    }
+                    if (menu.equals("十分钟平均风速")) {
+                        ctype = "wind_10minute_avg";
+                    }
+                    if (menu.equals("一小时内极大风速")) {
+                        ctype = "wind_great";
+                    }
+                    if (menu.equals("极大风速（20时-20时）")) {
+                        ctype = "wind_great_20";//日期型
+                    }
+                    if (menu.equals("一小时内最大风速")) {
+                        ctype = "wind_max";
+                    }
+                    if (menu.equals("瞬时风速")) {
+                        ctype = "wind_inst";
+                    }
+                    if (menu.equals("极大风速")) {
+                        ctype = "wind_inst_max";
+                    }
+                    if (menu.equals("最大风速")) {
+                        ctype = "wind_max_5";
+                    }
+                    if (menu.equals("一分钟平均风速")) {
+                        ctype = "wind_1minute_avg";
+                    }
 
 
-                if (menu.equals("相对湿度")) {
-                    ctype = "humidity";
-                }
-                if (menu.equals("最小相对湿度")) {
-                    ctype = "humidity_min";
-                }
+                    if (menu.equals("相对湿度")) {
+                        ctype = "humidity";
+                    }
+                    if (menu.equals("最小相对湿度")) {
+                        ctype = "humidity_min";
+                    }
 
-                if (menu.equals("本站气压")) {
-                    ctype = "pressure";
+                    if (menu.equals("本站气压")) {
+                        ctype = "pressure";
+                    }
+                    if (menu.equals("3小时变压")) {
+                        ctype = "pressure_deta3";
+                    }
+                    if (menu.equals("24小时变压")) {
+                        ctype = "pressure_deta24";
+                    }
+                    if (menu.equals("1小时内最高气压")) {
+                        ctype = "pressure_max";
+                    }
+                    if (menu.equals("1小时内最低气压")) {
+                        ctype = "pressure_min";
+                    }
+                    if (menu.equals("海平面气压")) {
+                        ctype = "sea_level_pressure";
+                    }
+                    progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
+                    progressDialog.setCancelable(true);
+                    getTestdata();
                 }
-                if (menu.equals("3小时变压")) {
-                    ctype = "pressure_deta3";
-                }
-                if (menu.equals("24小时变压")) {
-                    ctype = "pressure_deta24";
-                }
-                if (menu.equals("1小时内最高气压")) {
-                    ctype = "pressure_max";
-                }
-                if (menu.equals("1小时内最低气压")) {
-                    ctype = "pressure_min";
-                }
-                if (menu.equals("海平面气压")) {
-                    ctype = "sea_level_pressure";
-                }
-                progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-                progressDialog.setCancelable(true);
-                getTestdata();
             });
         }
         return mAdapter1;
@@ -624,11 +643,11 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_1:
-                viewPager.setCurrentItem(0);
-                SWZDYLFragment swzdylFragment = (SWZDYLFragment) list.get(0);
-                swzdylFragment.setIsPalyInit();
-                break;
+//            case R.id.tv_1:
+//                viewPager.setCurrentItem(0);
+//                SWZDYLFragment swzdylFragment = (SWZDYLFragment) list.get(0);
+//                swzdylFragment.setIsPalyInit();
+//                break;
             case R.id.tv_2:
                 viewPager.setCurrentItem(1);
                 DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(1);
@@ -655,6 +674,11 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 viewPager.setCurrentItem(5);
                 DMCGJCFragment dmcgjcFragment5 = (DMCGJCFragment) list.get(5);
                 dmcgjcFragment5.setIsPalyInit(5);
+                break;
+            case R.id.tv_7:
+                viewPager.setCurrentItem(6);
+                DMCGJCFragment dmcgjcFragment6 = (DMCGJCFragment) list.get(6);
+                dmcgjcFragment6.setIsPalyInit(6);
                 break;
         }
 

@@ -23,6 +23,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.WebTiledLayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
@@ -75,6 +76,8 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
     TextView six_hour;
     @BindView(R.id.twelve_hour)
     TextView twelve_hour;
+    @BindView(R.id.gd_dizhi)
+    TextView sousuo_tv;
     @BindView(R.id.twentyfour_hour)
     TextView twentyfour_hour;
     @BindView(R.id.province)
@@ -88,6 +91,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.mapview)
     MapView mapView;
     Basemap slbasemap;
+    ArcGISMapImageLayer gridLayer;
     String interval = "1";
     private Object times[];
     private Object temps[];
@@ -95,6 +99,10 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
     private Object winds[];
     private Object humiditys[];
     private List<GdybBeen.DataBean> data = new ArrayList<>();
+    Double x;
+    Double y;
+    int i=0;
+
 
     @Override
     public int getLayoutId() {
@@ -105,7 +113,6 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
     public void initViews(Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
         initView();
-        getTestdata();
         tuxin_tv.setOnClickListener(this);
         biaoge_tv.setOnClickListener(this);
         one_hour.setOnClickListener(this);
@@ -132,17 +139,11 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
                 slbasemap = new Basemap();
                 WebTiledLayer webTiledLayer = TianDiTuMethodsClass.CreateTianDiTuTiledLayer
                         (TianDiTuMethodsClass.LayerType.TIANDITU_VECTOR_2000);
-                WebTiledLayer webTiledLayer1 = TianDiTuMethodsClass.CreateTianDiTuTiledLayer
-                        (TianDiTuMethodsClass.LayerType
-                                .TIANDITU_VECTOR_ANNOTATION_CHINESE_2000);
-                ArcGISMapImageLayer arcGISMapImageLayer=new ArcGISMapImageLayer("http://192.168.0.188:6080/arcgis/rest/services/JX_disaster/jx/MapServer");
-                slbasemap.getBaseLayers().add(arcGISMapImageLayer);
-//                slbasemap.getBaseLayers().add(webTiledLayer1);
-
+                slbasemap.getBaseLayers().add(webTiledLayer);
+                slbasemap.getBaseLayers().add(getGridLayer());
                 if (mapView.getMap() == null) {
                     ArcGISMap arcGISMap = new ArcGISMap();
                     mapView.setMap(arcGISMap);
-
                 }
                 if (mapView.getMap().getBasemap() != slbasemap) {
                     mapView.getMap().setBasemap(slbasemap);
@@ -151,6 +152,22 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+    }
+
+    private ArcGISMapImageLayer getGridLayer() {
+        if (gridLayer == null) {
+            gridLayer = new ArcGISMapImageLayer("http://59.55.128.156:6080/arcgis/rest/services/JX_disaster/jx/MapServer");
+//            mapView.getMap().getOperationalLayers().add(gridLayer);
+            gridLayer.addDoneLoadingListener(() -> {
+                if (gridLayer.getLoadStatus() == LoadStatus.LOADED) {
+//                    mapView.setViewpointGeometryAsync(gridLayer.getFullExtent());
+                    mapView.setViewpointGeometryAsync(gridLayer.getFullExtent(), 10);
+                } else {
+                    ToastUtils.showShort("图层加载失败");
+                }
+            });
+        }
+        return gridLayer;
     }
 
     /**
@@ -182,6 +199,16 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
         locationDisplay.setNavigationPointHeightFactor(0.5f);
         //启动定位
         locationDisplay.startAsync();
+        locationDisplay.addLocationChangedListener(new LocationDisplay.LocationChangedListener() {
+            @Override
+            public void onLocationChanged(LocationDisplay.LocationChangedEvent locationChangedEvent) {
+                x=locationChangedEvent.getLocation().getPosition().getX();
+                y=locationChangedEvent.getLocation().getPosition().getY();
+                if(i==0)
+                getTestdata();
+                i++;
+            }
+        });
     }
 
     private void initView() {
@@ -209,7 +236,6 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
         webSettings.setLoadWithOverviewMode(true);
 //        mWebView.setInitialScale(200);
 //        mWebView.setVerticalScrollBarEnabled(false);//允许垂直滚动
-
         mWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 //        mWebView.setHorizontalScrollBarEnabled(false);//禁止水平滚动
 
@@ -221,7 +247,8 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
         dialog.setCancelable(true);
         start_forecast_time.setText(initForecastTime());
         RetrofitHelper.getWeatherMonitorAPI()
-                .getGdyb("114.25781250000001", "27.800209937418252", interval, "bd09ll", initForecastTime())
+//                .getGdyb("114.25781250000001", "27.800209937418252", interval, "bd09ll", initForecastTime())
+                .getGdyb(String.valueOf(x), String.valueOf(y), interval, "bd09ll", initForecastTime())
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -230,6 +257,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
                     province.setText(gdybBeen.getLocation().getProvince());
                     city.setText(gdybBeen.getLocation().getCity());
                     town.setText(gdybBeen.getLocation().getDistrict());
+                    sousuo_tv.setText(gdybBeen.getLocation().getDistrict());
                     getadapter().setNewData(data);
                     times = new Object[data.size()];
                     temps = new Object[data.size()];
@@ -253,11 +281,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
                         winds[i] = dataBean.getWindSpeed();
                         humiditys[i] = dataBean.getHumidity();
                     }
-//                    String option=new WebAppInterface(context).getLineChartOptions(times, temps, rains, winds, humiditys);
-//                    mWebView.loadUrl("javascript:loadALineChart('\"+Arrays.toString(times)+\"','\"+ Arrays.toString(temps)+\"','\"+Arrays.toString(rains)+\"','\"+Arrays.toString(winds)+\"','\"+Arrays.toString(winds)+\"')");
-//                    mWebView.loadUrl("javascript:loadALineChart('\" + option + \"')");
-//                    ('"+Arrays.toString(hzl_array)+"')");
-                    if(scrollView.getVisibility()==View.VISIBLE){
+                    if (scrollView.getVisibility() == View.VISIBLE) {
                         int width = 250 * (data.size());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.MATCH_PARENT);
                         mWebView.setLayoutParams(lp);
@@ -411,7 +435,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
         public GsonOption markLineChartOptions() {
             GsonOption option = new GsonOption();
             option.calculable(false);
-            option.tooltip().trigger(Trigger.axis).formatter("气温:{c}℃ <br/> 降雨量:{d}cm <br/>风速:{e}m/s<br/>相对湿度:{f}%");
+            option.tooltip().trigger(Trigger.axis).formatter("气温:{c}℃ <br/> 降雨量:{c1}cm <br/>风速:{c2}m/s<br/>相对湿度:{c3}%");
             //设置位置左上右下边距
             option.grid().x(40);
             option.grid().y(5);
@@ -440,10 +464,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
             line3.smooth(true).data(winds).itemStyle().normal().lineStyle().shadowColor("rgba(4,3,8,2.7)");
             Line line4 = new Line();
             line4.smooth(true).data(humiditys).itemStyle().normal().lineStyle().shadowColor("rgba(5,1,2,4.7)");
-            option.series(line1,line2,line3,line4);
-//            option.series();
-//            option.series();
-//            option.series();
+            option.series(line1, line2, line3, line4);
             return option;
         }
     }

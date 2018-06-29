@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gaikuan"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/gaikuan_pic"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/red_code_wave" />
+
+        <TextView
+            android:id="@+id/gaikuan_subclass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:text="高温黄色预警信号"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/gaikuan_qxj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:text="鄱阳县气象局"
+            android:textColor="@color/yujin_black"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:text="|"
+            android:textColor="@color/tine_black"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/gaikuan_sj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:text="2018/-06-26-26T08:"
+            android:textColor="@color/yujin_black"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/see_xiangqing"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/map_bottom_list" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/gb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="20dp"
+            android:text="关闭"
+            android:textColor="@color/yujin_black"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+</LinearLayout>
+
+

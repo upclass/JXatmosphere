@@ -570,7 +570,7 @@ public class EcxwgFragment extends RxLazyFragment {
 
                     if (madapter == null) {
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                        madapter = new EcxwgOneMenuAdapter(menu);
+                        madapter = new EcxwgOneMenuAdapter(menu,getContext());
                         recycleView.setLayoutManager(layoutManager);
                         recycleView.setAdapter(madapter);
                         recycleView.smoothScrollToPosition(whichFragment);

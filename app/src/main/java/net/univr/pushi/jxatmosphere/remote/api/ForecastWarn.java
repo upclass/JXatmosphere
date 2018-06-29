@@ -8,6 +8,7 @@ import net.univr.pushi.jxatmosphere.beens.GeneforeBeen;
 import net.univr.pushi.jxatmosphere.beens.QxfxBeen;
 import net.univr.pushi.jxatmosphere.beens.RadarForecastBeen;
 import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
+import net.univr.pushi.jxatmosphere.beens.ZytqybBeen;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -55,6 +56,11 @@ public interface ForecastWarn {
     Observable<RadarForecastBeen> radarForecastFrom20(@Query("type")String type);
     //预警信号
     @GET("yujin.do")
-    Observable<YuJinXinhaoBeen> getYujinInfo();
+    Observable<YuJinXinhaoBeen> getYujinInfo(@Query("tag")String tag);
+    //本地实况getTest3所需预警信号数据
+    @GET("yujin!getYujingbycity.do")
+    Observable<YuJinXinhaoBeen> getYujinInfoToBdsk(@Query("city")String city);
+    @GET("zytqybAction.do")
+    Observable<ZytqybBeen> getZytqyb(@Query("startTime")String startTime, @Query("endTime")String endTime);
 
 }

@@ -61,7 +61,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "net.univr.pushi.jxatmosphere"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 26
         versionCode 3
         versionName "1.1"
@@ -144,4 +144,8 @@ dependencies {
     // ECharts - Java类库 http://git.oschina.net/free/ECharts
     compile 'com.github.abel533:ECharts:2.2.7'
     compile 'com.google.code.gson:gson:2.7'
+    //日历控件
+    compile 'com.github.applikeysolutions:cosmocalendar:1.0.4'
+    //高德逆地理编码
+    compile 'com.amap.api:search:latest.integration'
 }
