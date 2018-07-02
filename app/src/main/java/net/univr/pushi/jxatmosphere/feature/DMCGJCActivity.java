@@ -27,7 +27,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
     @BindView(R.id.viewpager)
     CustomViewPager viewPager;
 
-//    @BindView(R.id.share_to)
+    //    @BindView(R.id.share_to)
 //    ImageView share_to;
     @BindView(R.id.back)
     ImageView leave;
@@ -39,6 +39,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
     DMCGJCFragment fragment2;
     DMCGJCFragment fragment3;
     DMCGJCFragment fragment4;
+    //    DMCGJCFragment fragment5;
     DMCGJCFragment fragment5;
     DMCGJCFragment fragment6;
 
@@ -56,36 +57,29 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
     }
 
 
-
-
     private void initView() {
         viewPager.setScanScroll(false);
         list = new ArrayList<>();
-
-//        share_to.setOnClickListener(this);
         leave.setOnClickListener(this);
 
-
-//        SWZDYLFragment fragment = SWZDYLFragment.newInstance(viewPager,list);
-
         String type1 = "rain";
-        String ctype1="swzd";
-        fragment1 = DMCGJCFragment.newInstance(type1,ctype1,viewPager,list);
+        String ctype1 = "swzd";
+        fragment1 = DMCGJCFragment.newInstance(type1, ctype1, viewPager, list);
         String type2 = "temp";
-        String ctype2="temp";
-        fragment2 = DMCGJCFragment.newInstance(type2,ctype2,viewPager,list);
+        String ctype2 = "temp";
+        fragment2 = DMCGJCFragment.newInstance(type2, ctype2, viewPager, list);
         String type3 = "wind";
-        String ctype3="wind_2minute_avg";
-        fragment3 = DMCGJCFragment.newInstance(type3,ctype3,viewPager,list);
+        String ctype3 = "wind_2minute_avg";
+        fragment3 = DMCGJCFragment.newInstance(type3, ctype3, viewPager, list);
         String type4 = "humidity";
-        String ctype4="humidity";
-        fragment4 = DMCGJCFragment.newInstance(type4,ctype4,viewPager,list);
+        String ctype4 = "humidity";
+        fragment4 = DMCGJCFragment.newInstance(type4, ctype4, viewPager, list);
         String type5 = "pressure";
-        String ctype5="pressure";
-        fragment5 = DMCGJCFragment.newInstance(type5,ctype5,viewPager,list);
+        String ctype5 = "pressure";
+        fragment5 = DMCGJCFragment.newInstance(type5, ctype5, viewPager, list);
         String type6 = "vis";
-        String ctype6="vis_min";
-        fragment6 = DMCGJCFragment.newInstance(type6,ctype6,viewPager,list);
+        String ctype6 = "vis_min";
+        fragment6 = DMCGJCFragment.newInstance(type6, ctype6, viewPager, list);
 
 
 //        list.add(fragment);
@@ -172,7 +166,6 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         }
 
     }
-
 
 
 }

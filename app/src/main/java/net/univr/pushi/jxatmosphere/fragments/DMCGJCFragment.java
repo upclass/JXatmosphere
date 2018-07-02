@@ -55,8 +55,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @BindView(R.id.recycler3)
     RecyclerView mRecyclerView3;
 
-//    @BindView(R.id.pic_ready)
-//    ImageView isStartPic;
 
     private Context mcontext;
 
@@ -66,7 +64,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     List<Fragment> fragmentList = new ArrayList<>();
     List<String> urls;
 
-    //    List<GkdmClickBeen> mData3 = new ArrayList<>();
+
     String type;
     String ctype;
 
@@ -86,35 +84,21 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
     ImageView isStartPic;
 
-    @BindView(R.id.tv_1)
-    TextView tv1;
-    @BindView(R.id.tv_2)
-    TextView tv2;
-    @BindView(R.id.tv_3)
-    TextView tv3;
-    @BindView(R.id.tv_4)
-    TextView tv4;
-    @BindView(R.id.tv_5)
-    TextView tv5;
-    @BindView(R.id.tv_6)
-    TextView tv6;
-    @BindView(R.id.tv_7)
-    TextView tv7;
+    @BindView(R.id.swzd_view)
+    View view_didver;
+    @BindView(R.id.linear2)
+    LinearLayout tv2;
+    @BindView(R.id.linear3)
+    LinearLayout tv3;
+    @BindView(R.id.linear4)
+    LinearLayout tv4;
+    @BindView(R.id.linear5)
+    LinearLayout tv5;
+    @BindView(R.id.linear6)
+    LinearLayout tv6;
+    @BindView(R.id.linear7)
+    LinearLayout tv7;
 
-    @BindView(R.id.tabline1)
-    View tabline1;
-    @BindView(R.id.tabline2)
-    View tabline2;
-    @BindView(R.id.tabline3)
-    View tabline3;
-    @BindView(R.id.tabline4)
-    View tabline4;
-    @BindView(R.id.tabline5)
-    View tabline5;
-    @BindView(R.id.tabline6)
-    View tabline6;
-    @BindView(R.id.tabline7)
-    View tabline7;
     @BindView(R.id.scrollview)
     HorizontalScrollView scrollview;
     @BindView(R.id.swzd_lay)
@@ -206,28 +190,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 });
 
         getTestdata();
-
-//        isStartPic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (isStart == false) {
-//                    isStartPic.setImageResource(R.drawable.app_end);
-//                    Message message = uiHandler.obtainMessage();
-//                    message.what = 1;
-//                    uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
-//                    isStart = true;
-//                    mViewPager.setScanScroll(false);
-//                } else {
-//                    uiHandler.removeCallbacksAndMessages(null);
-//                    isStartPic.setImageResource(R.drawable.app_start);
-//                    isStart = false;
-//                    mViewPager.setScanScroll(true);
-//                }
-//
-//            }
-//        });
-
-        tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
         tv3.setOnClickListener(this);
         tv4.setOnClickListener(this);
@@ -241,69 +203,63 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
     private void initOneMenu() {
         if (type.equals("rain")) {
-            tv2.setTextColor(getResources().getColor(R.color.toolbar_color));
-            tv2.setTextSize(17);
-            tabline2.setVisibility(View.VISIBLE);
+            TextView childAt = (TextView) tv2.getChildAt(0);
+            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
         }
         if (type.equals("temp")) {
-            tv3.setTextColor(getResources().getColor(R.color.toolbar_color));
-            tv3.setTextSize(17);
-            tabline3.setVisibility(View.VISIBLE);
+            TextView childAt = (TextView) tv3.getChildAt(0);
+            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
         }
         if (type.equals("wind")) {
-            tv4.setTextColor(getResources().getColor(R.color.toolbar_color));
-            tv4.setTextSize(17);
-            tabline4.setVisibility(View.VISIBLE);
+            TextView childAt = (TextView) tv4.getChildAt(0);
+            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
         }
         if (type.equals("humidity")) {
-            tv5.setTextColor(getResources().getColor(R.color.toolbar_color));
-            tv5.setTextSize(17);
-            tabline5.setVisibility(View.VISIBLE);
+            TextView childAt = (TextView) tv5.getChildAt(0);
+            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
         }
         if (type.equals("pressure")) {
-            tv6.setTextColor(getResources().getColor(R.color.toolbar_color));
-            tv6.setTextSize(17);
-            tabline6.setVisibility(View.VISIBLE);
+            TextView childAt = (TextView) tv6.getChildAt(0);
+            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
         }
         if (type.equals("vis")) {
-            tv7.setTextColor(getResources().getColor(R.color.toolbar_color));
-            tv7.setTextSize(17);
-            tabline7.setVisibility(View.VISIBLE);
+            TextView childAt = (TextView) tv7.getChildAt(0);
+            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
         }
         initScrollView();
     }
 
 
     public void initScrollView() {
-//        if (type.equals("rain")) {
-//            handler.postAtTime(new Runnable() {
-//                @Override
-//                public void run() {
-//                    scrollview.scrollTo(50, 0);
-//                }
-//            }, 2000);
-//        }
+        if (type.equals("rain")) {
+            handler.postAtTime(new Runnable() {
+                @Override
+                public void run() {
+                    scrollview.scrollTo(0, 0);
+                }
+            }, 1000);
+        }
         if (type.equals("temp")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(250, 0);
+                    scrollview.scrollTo(320, 0);
                 }
-            }, 2000);
+            }, 1000);
         }
         if (type.equals("wind")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(550, 0);
+                    scrollview.scrollTo(460, 0);
                 }
-            }, 2000);
+            }, 1000);
         }
         if (type.equals("humidity")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(580, 0);
+                    scrollview.scrollTo(710, 0);
                 }
             }, 2000);
         }
@@ -311,21 +267,22 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollBy(580, 0);
+                    scrollview.scrollTo(1200, 0);
                 }
-            }, 2000);
+            }, 1000);
         }
         if (type.equals("vis")) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollBy(580, 0);
+                    scrollview.scrollTo(1400, 0);
                 }
-            }, 2000);
+            }, 1000);
         }
     }
 
     private void swzdInfo() {
+        view_didver.setVisibility(View.GONE);
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
         RetrofitHelper.getWeatherMonitorAPI()
@@ -372,12 +329,22 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 TextView title = ((TextView) view);
                 String menu = title.getText().toString();
                 if (menu.equals("气象水文站点")) {
+                    ctype = "swzd";
                     swzd_lay.setVisibility(View.VISIBLE);
                     mViewPager.setVisibility(View.GONE);
                     mRecyclerView3.setVisibility(View.GONE);
-//                    viewPager.setCurrentItem(0);
-//                    SWZDYLFragment swzdylFragment = (SWZDYLFragment) list.get(0);
-//                    swzdylFragment.setIsPalyInit();
+                    List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
+                    int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
+                    DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
+                    DmcgjcmenuBeen.DataBean dataBean = data.get(position);
+                    dataBeanlasted.setSelect(false);
+                    dataBean.setSelect(true);
+                    adapter.notifyItemChanged(lastclick);
+                    adapter.notifyItemChanged(position);
+                    ((DmcgjcMenuAdapter) adapter).setLastposition(position);
+                    progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
+                    progressDialog.setCancelable(true);
+                    getTestdata();
                 } else {
                     List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                     int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
@@ -581,6 +548,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
+                    view_didver.setVisibility(View.VISIBLE);
                     recycle_skipto_position = 1;
                     now_postion = DmcgjcDeen.getData().getUrls().size();
                     isStart = false;
@@ -715,39 +683,34 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.tv_1:
-//                viewPager.setCurrentItem(0);
-//                SWZDYLFragment swzdylFragment = (SWZDYLFragment) list.get(0);
-//                swzdylFragment.setIsPalyInit();
-//                break;
-            case R.id.tv_2:
+            case R.id.linear2:
                 viewPager.setCurrentItem(0);
                 DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(0);
                 dmcgjcFragment1.setIsPalyInit(0);
                 break;
 
-            case R.id.tv_3:
+            case R.id.linear3:
                 viewPager.setCurrentItem(1);
                 DMCGJCFragment dmcgjcFragment2 = (DMCGJCFragment) list.get(1);
                 dmcgjcFragment2.setIsPalyInit(1);
                 break;
-            case R.id.tv_4:
+            case R.id.linear4:
                 viewPager.setCurrentItem(2);
                 DMCGJCFragment dmcgjcFragment3 = (DMCGJCFragment) list.get(2);
                 dmcgjcFragment3.setIsPalyInit(2);
                 break;
-            case R.id.tv_5:
+            case R.id.linear5:
                 viewPager.setCurrentItem(3);
                 DMCGJCFragment dmcgjcFragment4 = (DMCGJCFragment) list.get(3);
                 dmcgjcFragment4.setIsPalyInit(3);
 
                 break;
-            case R.id.tv_6:
+            case R.id.linear6:
                 viewPager.setCurrentItem(4);
                 DMCGJCFragment dmcgjcFragment5 = (DMCGJCFragment) list.get(4);
                 dmcgjcFragment5.setIsPalyInit(4);
                 break;
-            case R.id.tv_7:
+            case R.id.linear7:
                 viewPager.setCurrentItem(5);
                 DMCGJCFragment dmcgjcFragment6 = (DMCGJCFragment) list.get(5);
                 dmcgjcFragment6.setIsPalyInit(5);
@@ -759,15 +722,12 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
 
     public void setIsPalyInit(int current) {
-        for (int i = 0; i <list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             if (current == i) ;
             else {
                 ((DMCGJCFragment) list.get(i)).setStart(false);
                 ((DMCGJCFragment) list.get(i)).setImage();
             }
-
         }
-
     }
-
 }

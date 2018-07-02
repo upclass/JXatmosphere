@@ -6,12 +6,6 @@
     tools:context="net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment">
 
 
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/recycler2"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_weight="1"></android.support.v7.widget.RecyclerView>-->
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/swzd_lay"
@@ -40,10 +34,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
 
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="@color/tine_black" />-->
+    <View
+        android:id="@+id/swzd_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:visibility="gone"
+        android:background="@color/tine_black" />
 
 
     <LinearLayout
@@ -51,19 +47,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!--<RelativeLayout-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:background="@color/white">-->
-
-        <!--<ImageView-->
-        <!--android:id="@+id/pic_ready"-->
-        <!--android:layout_width="25dp"-->
-        <!--android:layout_height="25dp"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:src="@drawable/app_start" />-->
-        <!--</RelativeLayout>-->
 
 
         <android.support.v7.widget.RecyclerView
@@ -139,13 +122,6 @@
                         android:text="累计降水量"
                         android:textColor="@color/black" />
 
-                    <View
-                        android:id="@+id/tabline2"
-                        android:layout_width="80dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/toolbar_color"
-                        android:visibility="invisible"></View>
                 </LinearLayout>
 
                 <LinearLayout
@@ -164,15 +140,6 @@
                         android:layout_marginRight="@dimen/spacing_15"
                         android:text="气温"
                         android:textColor="@color/black" />
-
-                    <View
-                        android:id="@+id/tabline3"
-                        android:layout_width="34dp"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/toolbar_color"
-                        android:visibility="invisible"></View>
                 </LinearLayout>
 
                 <LinearLayout
@@ -191,15 +158,6 @@
                         android:layout_marginRight="@dimen/spacing_15"
                         android:text="风向风速"
                         android:textColor="@color/black" />
-
-                    <View
-                        android:id="@+id/tabline4"
-                        android:layout_width="66dp"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/toolbar_color"
-                        android:visibility="invisible"></View>
                 </LinearLayout>
 
 
@@ -220,16 +178,6 @@
                         android:text="相对湿度"
                         android:textColor="@color/black" />
 
-                    <View
-                        android:id="@+id/tabline5"
-                        android:layout_width="64dp"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/toolbar_color"
-                        android:visibility="invisible"></View>
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -248,16 +196,6 @@
                         android:layout_marginRight="@dimen/spacing_15"
                         android:text="气压"
                         android:textColor="@color/black" />
-
-                    <View
-                        android:id="@+id/tabline6"
-                        android:layout_width="34dp"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/toolbar_color"
-                        android:visibility="invisible"></View>
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -276,15 +214,6 @@
                         android:layout_marginRight="@dimen/spacing_15"
                         android:text="能见度"
                         android:textColor="@color/black" />
-
-                    <View
-                        android:id="@+id/tabline7"
-                        android:layout_width="51dp"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/toolbar_color"
-                        android:visibility="invisible"></View>
 
                 </LinearLayout>
 

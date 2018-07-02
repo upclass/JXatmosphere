@@ -2,7 +2,6 @@ package net.univr.pushi.jxatmosphere.adapter;
 
 import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -42,18 +41,12 @@ public class DmcgjcMenuAdapter extends BaseQuickAdapter<DmcgjcmenuBeen.DataBean,
     @Override
     protected void convert(BaseViewHolder helper, DmcgjcmenuBeen.DataBean item) {
         TextView title = helper.getView(R.id.title);
-        View view = helper.getView(R.id.tabline);
         title.setText(item.getZnName());
         if(item.isSelect()){
-            view.setVisibility(View.VISIBLE);
-//            title.setTextSize(15);
             title.setTextColor(Color.parseColor("#0081e7"));
         }
-
         else{
-            view.setVisibility(View.INVISIBLE);
             title.setTextColor(Color.parseColor("#121111"));
-//            title.setTextSize(13);
         }
 
         helper.addOnClickListener(R.id.title);
