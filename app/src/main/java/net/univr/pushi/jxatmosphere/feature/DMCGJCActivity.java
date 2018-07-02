@@ -12,7 +12,6 @@ import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.ComPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment;
-import net.univr.pushi.jxatmosphere.fragments.SWZDYLFragment;
 import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
@@ -67,10 +66,10 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         leave.setOnClickListener(this);
 
 
-        SWZDYLFragment fragment = SWZDYLFragment.newInstance(viewPager,list);
+//        SWZDYLFragment fragment = SWZDYLFragment.newInstance(viewPager,list);
 
         String type1 = "rain";
-        String ctype1="rain_sum";
+        String ctype1="swzd";
         fragment1 = DMCGJCFragment.newInstance(type1,ctype1,viewPager,list);
         String type2 = "temp";
         String ctype2="temp";
@@ -89,7 +88,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         fragment6 = DMCGJCFragment.newInstance(type6,ctype6,viewPager,list);
 
 
-        list.add(fragment);
+//        list.add(fragment);
         list.add(fragment1);
         list.add(fragment2);
         list.add(fragment3);
@@ -103,7 +102,7 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
                 getSupportFragmentManager(), list);
         // 绑定适配器
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);
+//        viewPager.setCurrentItem(1);
 
         CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override

@@ -11,16 +11,39 @@
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="0dp"-->
     <!--android:layout_weight="1"></android.support.v7.widget.RecyclerView>-->
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/swzd_lay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:text="数据加载中" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <net.univr.pushi.jxatmosphere.widget.CustomViewPager
         android:id="@+id/viepager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/tine_black" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/tine_black" />-->
 
 
     <LinearLayout
@@ -98,35 +121,6 @@
                 android:layout_height="35dp"
                 android:orientation="horizontal">
 
-
-                <LinearLayout
-                    android:id="@+id/linear1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/tv_1"
-                        style="@style/two_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_15"
-                        android:layout_marginRight="@dimen/spacing_15"
-                        android:text="气象水文站点雨量"
-                        android:textColor="@color/black" />
-
-                    <View
-                        android:id="@+id/tabline1"
-                        android:layout_width="120dp"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/toolbar_color"
-                        android:visibility="invisible"></View>
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linear2"
