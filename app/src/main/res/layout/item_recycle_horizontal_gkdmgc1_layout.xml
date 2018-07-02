@@ -27,7 +27,7 @@
             android:layout_alignLeft="@+id/title"
             android:layout_below="@+id/title"
             android:background="@color/toolbar_color"
-            android:visibility="invisible"></View>
+            android:visibility="gone"></View>
     </RelativeLayout>
 </RelativeLayout>
 

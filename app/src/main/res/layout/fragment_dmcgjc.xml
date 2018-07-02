@@ -38,15 +38,14 @@
         android:id="@+id/swzd_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:visibility="gone"
-        android:background="@color/tine_black" />
+        android:background="@color/tine_black"
+        android:visibility="gone" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
 
 
         <android.support.v7.widget.RecyclerView
@@ -90,138 +89,10 @@
         android:layout_height="35dp"
         android:orientation="vertical">
 
-        <HorizontalScrollView
-            android:id="@+id/scrollview"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/menu_fragment"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@color/light_white"
-            android:scrollbars="none">
-
-
-            <LinearLayout
-                android:id="@+id/scroll_linear"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:orientation="horizontal">
-
-
-                <LinearLayout
-                    android:id="@+id/linear2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_2"
-                        style="@style/two_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_15"
-                        android:layout_marginRight="@dimen/spacing_15"
-                        android:text="累计降水量"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_3"
-                        style="@style/two_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_15"
-                        android:layout_marginRight="@dimen/spacing_15"
-                        android:text="气温"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_4"
-                        style="@style/two_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_15"
-                        android:layout_marginRight="@dimen/spacing_15"
-                        android:text="风向风速"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/linear5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_5"
-                        style="@style/two_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_15"
-                        android:layout_marginRight="@dimen/spacing_15"
-                        android:text="相对湿度"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_6"
-                        style="@style/two_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_15"
-                        android:layout_marginRight="@dimen/spacing_15"
-                        android:text="气压"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_7"
-                        style="@style/two_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_15"
-                        android:layout_marginRight="@dimen/spacing_15"
-                        android:text="能见度"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-        </HorizontalScrollView>
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
 
     </LinearLayout>

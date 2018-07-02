@@ -13,13 +13,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.squareup.picasso.Picasso;
 
 import net.univr.pushi.jxatmosphere.MyApplication;
@@ -54,11 +54,14 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     CustomViewPager mViewPager;
     @BindView(R.id.recycler3)
     RecyclerView mRecyclerView3;
+    @BindView(R.id.menu_fragment)
+    RecyclerView menu_recycle;
 
 
     private Context mcontext;
 
     private DmcgjcMenuAdapter mAdapter1;
+    private DmcgjcMenuAdapter menuAdapter;
 
     MyPagerAdapter viewPagerAdapter;
     List<Fragment> fragmentList = new ArrayList<>();
@@ -86,21 +89,21 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
     @BindView(R.id.swzd_view)
     View view_didver;
-    @BindView(R.id.linear2)
-    LinearLayout tv2;
-    @BindView(R.id.linear3)
-    LinearLayout tv3;
-    @BindView(R.id.linear4)
-    LinearLayout tv4;
-    @BindView(R.id.linear5)
-    LinearLayout tv5;
-    @BindView(R.id.linear6)
-    LinearLayout tv6;
-    @BindView(R.id.linear7)
-    LinearLayout tv7;
+//    @BindView(R.id.linear2)
+//    LinearLayout tv2;
+//    @BindView(R.id.linear3)
+//    LinearLayout tv3;
+//    @BindView(R.id.linear4)
+//    LinearLayout tv4;
+//    @BindView(R.id.linear5)
+//    LinearLayout tv5;
+//    @BindView(R.id.linear6)
+//    LinearLayout tv6;
+//    @BindView(R.id.linear7)
+//    LinearLayout tv7;
 
-    @BindView(R.id.scrollview)
-    HorizontalScrollView scrollview;
+//    @BindView(R.id.scrollview)
+//    HorizontalScrollView scrollview;
     @BindView(R.id.swzd_lay)
     LinearLayout swzd_lay;
     @BindView(R.id.content)
@@ -112,8 +115,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     ViewPager viewPager;
     List<Fragment> list;
     Handler handler = new Handler();
+    int position;
 
-    public static DMCGJCFragment newInstance(String type, String ctype, ViewPager viewPager, List<Fragment> list) {
+    public static DMCGJCFragment newInstance(String type, String ctype, ViewPager viewPager, List<Fragment> list,int position) {
         DMCGJCFragment dmcgjcFragment = new DMCGJCFragment();
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
@@ -121,6 +125,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         dmcgjcFragment.setArguments(bundle);
         dmcgjcFragment.viewPager = viewPager;
         dmcgjcFragment.list = list;
+        dmcgjcFragment.position = position;
         return dmcgjcFragment;
     }
 
@@ -190,95 +195,157 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 });
 
         getTestdata();
-        tv2.setOnClickListener(this);
-        tv3.setOnClickListener(this);
-        tv4.setOnClickListener(this);
-        tv5.setOnClickListener(this);
-        tv6.setOnClickListener(this);
-        tv7.setOnClickListener(this);
+//        tv2.setOnClickListener(this);
+//        tv3.setOnClickListener(this);
+//        tv4.setOnClickListener(this);
+//        tv5.setOnClickListener(this);
+//        tv6.setOnClickListener(this);
+//        tv7.setOnClickListener(this);
 
-        initOneMenu();
-
+//        initOneMenu();
+        getMenuAdapter(position);
+//        initScrollView();
     }
 
-    private void initOneMenu() {
-        if (type.equals("rain")) {
-            TextView childAt = (TextView) tv2.getChildAt(0);
-            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-        }
-        if (type.equals("temp")) {
-            TextView childAt = (TextView) tv3.getChildAt(0);
-            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-        }
-        if (type.equals("wind")) {
-            TextView childAt = (TextView) tv4.getChildAt(0);
-            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-        }
-        if (type.equals("humidity")) {
-            TextView childAt = (TextView) tv5.getChildAt(0);
-            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-        }
-        if (type.equals("pressure")) {
-            TextView childAt = (TextView) tv6.getChildAt(0);
-            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-        }
-        if (type.equals("vis")) {
-            TextView childAt = (TextView) tv7.getChildAt(0);
-            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-        }
-        initScrollView();
-    }
+//    private void initOneMenu() {
+//        if (type.equals("rain")) {
+//            TextView childAt = (TextView) tv2.getChildAt(0);
+//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
+//        }
+//        if (type.equals("temp")) {
+//            TextView childAt = (TextView) tv3.getChildAt(0);
+//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
+//        }
+//        if (type.equals("wind")) {
+//            TextView childAt = (TextView) tv4.getChildAt(0);
+//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
+//        }
+//        if (type.equals("humidity")) {
+//            TextView childAt = (TextView) tv5.getChildAt(0);
+//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
+//        }
+//        if (type.equals("pressure")) {
+//            TextView childAt = (TextView) tv6.getChildAt(0);
+//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
+//        }
+//        if (type.equals("vis")) {
+//            TextView childAt = (TextView) tv7.getChildAt(0);
+//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
+//        }
+//        initScrollView();
+//    }
 
 
-    public void initScrollView() {
-        if (type.equals("rain")) {
+    public void initScrollView(int position) {
+        if (position==0) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(0, 0);
+//                    scrollview.scrollTo(0, 0);
+                    menu_recycle.smoothScrollToPosition(0);
                 }
             }, 1000);
         }
-        if (type.equals("temp")) {
+        if (position==1) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(320, 0);
+//                    scrollview.scrollTo(320, 0);
+                    menu_recycle.smoothScrollToPosition(1);
                 }
             }, 1000);
         }
-        if (type.equals("wind")) {
+        if (position==2) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(460, 0);
+//                    scrollview.scrollTo(460, 0);
+                    menu_recycle.smoothScrollToPosition(2);
                 }
             }, 1000);
         }
-        if (type.equals("humidity")) {
+        if (position==3) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(710, 0);
+//                    scrollview.scrollTo(710, 0);
+                    menu_recycle.smoothScrollToPosition(3);
                 }
             }, 2000);
         }
-        if (type.equals("pressure")) {
+        if (position==4) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(1200, 0);
+//                    scrollview.scrollTo(1200, 0);
+                    menu_recycle.smoothScrollToPosition(4);
                 }
             }, 1000);
         }
-        if (type.equals("vis")) {
+        if (position==5) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    scrollview.scrollTo(1400, 0);
+//                    scrollview.scrollTo(1400, 0);
+                    menu_recycle.smoothScrollToPosition(5);
                 }
             }, 1000);
         }
+//        if (type.equals("rain")) {
+//            handler.postAtTime(new Runnable() {
+//                @Override
+//                public void run() {
+////                    scrollview.scrollTo(0, 0);
+//                    menu_recycle.smoothScrollToPosition(0);
+//                }
+//            }, 1000);
+//        }
+//        if (type.equals("temp")) {
+//            handler.postAtTime(new Runnable() {
+//                @Override
+//                public void run() {
+////                    scrollview.scrollTo(320, 0);
+//                    menu_recycle.smoothScrollToPosition(1);
+//                }
+//            }, 1000);
+//        }
+//        if (type.equals("wind")) {
+//            handler.postAtTime(new Runnable() {
+//                @Override
+//                public void run() {
+////                    scrollview.scrollTo(460, 0);
+//                    menu_recycle.smoothScrollToPosition(2);
+//                }
+//            }, 1000);
+//        }
+//        if (type.equals("humidity")) {
+//            handler.postAtTime(new Runnable() {
+//                @Override
+//                public void run() {
+////                    scrollview.scrollTo(710, 0);
+//                    menu_recycle.smoothScrollToPosition(3);
+//                }
+//            }, 2000);
+//        }
+//        if (type.equals("pressure")) {
+//            handler.postAtTime(new Runnable() {
+//                @Override
+//                public void run() {
+////                    scrollview.scrollTo(1200, 0);
+//                    menu_recycle.smoothScrollToPosition(4);
+//                }
+//            }, 1000);
+//        }
+//        if (type.equals("vis")) {
+//            handler.postAtTime(new Runnable() {
+//                @Override
+//                public void run() {
+////                    scrollview.scrollTo(1400, 0);
+//                    menu_recycle.smoothScrollToPosition(5);
+//                }
+//            }, 1000);
+//        }
+
     }
 
     private void swzdInfo() {
@@ -489,6 +556,164 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     }
 
 
+    private DmcgjcMenuAdapter getMenuAdapter(int position) {
+        if (menuAdapter == null) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
+            List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
+            initMenuData(mData1,position);
+            menuAdapter = new DmcgjcMenuAdapter(mData1);
+            menu_recycle.setLayoutManager(layoutManager);
+            menu_recycle.setAdapter(menuAdapter);
+            menuAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                    TextView title = ((TextView) view);
+                    String menu = title.getText().toString();
+                    if (menu.equals("累积降水")) {
+                        ((DMCGJCFragment) list.get(0)).initScrollView(0);
+                        viewPager.setCurrentItem(0);
+                        DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(0);
+                        dmcgjcFragment1.setIsPalyInit(0);
+                    }
+                    if (menu.equals("气温")) {
+                        ((DMCGJCFragment) list.get(1)).initScrollView(1);
+                        viewPager.setCurrentItem(1);
+                        DMCGJCFragment dmcgjcFragment2 = (DMCGJCFragment) list.get(1);
+                        dmcgjcFragment2.setIsPalyInit(1);
+                    }
+                    if (menu.equals("风向风速")) {
+                        ((DMCGJCFragment) list.get(2)).initScrollView(2);
+                        viewPager.setCurrentItem(2);
+                        DMCGJCFragment dmcgjcFragment3 = (DMCGJCFragment) list.get(2);
+                        dmcgjcFragment3.setIsPalyInit(2);
+                    }
+                    if (menu.equals("相对湿度")) {
+                        ((DMCGJCFragment) list.get(3)).initScrollView(3);
+                        viewPager.setCurrentItem(3);
+                        DMCGJCFragment dmcgjcFragment4 = (DMCGJCFragment) list.get(3);
+                        dmcgjcFragment4.setIsPalyInit(3);
+
+                    }
+                    if (menu.equals("气压")) {
+                        ((DMCGJCFragment) list.get(4)).initScrollView(4);
+                        viewPager.setCurrentItem(4);
+                        DMCGJCFragment dmcgjcFragment5 = (DMCGJCFragment) list.get(4);
+                        dmcgjcFragment5.setIsPalyInit(4);
+                    }
+                    if (menu.equals("能见度")) {
+                        ((DMCGJCFragment) list.get(5)).initScrollView(5);
+                        viewPager.setCurrentItem(5);
+                        DMCGJCFragment dmcgjcFragment6 = (DMCGJCFragment) list.get(5);
+                        dmcgjcFragment6.setIsPalyInit(5);
+                    }
+                }
+            });
+        }
+        return menuAdapter;
+    }
+
+    private void initMenuData(List<DmcgjcmenuBeen.DataBean> mData1,int position) {
+        DmcgjcmenuBeen.DataBean dataBean = new DmcgjcmenuBeen.DataBean();
+        DmcgjcmenuBeen.DataBean dataBean1 = new DmcgjcmenuBeen.DataBean();
+        DmcgjcmenuBeen.DataBean dataBean2 = new DmcgjcmenuBeen.DataBean();
+        DmcgjcmenuBeen.DataBean dataBean3 = new DmcgjcmenuBeen.DataBean();
+        DmcgjcmenuBeen.DataBean dataBean4 = new DmcgjcmenuBeen.DataBean();
+        DmcgjcmenuBeen.DataBean dataBean5 = new DmcgjcmenuBeen.DataBean();
+        if(position==0){
+            dataBean.setZnName("累积降水");
+            dataBean.setSelect(true);
+            dataBean1.setZnName("气温");
+            dataBean1.setSelect(false);
+            dataBean2.setZnName("风向风速");
+            dataBean2.setSelect(false);
+            dataBean3.setZnName("相对湿度");
+            dataBean3.setSelect(false);
+            dataBean4.setZnName("气压");
+            dataBean4.setSelect(false);
+            dataBean5.setZnName("能见度");
+            dataBean5.setSelect(false);
+        }
+        if(position==1){
+            dataBean.setZnName("累积降水");
+            dataBean.setSelect(false);
+            dataBean1.setZnName("气温");
+            dataBean1.setSelect(true);
+            dataBean2.setZnName("风向风速");
+            dataBean2.setSelect(false);
+            dataBean3.setZnName("相对湿度");
+            dataBean3.setSelect(false);
+            dataBean4.setZnName("气压");
+            dataBean4.setSelect(false);
+            dataBean5.setZnName("能见度");
+            dataBean5.setSelect(false);
+        }
+        if(position==2){
+            dataBean.setZnName("累积降水");
+            dataBean.setSelect(false);
+            dataBean1.setZnName("气温");
+            dataBean1.setSelect(false);
+            dataBean2.setZnName("风向风速");
+            dataBean2.setSelect(true);
+            dataBean3.setZnName("相对湿度");
+            dataBean3.setSelect(false);
+            dataBean4.setZnName("气压");
+            dataBean4.setSelect(false);
+            dataBean5.setZnName("能见度");
+            dataBean5.setSelect(false);
+        }
+        if(position==3){
+            dataBean.setZnName("累积降水");
+            dataBean.setSelect(false);
+            dataBean1.setZnName("气温");
+            dataBean1.setSelect(false);
+            dataBean2.setZnName("风向风速");
+            dataBean2.setSelect(false);
+            dataBean3.setZnName("相对湿度");
+            dataBean3.setSelect(true);
+            dataBean4.setZnName("气压");
+            dataBean4.setSelect(false);
+            dataBean5.setZnName("能见度");
+            dataBean5.setSelect(false);
+        }
+        if(position==4){
+            dataBean.setZnName("累积降水");
+            dataBean.setSelect(false);
+            dataBean1.setZnName("气温");
+            dataBean1.setSelect(false);
+            dataBean2.setZnName("风向风速");
+            dataBean2.setSelect(false);
+            dataBean3.setZnName("相对湿度");
+            dataBean3.setSelect(false);
+            dataBean4.setZnName("气压");
+            dataBean4.setSelect(true);
+            dataBean5.setZnName("能见度");
+            dataBean5.setSelect(false);
+        }
+        if(position==5){
+            dataBean.setZnName("累积降水");
+            dataBean.setSelect(false);
+            dataBean1.setZnName("气温");
+            dataBean1.setSelect(false);
+            dataBean2.setZnName("风向风速");
+            dataBean2.setSelect(false);
+            dataBean3.setZnName("相对湿度");
+            dataBean3.setSelect(false);
+            dataBean4.setZnName("气压");
+            dataBean4.setSelect(false);
+            dataBean5.setZnName("能见度");
+            dataBean5.setSelect(true);
+        }
+        mData1.add(dataBean);
+        mData1.add(dataBean1);
+        mData1.add(dataBean2);
+        mData1.add(dataBean3);
+        mData1.add(dataBean4);
+        mData1.add(dataBean5);
+
+
+    }
+
+
     private MultiGdybTxAdapter getAdapter3() {
         if (mAdapter3 == null) {
             ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
@@ -683,38 +908,38 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.linear2:
-                viewPager.setCurrentItem(0);
-                DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(0);
-                dmcgjcFragment1.setIsPalyInit(0);
-                break;
-
-            case R.id.linear3:
-                viewPager.setCurrentItem(1);
-                DMCGJCFragment dmcgjcFragment2 = (DMCGJCFragment) list.get(1);
-                dmcgjcFragment2.setIsPalyInit(1);
-                break;
-            case R.id.linear4:
-                viewPager.setCurrentItem(2);
-                DMCGJCFragment dmcgjcFragment3 = (DMCGJCFragment) list.get(2);
-                dmcgjcFragment3.setIsPalyInit(2);
-                break;
-            case R.id.linear5:
-                viewPager.setCurrentItem(3);
-                DMCGJCFragment dmcgjcFragment4 = (DMCGJCFragment) list.get(3);
-                dmcgjcFragment4.setIsPalyInit(3);
-
-                break;
-            case R.id.linear6:
-                viewPager.setCurrentItem(4);
-                DMCGJCFragment dmcgjcFragment5 = (DMCGJCFragment) list.get(4);
-                dmcgjcFragment5.setIsPalyInit(4);
-                break;
-            case R.id.linear7:
-                viewPager.setCurrentItem(5);
-                DMCGJCFragment dmcgjcFragment6 = (DMCGJCFragment) list.get(5);
-                dmcgjcFragment6.setIsPalyInit(5);
-                break;
+//            case R.id.linear2:
+//                viewPager.setCurrentItem(0);
+//                DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(0);
+//                dmcgjcFragment1.setIsPalyInit(0);
+//                break;
+//
+//            case R.id.linear3:
+//                viewPager.setCurrentItem(1);
+//                DMCGJCFragment dmcgjcFragment2 = (DMCGJCFragment) list.get(1);
+//                dmcgjcFragment2.setIsPalyInit(1);
+//                break;
+//            case R.id.linear4:
+//                viewPager.setCurrentItem(2);
+//                DMCGJCFragment dmcgjcFragment3 = (DMCGJCFragment) list.get(2);
+//                dmcgjcFragment3.setIsPalyInit(2);
+//                break;
+//            case R.id.linear5:
+//                viewPager.setCurrentItem(3);
+//                DMCGJCFragment dmcgjcFragment4 = (DMCGJCFragment) list.get(3);
+//                dmcgjcFragment4.setIsPalyInit(3);
+//
+//                break;
+//            case R.id.linear6:
+//                viewPager.setCurrentItem(4);
+//                DMCGJCFragment dmcgjcFragment5 = (DMCGJCFragment) list.get(4);
+//                dmcgjcFragment5.setIsPalyInit(4);
+//                break;
+//            case R.id.linear7:
+//                viewPager.setCurrentItem(5);
+//                DMCGJCFragment dmcgjcFragment6 = (DMCGJCFragment) list.get(5);
+//                dmcgjcFragment6.setIsPalyInit(5);
+//                break;
         }
 
 
