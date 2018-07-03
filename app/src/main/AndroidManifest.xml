@@ -162,7 +162,10 @@
             android:theme="@style/TranslucentTheme" />
         <activity
             android:name=".feature.ZytqybActivity"
-            android:label="@string/title_activity_zytqyb"></activity>
+            android:label="@string/title_activity_zytqyb" />
+        <activity
+            android:name=".feature.DsljybActivity"
+            android:label="@string/title_activity_dsljyb"></activity>
     </application>
 
 </manifest>

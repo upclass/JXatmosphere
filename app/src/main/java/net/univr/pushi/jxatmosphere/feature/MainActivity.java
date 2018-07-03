@@ -109,6 +109,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //格点图形预报
     @BindView(R.id.main_content_item3_3)
     PercentRelativeLayout gdybtx;
+    //短时临近预报
+    @BindView(R.id.main_content_item3_4)
+    PercentRelativeLayout dsljyb;
     //wtf快速循环
     @BindView(R.id.main_content_item0_4)
     PercentRelativeLayout wtfdlxh;
@@ -152,6 +155,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initViews(Bundle savedInstanceState) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        int i = (int) (55 * scale + 0.5f);
 
         PgyUpdateManager.register(this);
         initDuty();
@@ -179,6 +184,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         radarForecast.setOnClickListener(this);
         YujinXinhao.setOnClickListener(this);
         Zytqyb.setOnClickListener(this);
+        dsljyb.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -385,6 +391,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.main_content_item2_1:
                 Intent yujinXinhao = new Intent(context, YujingActivity.class);
                 startActivity(yujinXinhao);
+                break;
+            case R.id.main_content_item3_4:
+                Intent dsljyb = new Intent(context, DsljybActivity.class);
+                startActivity(dsljyb);
                 break;
         }
 

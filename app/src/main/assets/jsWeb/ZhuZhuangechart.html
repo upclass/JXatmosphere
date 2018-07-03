@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:background="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,17 +31,17 @@
         require(
           [
             'echarts',
-            'echarts/chart/line', //加载line模块，按需加载
+             'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
           ]
         )
-</script>
+
+
+
+	</script>
+
 </head>
-<body onload="loadALineChart()">
 
-
-
-<div id="chart2" style="height:200px;width:100%"/>
-
-
+<body  style="background-image:url(fprecast_back.png);background-repeat:no-repeat;background-size:100% 100%;"  onload="loadAZhuzhuangChart()">
+<div id="chart2" style="height:160px;width:100%;margin-top:20px"></div>
 </body>
 </html>

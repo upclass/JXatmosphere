@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
+import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.WebTiledLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -40,7 +41,9 @@ import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.PiaoGeAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
+import net.univr.pushi.jxatmosphere.interfaces.MapCall;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.widget.MapScreenClickListen;
 import net.univr.pushi.jxatmosphere.widget.TianDiTuMethodsClass;
 
 import java.text.ParseException;
@@ -53,7 +56,7 @@ import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class GdybActivity extends BaseActivity implements View.OnClickListener {
+public class GdybActivity extends BaseActivity implements View.OnClickListener,MapCall {
     @BindView(R.id.webView)
     WebView mWebView;
     @BindView(R.id.tuxin_tv)
@@ -130,7 +133,13 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
         initBaseMap();//初始化底图
         initGps();//初始化gps
         initArcgisUtils();
-        initArcgisLocation();
+//        initArcgisLocation();
+        startMapLinstenter();
+    }
+
+    private void startMapLinstenter() {
+        MapScreenClickListen mapScreenClickListen = new MapScreenClickListen(context, mapView,this);
+        mapView.setOnTouchListener(mapScreenClickListen);
     }
 
     private void initBaseMap() {
@@ -408,6 +417,13 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void getNewData(Point point) {
+         x = point.getX();
+         y = point.getY();
+        getTestdata();
+    }
+
 
     /**
      * 注入到JS里的对象接口
@@ -437,8 +453,8 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener {
             option.calculable(false);
             option.tooltip().trigger(Trigger.axis).formatter("气温:{c}℃ <br/> 降雨量:{c1}cm <br/>风速:{c2}m/s<br/>相对湿度:{c3}%");
             //设置位置左上右下边距
-            option.grid().x(40);
-            option.grid().y(5);
+            option.grid().x(34);
+            option.grid().y(20);
             ValueAxis valueAxis = new ValueAxis();
             valueAxis.setSplitNumber(4);
             option.yAxis(valueAxis);

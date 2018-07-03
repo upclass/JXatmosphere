@@ -2,6 +2,7 @@ package net.univr.pushi.jxatmosphere.remote.api;
 
 import net.univr.pushi.jxatmosphere.beens.BdskBeen;
 import net.univr.pushi.jxatmosphere.beens.BdybBeen;
+import net.univr.pushi.jxatmosphere.beens.DsljybBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GeneforeBeen;
@@ -60,7 +61,11 @@ public interface ForecastWarn {
     //本地实况getTest3所需预警信号数据
     @GET("yujin!getYujingbycity.do")
     Observable<YuJinXinhaoBeen> getYujinInfoToBdsk(@Query("city")String city);
+    //重要天气预
     @GET("zytqybAction.do")
     Observable<ZytqybBeen> getZytqyb(@Query("startTime")String startTime, @Query("endTime")String endTime);
+    //短时临近预报
+    @GET("rainForecastGirdFrom20Action.do")
+    Observable<DsljybBeen> getRainGird(@Query("lat")String lattitude, @Query("lon")String lontitude);
 
 }

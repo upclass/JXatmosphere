@@ -116,6 +116,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     List<Fragment> list;
     Handler handler = new Handler();
     int position;
+    public String interval="5";
 
     public static DMCGJCFragment newInstance(String type, String ctype, ViewPager viewPager, List<Fragment> list,int position) {
         DMCGJCFragment dmcgjcFragment = new DMCGJCFragment();
@@ -488,8 +489,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     if (menu.equals("体感温度")) {
                         ctype = "body_feeling_temp";
                     }
-                    if (menu.equals("最小水平能见度")) {
-                        ctype = "vis_min";
+                    if (menu.equals("地面温度")) {
+                        ctype = "surface_temp";
                     }
 
                     if (menu.equals("二分钟平均风速")) {
@@ -544,6 +545,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                         ctype = "pressure_min";
                     }
                     if (menu.equals("海平面气压")) {
+                        ctype = "sea_level_pressure";
+                    }
+                    if (menu.equals("最小水平能见度")) {
                         ctype = "sea_level_pressure";
                     }
                     progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
@@ -757,7 +761,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     }
 
 
-    private void getTestdata() {
+    public void getTestdata() {
         if (ctype.equals("swzd")) {
             progressDialog.dismiss();
             swzdInfo();
@@ -768,11 +772,27 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         }
         getAdapter3();
         RetrofitHelper.getWeatherMonitorAPI()
-                .getDmcgjc(type, ctype)
+                .getDmcgjc(type, ctype,interval)
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
+                    int vis=0;
+                    if (ctype.equals("rain_sum") || ctype.equals("rain_sum1")
+                            || ctype.equals("rain_sum3") || ctype.equals("rain_sum6")
+                            || ctype.equals("rain_sum12") || ctype.equals("temp")
+                            || ctype.equals("body_feeling_temp")
+                            || ctype.equals("vis_min")
+                            || ctype.equals("wind_2minute_avg")
+                            || ctype.equals("wind_10minute_avg")
+                            || ctype.equals("wind_inst")
+                            || ctype.equals("wind_inst_max")
+                            || ctype.equals("wind_max_5")
+                            || ctype.equals("wind_1minute_avg")
+                            || ctype.equals("humidity") || ctype.equals("pressure")
+                            || ctype.equals("surface_temp")) {
+                        vis=1;
+                    }
                     view_didver.setVisibility(View.VISIBLE);
                     recycle_skipto_position = 1;
                     now_postion = DmcgjcDeen.getData().getUrls().size();
@@ -790,7 +810,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     fragmentList.clear();
                     urls = DmcgjcDeen.getData().getUrls();
                     for (int i = 0; i < urls.size(); i++) {
-                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i), urls);
+                        DmcgjcPicFragment fragment = DmcgjcPicFragment.newInstance(urls.get(i), urls,this,vis,interval);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
