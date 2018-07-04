@@ -223,6 +223,7 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                             getSupportFragmentManager(), list);
                     // 绑定适配器
                     viewPager.setAdapter(viewpagerAdapter);
+//                    viewPager.setOffscreenPageLimit(20);
 
 
 //                    if (madapter == null) {

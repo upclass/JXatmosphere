@@ -65,6 +65,7 @@ public class TyphoonMonitoringActivity extends BaseActivity implements View.OnCl
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 progressDialog.dismiss();
+                if(webView!=null)
                 webView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
                 //网页加载结束的处理，可以停止动画

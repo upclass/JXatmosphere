@@ -16,6 +16,7 @@ import android.widget.TextView;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.ComPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
+import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.fragments.WtfRapidFragment;
 import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
@@ -99,6 +100,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
         // 绑定适配器
         viewPager.setScanScroll(false);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(1);
 
 
         // 设置滑动监听
@@ -187,8 +189,12 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 viewPager.setCurrentItem(0);
                 ll.leftMargin = marginleft;
                 tabline.setLayoutParams(ll);
-                fragment1.setStart(false);
-                fragment1.setImage();
+                fragment1.isStart=false;
+                MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                fragment1.multitemList.set(0,multiItemGdybTx);
+                fragment1.getAdapter3().notifyItemChanged(0);
+//                fragment1.setStart(false);
+//                fragment1.setImage();
                 break;
             case R.id.vice_tv:
                 changeSize(1);
@@ -196,8 +202,12 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 viewPager.setCurrentItem(1);
                 ll.leftMargin = tabLineLength + marginleft;
                 tabline.setLayoutParams(ll);
-                fragment.setStart(false);
-                fragment.setImage();
+                fragment.isStart=false;
+                MultiItemGdybTx multiItemGdybTx1 = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                fragment.multitemList.set(0,multiItemGdybTx1);
+                fragment.getAdapter3().notifyItemChanged(0);
+//                fragment.setStart(false);
+//                fragment.setImage();
 
                 break;
 //            case R.id.share_to:

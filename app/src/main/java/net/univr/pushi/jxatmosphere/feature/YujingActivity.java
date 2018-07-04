@@ -87,6 +87,7 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
 //        ditu.setOnClickListener(this);
         shengtai.setOnClickListener(this);
         shixian.setOnClickListener(this);
+        back.setOnClickListener(this);
     }
 
     private void initArcgis() {
@@ -292,6 +293,9 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
                 getMissionGraphicLayer().getGraphics().clear();
                 tag = "1";
                 getYujinInfo();
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

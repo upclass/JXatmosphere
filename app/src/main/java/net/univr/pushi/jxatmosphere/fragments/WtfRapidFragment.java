@@ -81,7 +81,7 @@ public class WtfRapidFragment extends RxLazyFragment {
     //播放的下一位置
     int recycle_skipto_position = 2;
     //是否播放
-    Boolean isStart = false;
+    public Boolean isStart = false;
 
     //当前的位置
     int now_postion = 1;
@@ -89,7 +89,7 @@ public class WtfRapidFragment extends RxLazyFragment {
 
 
     private MultiGdybTxAdapter mAdapter3;
-    List<MultiItemGdybTx> multitemList = new ArrayList<>();
+    public List<MultiItemGdybTx> multitemList = new ArrayList<>();
 
     ImageView isStartPic;
 
@@ -188,27 +188,28 @@ public class WtfRapidFragment extends RxLazyFragment {
                 if (oneMenu) {
                     String s = menuTime.get(position);
                     getTwoTime1(s);
-
-
                     oneMenu = false;
                 } else {
+                    isStart=false;
+                    uiHandler.removeCallbacksAndMessages(null);
+                    popupWindow.dismiss();
                     getTestDataBytime(menuTime.get(position));
                     time.setText(menuTime.get(position));
-                    menuTime.clear();
-                    for (int i = 0; i < oneTime.size(); i++) {
-                        menuTime.add(oneTime.get(i));
-                    }
-                    timeAdapter.notifyDataSetChanged();
                     oneMenu = true;
                 }
-                popupWindow.dismiss();
             }
         });
         time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.show();
 
+                menuTime.clear();
+                for (int i = 0; i < oneTime.size(); i++) {
+                    menuTime.add(oneTime.get(i));
+                }
+                timeAdapter.notifyDataSetChanged();
+                popupWindow.show();
+                oneMenu=true;
             }
         });
     }
@@ -222,7 +223,11 @@ public class WtfRapidFragment extends RxLazyFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(wtfOneMenu -> {
                     oneTime = wtfOneMenu.getData();
-                    getTwoTime(oneTime.get(0));
+                    if(oneTime==null||oneTime.size()==0);
+//                        ToastUtils.showShort("没查询到时间菜单");
+                    else{
+                        getTwoTime(oneTime.get(0));
+                    }
                 }, throwable -> {
                     throwable.printStackTrace();
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -237,12 +242,11 @@ public class WtfRapidFragment extends RxLazyFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timeTwoMenu -> {
                     twoTime = timeTwoMenu.getData();
-                    time.setText(twoTime.get(0));
-                    menuTime.clear();
-                    for (int i = 0; i < oneTime.size(); i++) {
-                        menuTime.add(oneTime.get(i));
+                    if(twoTime==null||twoTime.size()==0){
+//                        ToastUtils.showShort("没查询到二级时间菜单");
+                    }else{
+                        time.setText(twoTime.get(0));
                     }
-                    timeAdapter.notifyDataSetChanged();
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -263,7 +267,6 @@ public class WtfRapidFragment extends RxLazyFragment {
                         menuTime.add(twoTime.get(i));
                     }
                     timeAdapter.notifyDataSetChanged();
-                    time.setText(param);
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -282,8 +285,8 @@ public class WtfRapidFragment extends RxLazyFragment {
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
-                if (isStartPic != null)
-                    isStartPic.setImageResource(R.drawable.app_start);
+//                if (isStartPic != null)
+//                    isStartPic.setImageResource(R.drawable.app_start);
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
                 DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
@@ -357,14 +360,15 @@ public class WtfRapidFragment extends RxLazyFragment {
     }
 
 
-    private MultiGdybTxAdapter getAdapter3() {
+    public MultiGdybTxAdapter getAdapter3() {
         if (mAdapter3 == null) {
-            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
+//            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
+//                @Override
+//                public boolean canScrollVertically() {
+//                    return false;
+//                }
+//            };
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL);
             mAdapter3 = new MultiGdybTxAdapter(multitemList);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
@@ -378,7 +382,10 @@ public class WtfRapidFragment extends RxLazyFragment {
                     case R.id.pic_ready:
                         if (isStart == false) {
                             isStartPic = ((ImageView) view);
-                            isStartPic.setImageResource(R.drawable.app_end);
+//                            isStartPic.setImageResource(R.drawable.app_end);
+                            MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_end);
+                            multitemList.set(0,multiItemGdybTx);
+                            getAdapter3().notifyItemChanged(0);
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
                             uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
@@ -386,7 +393,10 @@ public class WtfRapidFragment extends RxLazyFragment {
                             mViewPager.setScanScroll(false);
                         } else {
                             uiHandler.removeCallbacksAndMessages(null);
-                            isStartPic.setImageResource(R.drawable.app_start);
+//                            isStartPic.setImageResource(R.drawable.app_start);
+                            MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                            multitemList.set(0,multiItemGdybTx);
+                            getAdapter3().notifyItemChanged(0);
                             isStart = false;
                             mViewPager.setScanScroll(true);
                         }
@@ -412,11 +422,11 @@ public class WtfRapidFragment extends RxLazyFragment {
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
-                    if (isStartPic != null) {
-                        isStartPic.setImageResource(R.drawable.app_start);
-                        mViewPager.setScanScroll(true);
-                    }
-
+//                    if (isStartPic != null) {
+//                        isStartPic.setImageResource(R.drawable.app_start);
+//                        mViewPager.setScanScroll(true);
+//                    }
+                    mViewPager.setScanScroll(true);
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {
                         Fragment fragment = fragmentList.get(i);
@@ -506,11 +516,11 @@ public class WtfRapidFragment extends RxLazyFragment {
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
-                    if (isStartPic != null) {
-                        isStartPic.setImageResource(R.drawable.app_start);
-                        mViewPager.setScanScroll(true);
-                    }
-
+//                    if (isStartPic != null) {
+//                        isStartPic.setImageResource(R.drawable.app_start);
+//                        mViewPager.setScanScroll(true);
+//                    }
+                    mViewPager.setScanScroll(true);
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {
                         Fragment fragment = fragmentList.get(i);

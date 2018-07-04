@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -76,7 +75,7 @@ public class EcxwgFragment extends RxLazyFragment {
     private MultiGdybTxAdapter mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
 
-    ImageView isStartPic;
+//    ImageView isStartPic;
 
     MyPagerAdapter viewPagerAdapter;
     List<Fragment> fragmentList = new ArrayList<>();
@@ -126,10 +125,11 @@ public class EcxwgFragment extends RxLazyFragment {
 
     }
 
-    public void setImage() {
-        if (isStartPic != null)
-            isStartPic.setImageResource(R.drawable.app_start);
-    }
+//
+//    public void setImage() {
+//        if (isStartPic != null)
+//            isStartPic.setImageResource(R.drawable.app_start);
+//    }
 
 
     @Override
@@ -201,8 +201,8 @@ public class EcxwgFragment extends RxLazyFragment {
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
                 mViewPager.setScanScroll(true);
-                if (isStartPic != null)
-                    isStartPic.setImageResource(R.drawable.app_start);
+//                if (isStartPic != null)
+//                    isStartPic.setImageResource(R.drawable.app_start);
 
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
@@ -427,22 +427,27 @@ public class EcxwgFragment extends RxLazyFragment {
                     getTwoTime1(s);
                     oneMenu = false;
                 } else {
+                    popupWindow.dismiss();
+                    isStart=false;
+                    uiHandler.removeCallbacksAndMessages(null);
                     getTestDataBytime(menuTime.get(position));
                     time.setText(menuTime.get(position));
-                    menuTime.clear();
-                    for (int i = 0; i < oneTime.size(); i++) {
-                        menuTime.add(oneTime.get(i));
-                    }
-                    timeAdapter.notifyDataSetChanged();
                     oneMenu = true;
                 }
-                popupWindow.dismiss();
+
             }
         });
         time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                menuTime.clear();
+                for (int i = 0; i < oneTime.size(); i++) {
+                    menuTime.add(oneTime.get(i));
+                }
+                timeAdapter.notifyDataSetChanged();
                 popupWindow.show();
+                oneMenu=true;
 
             }
         });
@@ -473,11 +478,11 @@ public class EcxwgFragment extends RxLazyFragment {
                 .subscribe(timeTwoMenu -> {
                     twoTime = timeTwoMenu.getData();
                     time.setText(twoTime.get(0));
-                    menuTime.clear();
-                    for (int i = 0; i < oneTime.size(); i++) {
-                        menuTime.add(oneTime.get(i));
-                    }
-                    timeAdapter.notifyDataSetChanged();
+//                    menuTime.clear();
+//                    for (int i = 0; i < oneTime.size(); i++) {
+//                        menuTime.add(oneTime.get(i));
+//                    }
+//                    timeAdapter.notifyDataSetChanged();
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -497,7 +502,8 @@ public class EcxwgFragment extends RxLazyFragment {
                         menuTime.add(twoTime.get(i));
                     }
                     timeAdapter.notifyDataSetChanged();
-                    time.setText(param);
+//                    popupWindow.show();
+//                    time.setText(param);
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
@@ -508,12 +514,14 @@ public class EcxwgFragment extends RxLazyFragment {
     private MultiGdybTxAdapter getAdapter3() {
 
         if (mAdapter3 == null) {
-            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
+//            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
+//                @Override
+//                public boolean canScrollVertically() {
+//                    return false;
+//                }
+//            };
+
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL);
             mAdapter3 = new MultiGdybTxAdapter(multitemList);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
@@ -526,16 +534,30 @@ public class EcxwgFragment extends RxLazyFragment {
                         break;
                     case R.id.pic_ready:
                         if (isStart == false) {
-                            isStartPic = ((ImageView) view);
-                            isStartPic.setImageResource(R.drawable.app_end);
+//                            isStartPic = ((ImageView) view);
+//                            isStartPic.setImageResource(R.drawable.app_end);
+//                            Message message = uiHandler.obtainMessage();
+//                            message.what = 1;
+//                            uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
+//                            isStart = true;
+//                            mViewPager.setScanScroll(false);
+                            MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_end);
+                            multitemList.set(0,multiItemGdybTx);
+                            getAdapter3().notifyItemChanged(0);
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
                             uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
                             isStart = true;
                             mViewPager.setScanScroll(false);
                         } else {
+//                            uiHandler.removeCallbacksAndMessages(null);
+//                            isStartPic.setImageResource(R.drawable.app_start);
+//                            isStart = false;
+//                            mViewPager.setScanScroll(true);
                             uiHandler.removeCallbacksAndMessages(null);
-                            isStartPic.setImageResource(R.drawable.app_start);
+                            MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                            multitemList.set(0,multiItemGdybTx);
+                            getAdapter3().notifyItemChanged(0);
                             isStart = false;
                             mViewPager.setScanScroll(true);
                         }
@@ -584,16 +606,21 @@ public class EcxwgFragment extends RxLazyFragment {
 //                            adapter.notifyItemChanged(lastclick);
 //                            adapter.notifyItemChanged(position);
 //                            ((EcxwgOneMenuAdapter) adapter).setLastposition(position);
-
+                            isStart=false;
+                            MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                            multitemList.set(0,multiItemGdybTx);
+                            getAdapter3().notifyItemChanged(0);
                             oneMenuViewpager.setCurrentItem(position);
-                            for (int i = 0; i < oneMenuFragmentList.size(); i++) {
-                                if (position == i) {
-                                } else {
-                                    EcxwgFragment fragment = (EcxwgFragment) oneMenuFragmentList.get(i);
-                                    fragment.setStart(false);
-                                    fragment.setImage();
-                                }
-                            }
+
+//                            for (int i = 0; i < oneMenuFragmentList.size(); i++) {
+//                                if (position == i) {
+//                                } else {
+//                                    EcxwgFragment fragment = (EcxwgFragment) oneMenuFragmentList.get(i);
+//                                    fragment.setStart(false);
+//                                    fragment.setImage();
+
+//                                }
+//                            }
                         });
                     }
 
@@ -616,10 +643,11 @@ public class EcxwgFragment extends RxLazyFragment {
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
-                    if (isStartPic != null) {
-                        isStartPic.setImageResource(R.drawable.app_start);
-                        mViewPager.setScanScroll(true);
-                    }
+//                    if (isStartPic != null) {
+//                        isStartPic.setImageResource(R.drawable.app_start);
+//                        mViewPager.setScanScroll(true);
+//                    }
+                    mViewPager.setScanScroll(true);
 
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {
@@ -709,10 +737,12 @@ public class EcxwgFragment extends RxLazyFragment {
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
-                    if (isStartPic != null) {
-                        isStartPic.setImageResource(R.drawable.app_start);
-                        mViewPager.setScanScroll(true);
-                    }
+//                    if (isStartPic != null) {
+//                        isStartPic.setImageResource(R.drawable.app_start);
+//                        mViewPager.setScanScroll(true);
+//                    }
+
+                    mViewPager.setScanScroll(true);
 
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {

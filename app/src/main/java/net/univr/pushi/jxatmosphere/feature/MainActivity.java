@@ -27,7 +27,6 @@ import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.pgyersdk.update.PgyUpdateManager;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
@@ -158,7 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         final float scale = context.getResources().getDisplayMetrics().density;
         int i = (int) (55 * scale + 0.5f);
 
-        PgyUpdateManager.register(this);
+//        PgyUpdateManager.register(this);
         initDuty();
         initHeight();
         rememberLoginState();

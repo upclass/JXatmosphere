@@ -84,6 +84,12 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         initCalendar();
         startMapLinstenter();
         getZytqyb(data_qi_bottom.getText().toString(), data_zhi_bottom.getText().toString());
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void getZytqyb(String startTime, String endTime) {
@@ -95,46 +101,50 @@ public class ZytqybActivity extends BaseActivity implements MapI {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(zytqybBeen -> {
                     List<ZytqybBeen.DataBean> data = zytqybBeen.getData();
-                    for (int i = 0; i < data.size(); i++) {
-                        String lat = data.get(i).getLat();
-                        Double aDouble = Double.valueOf(lat);
-                        String lon = data.get(i).getLon();
-                        Double aDouble1 = Double.valueOf(lon);
-                        String wep_now = data.get(i).getWEP_Now();
-                        String win_d_inst_max = data.get(i).getWIN_D_INST_Max();
-                        String win_s_inst_max = data.get(i).getWIN_S_Inst_Max();
-                        String trod_type = data.get(i).getTrod_Type();
-                        String trod_bear = data.get(i).getTrod_Bear();
-                        String snow_depth = data.get(i).getSnow_Depth();
-                        String eiced = data.get(i).getEICED();
-                        String hail_diam_max = data.get(i).getHAIL_Diam_Max();
-                        String pre_1h = data.get(i).getPRE_1h();
-                        String pre_3h = data.get(i).getPRE_3h();
-                        Map<String, Object> stringObjectMap = new HashMap<>();
-                        stringObjectMap.put("wep_now", wep_now);
-                        stringObjectMap.put("win_d_inst_max", win_d_inst_max);
-                        stringObjectMap.put("win_s_inst_max", win_s_inst_max);
-                        stringObjectMap.put("trod_type", trod_type);
-                        stringObjectMap.put("trod_bear", trod_bear);
-                        stringObjectMap.put("snow_depth", snow_depth);
-                        stringObjectMap.put("eiced", eiced);
-                        stringObjectMap.put("hail_diam_max", hail_diam_max);
-                        stringObjectMap.put("pre_1h", pre_1h);
-                        stringObjectMap.put("pre_3h", pre_3h);
+                    if (data == null) {
+                        ToastUtils.showShort("没查询到数据");
+                    } else {
+                        for (int i = 0; i < data.size(); i++) {
+                            String lat = data.get(i).getLat();
+                            Double aDouble = Double.valueOf(lat);
+                            String lon = data.get(i).getLon();
+                            Double aDouble1 = Double.valueOf(lon);
+                            String wep_now = data.get(i).getWEP_Now();
+                            String win_d_inst_max = data.get(i).getWIN_D_INST_Max();
+                            String win_s_inst_max = data.get(i).getWIN_S_Inst_Max();
+                            String trod_type = data.get(i).getTrod_Type();
+                            String trod_bear = data.get(i).getTrod_Bear();
+                            String snow_depth = data.get(i).getSnow_Depth();
+                            String eiced = data.get(i).getEICED();
+                            String hail_diam_max = data.get(i).getHAIL_Diam_Max();
+                            String pre_1h = data.get(i).getPRE_1h();
+                            String pre_3h = data.get(i).getPRE_3h();
+                            Map<String, Object> stringObjectMap = new HashMap<>();
+                            stringObjectMap.put("wep_now", wep_now);
+                            stringObjectMap.put("win_d_inst_max", win_d_inst_max);
+                            stringObjectMap.put("win_s_inst_max", win_s_inst_max);
+                            stringObjectMap.put("trod_type", trod_type);
+                            stringObjectMap.put("trod_bear", trod_bear);
+                            stringObjectMap.put("snow_depth", snow_depth);
+                            stringObjectMap.put("eiced", eiced);
+                            stringObjectMap.put("hail_diam_max", hail_diam_max);
+                            stringObjectMap.put("pre_1h", pre_1h);
+                            stringObjectMap.put("pre_3h", pre_3h);
 
-                        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.location);
-                        PictureMarkerSymbol pictureMarkerSymbol = new PictureMarkerSymbol(new BitmapDrawable(bitmap));
-                        pictureMarkerSymbol.setWidth(30);
-                        pictureMarkerSymbol.setHeight(30);
-                        try {
-                            Graphic graphic = new Graphic(new Point(aDouble1,
-                                    aDouble,
-                                    mapView.getSpatialReference()), stringObjectMap, pictureMarkerSymbol);
-                            getMissionGraphicLayer().getGraphics().add(graphic);
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                        }
+                            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.location);
+                            PictureMarkerSymbol pictureMarkerSymbol = new PictureMarkerSymbol(new BitmapDrawable(bitmap));
+                            pictureMarkerSymbol.setWidth(30);
+                            pictureMarkerSymbol.setHeight(30);
+                            try {
+                                Graphic graphic = new Graphic(new Point(aDouble1,
+                                        aDouble,
+                                        mapView.getSpatialReference()), stringObjectMap, pictureMarkerSymbol);
+                                getMissionGraphicLayer().getGraphics().add(graphic);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
 //                        mapView.setViewpointGeometryAsync(getMissionGraphicLayer().getExtent(), 100);
+                        }
                     }
                 }, throwable -> {
                     LogUtils.e(throwable);
@@ -185,7 +195,7 @@ public class ZytqybActivity extends BaseActivity implements MapI {
                 String zhi = selectedDates.get(selectedDates.size() - 1).get(Calendar.YEAR) + "-" + (selectedDates.get(selectedDates.size() - 1).get(Calendar.MONTH) + 1) + "-" + selectedDates.get(selectedDates.size() - 1).get(Calendar.DAY_OF_MONTH) + " 23:59:59";
                 data_qi_bottom.setText(qi);
                 data_zhi_bottom.setText(zhi);
-                getZytqyb(data_qi_bottom.getText().toString(),data_zhi_bottom.getText().toString());
+                getZytqyb(data_qi_bottom.getText().toString(), data_zhi_bottom.getText().toString());
             }
         });
         cancle_sj.setOnClickListener(new View.OnClickListener() {
@@ -292,7 +302,6 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         View view = getLayoutInflater().inflate(R.layout.zytqyb_xq_layout, null);
 
 
-
         TextView xztq = view.findViewById(R.id.xztq);
         TextView jdfsd = view.findViewById(R.id.jdfsd);
         TextView jdfsm = view.findViewById(R.id.jdfsm);
@@ -303,7 +312,7 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         TextView zdbbzj = view.findViewById(R.id.zdbbzj);
         TextView gqyxsjyl = view.findViewById(R.id.gqyxsjyl);
         TextView gqsxsjyl = view.findViewById(R.id.gqsxsjyl);
-        ImageView imageView= view.findViewById(R.id.cancle_xq);
+        ImageView imageView = view.findViewById(R.id.cancle_xq);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

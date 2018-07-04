@@ -9,38 +9,27 @@
     <net.univr.pushi.jxatmosphere.widget.CustomViewPager
         android:id="@+id/viepager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
+        android:layout_height="350dp"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
 
 
-    <!--<View-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:background="@color/tine_black" />-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="4dp"
+        android:background="@color/tine_black" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal">
-
-        <!--<RelativeLayout-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="match_parent">-->
-
-        <!--<ImageView-->
-        <!--android:id="@+id/pic_ready"-->
-        <!--android:layout_width="25dp"-->
-        <!--android:layout_height="25dp"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:src="@drawable/app_start" />-->
-        <!--</RelativeLayout>-->
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="@dimen/spacing_2"
             android:background="@color/white"></android.support.v7.widget.RecyclerView>
 

@@ -71,7 +71,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
     private MultiGdybTxAdapter mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
 
-    ImageView isStartPic;
+//    ImageView isStartPic;
 
     //是否播放
     Boolean isStart = false;
@@ -233,10 +233,11 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribe(gdybtxTwoMenu -> {
                     getAdapter1().setLastposition(0);
                     isStart = false;
-                    if (isStartPic != null) {
-                        isStartPic.setImageResource(R.drawable.app_start);
-                        mViewPager.setScanScroll(true);
-                    }
+//                    if (isStartPic != null) {
+//                        isStartPic.setImageResource(R.drawable.app_start);
+//                        mViewPager.setScanScroll(true);
+//                    }
+                    mViewPager.setScanScroll(true);
                     progressDialog.dismiss();
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxTwoMenu.getData().getMenu();
                     List<DmcgjcmenuBeen.DataBean> dataBeans = new ArrayList<>();
@@ -272,10 +273,11 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
             mRecyclerView1.setAdapter(mAdapter1);
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
                 isStart = false;
-                if (isStartPic != null) {
-                    isStartPic.setImageResource(R.drawable.app_start);
-                    mViewPager.setScanScroll(true);
-                }
+//                if (isStartPic != null) {
+//                    isStartPic.setImageResource(R.drawable.app_start);
+//                    mViewPager.setScanScroll(true);
+//                }
+                mViewPager.setScanScroll(true);
 
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
@@ -473,10 +475,11 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
-                    if (isStartPic != null) {
-                        isStartPic.setImageResource(R.drawable.app_start);
-                        mViewPager.setScanScroll(true);
-                    }
+//                    if (isStartPic != null) {
+//                        isStartPic.setImageResource(R.drawable.app_start);
+//                        mViewPager.setScanScroll(true);
+//                    }
+                    mViewPager.setScanScroll(true);
 
                     list = new ArrayList<>();
                     List<String> picList = gdybtx.getData().getPicList();
@@ -566,12 +569,13 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
     private MultiGdybTxAdapter getAdapter3() {
         if (mAdapter3 == null) {
-            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
+//            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
+//                @Override
+//                public boolean canScrollVertically() {
+//                    return false;
+//                }
+//            };
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL);
             mAdapter3 = new MultiGdybTxAdapter(multitemList);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
@@ -584,8 +588,11 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                         break;
                     case R.id.pic_ready:
                         if (isStart == false) {
-                            isStartPic = ((ImageView) view);
-                            isStartPic.setImageResource(R.drawable.app_end);
+//                            isStartPic = ((ImageView) view);
+//                            isStartPic.setImageResource(R.drawable.app_end);
+                            MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_end);
+                            multitemList.set(0,multiItemGdybTx);
+                            getAdapter3().notifyItemChanged(0);
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
                             uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
@@ -593,7 +600,10 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                             mViewPager.setScanScroll(false);
                         } else {
                             uiHandler.removeCallbacksAndMessages(null);
-                            isStartPic.setImageResource(R.drawable.app_start);
+//                            isStartPic.setImageResource(R.drawable.app_start);
+                            MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+                            multitemList.set(0,multiItemGdybTx);
+                            getAdapter3().notifyItemChanged(0);
                             isStart = false;
                             mViewPager.setScanScroll(true);
                         }
