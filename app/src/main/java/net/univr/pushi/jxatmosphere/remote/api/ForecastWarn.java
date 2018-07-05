@@ -65,6 +65,9 @@ public interface ForecastWarn {
     @GET("zytqybAction.do")
     Observable<ZytqybBeen> getZytqyb(@Query("startTime")String startTime, @Query("endTime")String endTime);
     //短时临近预报
+//    @GET("rainForecastGirdFrom20Action.do")
+//    Observable<DsljybBeen> getRainGird(@Query("type")String type,@Query("lat")String lattitude, @Query("lon")String lontitude);
+    //短时临近预报
     @GET("rainForecastGirdFrom20Action.do")
     Observable<DsljybBeen> getRainGird(@Query("lat")String lattitude, @Query("lon")String lontitude);
 

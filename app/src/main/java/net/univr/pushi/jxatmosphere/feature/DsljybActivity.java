@@ -70,6 +70,7 @@ public class DsljybActivity extends BaseActivity {
 
     public AMapLocationClient mlocationClient;
     public AMapLocationClientOption mLocationOption;
+//    String type="0";
 
 
     @Override
@@ -222,6 +223,7 @@ public class DsljybActivity extends BaseActivity {
         webSettings.setBlockNetworkLoads(false);
         webSettings.setAllowFileAccess(true);
 
+
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int mDensity = metrics.densityDpi;
@@ -270,7 +272,7 @@ public class DsljybActivity extends BaseActivity {
         public GsonOption markZhuZhuangChartOptions() {
             GsonOption option = new GsonOption();
             //设置位置左上右下边距
-            option.grid().x(34);
+            option.grid().x(46);
             option.grid().y(10);
 //            option.legend().x(X.left);
             option.calculable(false);

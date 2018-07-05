@@ -75,8 +75,10 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
         Matrix matrix = new Matrix();
         matrix.postTranslate(windowWidth / 2 - imageWidth / 2, windowHeight / 2 - imageHeight / 2);
         //保存到currentMatrix
-        currentMatrix.set(matrix);
-        image.setImageMatrix(matrix);
+        if(currentMatrix!=null){
+            currentMatrix.set(matrix);
+            image.setImageMatrix(matrix);
+        }
     }
 
 

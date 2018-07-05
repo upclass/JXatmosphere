@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -93,6 +94,12 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
     ImageView back;
     @BindView(R.id.mapview)
     MapView mapView;
+    @BindView(R.id.weizhi_relative)
+    RelativeLayout weizhiRelative;
+    @BindView(R.id.content)
+    LinearLayout content;
+    @BindView(R.id.delete)
+    ImageView delete;
     Basemap slbasemap;
     ArcGISMapImageLayer gridLayer;
     String interval = "1";
@@ -124,6 +131,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
         twelve_hour.setOnClickListener(this);
         twentyfour_hour.setOnClickListener(this);
         back.setOnClickListener(this);
+        delete.setOnClickListener(this);
         initArcgis();
     }
 
@@ -223,11 +231,12 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
     private void initView() {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setSupportZoom(false);
-        webSettings.setDisplayZoomControls(false);
-        webSettings.setBlockNetworkLoads(false);
-        webSettings.setAllowFileAccess(true);
+//        mWebView.getSettings().setBuiltInZoomControls(false);
+//        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+//        webSettings.setSupportZoom(false);
+//        webSettings.setDisplayZoomControls(false);
+//        webSettings.setBlockNetworkLoads(false);
+//        webSettings.setAllowFileAccess(true);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -241,10 +250,10 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
         }
         //自适应屏幕
 //        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setLoadWithOverviewMode(true);
+//        webSettings.setUseWideViewPort(true);
+//        webSettings.setLoadWithOverviewMode(true);
 //        mWebView.setInitialScale(200);
-//        mWebView.setVerticalScrollBarEnabled(false);//允许垂直滚动
+        mWebView.setVerticalScrollBarEnabled(false);//允许垂直滚动
         mWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 //        mWebView.setHorizontalScrollBarEnabled(false);//禁止水平滚动
 
@@ -252,6 +261,8 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
     }
 
     private void getTestdata() {
+        weizhiRelative.setVisibility(View.VISIBLE);
+        content.setVisibility(View.VISIBLE);
         dialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
         dialog.setCancelable(true);
         start_forecast_time.setText(initForecastTime());
@@ -413,6 +424,10 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
                 break;
             case R.id.back:
                 finish();
+                break;
+            case R.id.delete:
+                weizhiRelative.setVisibility(View.GONE);
+                content.setVisibility(View.GONE);
                 break;
         }
     }

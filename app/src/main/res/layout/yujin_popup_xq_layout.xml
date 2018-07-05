@@ -171,6 +171,15 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/map_bottom_map" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="20dp"
+            android:text="显示地图"
+            android:textColor="@color/yujin_black"
+            android:textSize="15dp" />
 
         <TextView
             android:layout_width="0dp"
@@ -181,7 +190,7 @@
             android:id="@+id/gb_xq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="center"
             android:layout_marginLeft="9dp"
             android:layout_marginRight="20dp"
             android:text="关闭"

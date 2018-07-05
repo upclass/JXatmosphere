@@ -2,7 +2,6 @@ package net.univr.pushi.jxatmosphere.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -43,16 +42,16 @@ public class EcxwgOneMenuAdapter extends BaseQuickAdapter<EcOneMenu.DataBean.Men
     @Override
     protected void convert(BaseViewHolder helper, EcOneMenu.DataBean.MenuBean item) {
         TextView title = helper.getView(R.id.title);
-        View view = helper.getView(R.id.tabline);
+//        View view = helper.getView(R.id.tabline);
         title.setText(item.getZnName());
         if(item.getSelect()){
-            view.setVisibility(View.VISIBLE);
+//            view.setVisibility(View.VISIBLE);
             title.setTextColor(mContext.getResources().getColor(R.color.toolbar_color));
 //            title.setTextSize(17);
         }
 
         else{
-            view.setVisibility(View.INVISIBLE);
+//            view.setVisibility(View.INVISIBLE);
             title.setTextColor(mContext.getResources().getColor(R.color.black));
 //            title.setTextSize(15);
         }

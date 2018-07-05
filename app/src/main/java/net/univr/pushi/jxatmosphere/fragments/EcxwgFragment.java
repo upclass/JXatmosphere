@@ -757,6 +757,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     }
                     viewPagerAdapter = new MyPagerAdapter(
                             getChildFragmentManager(), fragmentList, HuancunfragmentList);
+
                     // 绑定适配器
                     mViewPager.setAdapter(viewPagerAdapter);
                     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
