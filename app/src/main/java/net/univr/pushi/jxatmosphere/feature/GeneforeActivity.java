@@ -77,7 +77,7 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
     View tabline5;
     List<Fragment> list;
     List<GeneforeMenuBeen> menuList;
-    private int i;
+//    private int i;
     private String tag;
 
     @Override
@@ -93,9 +93,13 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
         mMonth = c.get(Calendar.MONTH) + 1;
         mDay = c.get(Calendar.DAY_OF_MONTH);
         if (mMonth < 10)
-            timeStr = mYear + "-0" + mMonth + "-" + mDay;
+            timeStr = mYear + "-0" + mMonth + "-";
         else
-            timeStr = mYear + "-" + mMonth + "-" + mDay;
+            timeStr = mYear + "-" + mMonth + "-" ;
+        if(mDay<10)
+            timeStr = timeStr + "0" + mDay ;
+        else
+            timeStr=timeStr+mDay;
         time.setText(timeStr);
         time.setOnClickListener(this);
 //        shareTo.setOnClickListener(this);
@@ -230,7 +234,7 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                 .subscribe(geneforeBeen -> {
                     list = new ArrayList<>();
                     tag = geneforeBeen.getData().getClassX();
-                    i = 0;
+//                    i = 0;
                     String timeParams = timeStr.substring(2, timeStr.length());
                     GeneforeFragment geneforeFragment1 = GeneforeFragment.newInstance(timeParams, "早晨");
                     GeneforeFragment geneforeFragment2 = GeneforeFragment.newInstance(timeParams, "中午");
@@ -243,7 +247,7 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                     MyPagerAdapter adapter = new MyPagerAdapter(
                             getSupportFragmentManager(), list, null);
                     // 绑定适配器
-                    viewPager.setOffscreenPageLimit(3);
+                    viewPager.setOffscreenPageLimit(4);
                     viewPager.setAdapter(adapter);
 
                     if (tag.equals("早晨")) {
