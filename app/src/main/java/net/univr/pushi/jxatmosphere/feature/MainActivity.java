@@ -2,6 +2,7 @@ package net.univr.pushi.jxatmosphere.feature;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -159,6 +160,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 //        PgyUpdateManager.register(this);
         initDuty();
+//        cheackVersion();
         initHeight();
         rememberLoginState();
         toolbar.setTitle("");
@@ -235,6 +237,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             ActivityCompat.requestPermissions(MainActivity.this, permissionList.toArray(new String[permissionList.size()]), 1);
         }
 
+    }
+
+    private void cheackVersion() throws Exception {
+        String versionName = getVersionName();
+        RetrofitHelper.getUserAPI()
+                .cheackAppVersion(versionName)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(appVersionBeen -> {
+                    String version = appVersionBeen.getData().getVersion();
+                    String versionName1 = null;
+                    try {
+                        versionName1 = getVersionName();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if(Double.valueOf(versionName1)<Double.valueOf(version)){
+                    }
+                    appVersionBeen.getData().getUrl();
+                }, throwable -> {
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
     }
 
     private void rememberLoginState() {
@@ -490,12 +516,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bdskBeen -> {
                     BdskBeen.DataBean data = bdskBeen.getData().get(0);
-                    temp.setText(data.getTEM()+"℃");
+                    temp.setText(data.getTEM() + "℃");
 
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
+    }
+
+    private String getVersionName() throws Exception {
+        // 获取packagemanager的实例
+        PackageManager packageManager = getPackageManager();
+        // getPackageName()是你当前类的包名，0代表是获取版本信息
+        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(), 0);
+        String version = packInfo.versionName;
+        return version;
     }
 
 

@@ -435,7 +435,7 @@ public class WtfRapidFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), type, this, urls);
+                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls,type+"/"+ctype);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -529,7 +529,7 @@ public class WtfRapidFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        WtfPicFragment fragment = WtfPicFragment.newInstance(urls.get(i), type, this, urls);
+                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i), urls,type+"/"+ctype);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(

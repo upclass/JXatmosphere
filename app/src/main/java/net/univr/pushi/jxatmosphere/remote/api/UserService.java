@@ -1,5 +1,6 @@
 package net.univr.pushi.jxatmosphere.remote.api;
 
+import net.univr.pushi.jxatmosphere.beens.AppVersionBeen;
 import net.univr.pushi.jxatmosphere.beens.UserBeen;
 
 import retrofit2.http.GET;
@@ -27,5 +28,8 @@ public interface UserService {
 
     @GET("userPSModify.do")
     Observable<UserBeen> userPSModify(@Query("phone") String phone,@Query("password") String password);
+
+    @GET("appVersionCheackAction.do")
+    Observable<AppVersionBeen> cheackAppVersion(@Query("version") String version);
 
 }

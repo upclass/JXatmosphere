@@ -12,12 +12,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
-
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.interfaces.Picdispath;
+import net.univr.pushi.jxatmosphere.utils.PicUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +40,8 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
     private ImageView image;
     List<String> urls = new ArrayList<>();
     String url;
+    String pack;
+    private Bitmap bitmap;
 
 
     @Override
@@ -67,33 +67,51 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
     private void center() {
 
         //获取imageview中图片的实际高度
-        Bitmap bitmap = ((BitmapDrawable) (image).getDrawable()).getBitmap();
-        imageHeight = bitmap.getHeight();
-        imageWidth = bitmap.getWidth();
+        BitmapDrawable drawable = (BitmapDrawable) (image).getDrawable();
+        if (drawable != null)
+            bitmap = drawable.getBitmap();
+        if (bitmap != null) {
+//            bitmap=setImgSize(bitmap,1000,900);
+            imageHeight = bitmap.getHeight();
+            imageWidth = bitmap.getWidth();
 
-        //变换矩阵，使其移动到屏幕中央
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(windowWidth / 2 - imageWidth / 2, windowHeight / 2 - imageHeight / 2);
-        //保存到currentMatrix
-        if(currentMatrix!=null){
-            currentMatrix.set(matrix);
-            image.setImageMatrix(matrix);
+            //变换矩阵，使其移动到屏幕中央
+            Matrix matrix = new Matrix();
+            matrix.postTranslate(windowWidth / 2 - imageWidth / 2, windowHeight / 2 - imageHeight / 2);
+            //保存到currentMatrix
+            if (currentMatrix != null) {
+                currentMatrix.set(matrix);
+                image.setImageMatrix(matrix);
+            }
         }
+
     }
 
 
     public void initView() {
         urls = getIntent().getStringArrayListExtra("urls");
         url = getIntent().getStringExtra("url");
+        pack = getIntent().getStringExtra("pack");
         CallBackUtil.setPicdispath(new Picdispath() {
             @Override
             public void onDispatchPic(int position) {
-                Picasso.with(mContext).load(urls.get(position)).placeholder(R.drawable.app_imageplaceholdsmall).memoryPolicy(MemoryPolicy.NO_STORE).into(image);
+                bitmap = PicUtils.readLocalImage(urls.get(position), pack);
+                if (bitmap != null) {
+//                    bitmap = setImgSize(bitmap, 1000, 900);
+                    image.setImageBitmap(bitmap);
+                }
+
+//                center();
             }
         });
 
-        Picasso.with(this).load(url).placeholder(R.drawable.app_imageplacehold).into(image);
-        image.setOnTouchListener(this);
+//        Picasso.with(this).load(url).placeholder(R.drawable.app_imageplacehold).into(image);
+        bitmap = PicUtils.readLocalImage(url, pack);
+        if (bitmap != null) {
+            image.setImageBitmap(bitmap);
+            image.setOnTouchListener(this);
+        }
+
 
 //        CallBackUtil.setDispatchDrawable(this);
 //      try {
@@ -253,8 +271,31 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
     @Override
     public void finish() {
         super.finish();
-        CallBackUtil.picdispath=null;
+        CallBackUtil.picdispath = null;
         CallBackUtil.doDispatchLight();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bitmap != null) {
+            bitmap.recycle();
+        }
+    }
+
+    public Bitmap setImgSize(Bitmap bm, int newWidth, int newHeight) {
+        // 获得图片的宽高.
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例.
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // 取得想要缩放的matrix参数.
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片.
+        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+        return newbm;
     }
 
 }

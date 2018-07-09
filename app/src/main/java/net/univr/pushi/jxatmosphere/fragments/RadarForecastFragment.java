@@ -198,7 +198,7 @@ public class RadarForecastFragment extends RxLazyFragment {
 
                         urls = radarForecastBeen.getData().getUrlList();
                         for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls,"radarForecast/rain");
                             fragmentList.add(fragment);
                         }
 
@@ -286,7 +286,7 @@ public class RadarForecastFragment extends RxLazyFragment {
 
                         urls = radarForecastBeen.getData().getUrlList();
                         for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls,"radarForecast/ref");
                             fragmentList.add(fragment);
                         }
 

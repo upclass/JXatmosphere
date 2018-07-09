@@ -3,7 +3,6 @@ package net.univr.pushi.jxatmosphere.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,7 +30,6 @@ import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
-import net.univr.pushi.jxatmosphere.feature.PicDealActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
@@ -102,7 +100,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 //    @BindView(R.id.linear7)
 //    LinearLayout tv7;
 
-//    @BindView(R.id.scrollview)
+    //    @BindView(R.id.scrollview)
 //    HorizontalScrollView scrollview;
     @BindView(R.id.swzd_lay)
     LinearLayout swzd_lay;
@@ -116,9 +114,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     List<Fragment> list;
     Handler handler = new Handler();
     int position;
-    public String interval="5";
+    public String interval = "5";
 
-    public static DMCGJCFragment newInstance(String type, String ctype, ViewPager viewPager, List<Fragment> list,int position) {
+    public static DMCGJCFragment newInstance(String type, String ctype, ViewPager viewPager, List<Fragment> list, int position) {
         DMCGJCFragment dmcgjcFragment = new DMCGJCFragment();
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
@@ -238,7 +236,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
 
     public void initScrollView(int position) {
-        if (position==0) {
+        if (position == 0) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
@@ -247,7 +245,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 }
             }, 1000);
         }
-        if (position==1) {
+        if (position == 1) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
@@ -256,7 +254,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 }
             }, 1000);
         }
-        if (position==2) {
+        if (position == 2) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
@@ -265,7 +263,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 }
             }, 1000);
         }
-        if (position==3) {
+        if (position == 3) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
@@ -274,7 +272,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 }
             }, 2000);
         }
-        if (position==4) {
+        if (position == 4) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
@@ -283,7 +281,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 }
             }, 1000);
         }
-        if (position==5) {
+        if (position == 5) {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
@@ -366,12 +364,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     Picasso.with(getContext())
                             .load(url).placeholder(R.drawable.ic_placeholder)
                             .into(image);
-                    image.setOnClickListener(v -> {
-                                Intent intent = new Intent(getActivity(), PicDealActivity.class);
-                                intent.putExtra("url", url);
-                                startActivity(intent);
-                            }
-                    );
+//                    image.setOnClickListener(v -> {
+//                                Intent intent = new Intent(getActivity(), PicDealActivity.class);
+//                                intent.putExtra("url", url);
+//                                intent.putExtra("pack", "swzd'");
+//                                startActivity(intent);
+//                            }
+//                    );
 
                 }, throwable -> {
                     progressDialog.dismiss();
@@ -564,7 +563,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         if (menuAdapter == null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
             List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
-            initMenuData(mData1,position);
+            initMenuData(mData1, position);
             menuAdapter = new DmcgjcMenuAdapter(mData1);
             menu_recycle.setLayoutManager(layoutManager);
             menu_recycle.setAdapter(menuAdapter);
@@ -616,14 +615,14 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         return menuAdapter;
     }
 
-    private void initMenuData(List<DmcgjcmenuBeen.DataBean> mData1,int position) {
+    private void initMenuData(List<DmcgjcmenuBeen.DataBean> mData1, int position) {
         DmcgjcmenuBeen.DataBean dataBean = new DmcgjcmenuBeen.DataBean();
         DmcgjcmenuBeen.DataBean dataBean1 = new DmcgjcmenuBeen.DataBean();
         DmcgjcmenuBeen.DataBean dataBean2 = new DmcgjcmenuBeen.DataBean();
         DmcgjcmenuBeen.DataBean dataBean3 = new DmcgjcmenuBeen.DataBean();
         DmcgjcmenuBeen.DataBean dataBean4 = new DmcgjcmenuBeen.DataBean();
         DmcgjcmenuBeen.DataBean dataBean5 = new DmcgjcmenuBeen.DataBean();
-        if(position==0){
+        if (position == 0) {
             dataBean.setZnName("累积降水");
             dataBean.setSelect(true);
             dataBean1.setZnName("气温");
@@ -637,7 +636,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setZnName("能见度");
             dataBean5.setSelect(false);
         }
-        if(position==1){
+        if (position == 1) {
             dataBean.setZnName("累积降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
@@ -651,7 +650,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setZnName("能见度");
             dataBean5.setSelect(false);
         }
-        if(position==2){
+        if (position == 2) {
             dataBean.setZnName("累积降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
@@ -665,7 +664,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setZnName("能见度");
             dataBean5.setSelect(false);
         }
-        if(position==3){
+        if (position == 3) {
             dataBean.setZnName("累积降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
@@ -679,7 +678,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setZnName("能见度");
             dataBean5.setSelect(false);
         }
-        if(position==4){
+        if (position == 4) {
             dataBean.setZnName("累积降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
@@ -693,7 +692,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setZnName("能见度");
             dataBean5.setSelect(false);
         }
-        if(position==5){
+        if (position == 5) {
             dataBean.setZnName("累积降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
@@ -772,12 +771,12 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         }
         getAdapter3();
         RetrofitHelper.getWeatherMonitorAPI()
-                .getDmcgjc(type, ctype,interval)
+                .getDmcgjc(type, ctype, interval)
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
-                    int vis=0;
+                    int vis = 0;
                     if (ctype.equals("rain_sum") || ctype.equals("rain_sum1")
                             || ctype.equals("rain_sum3") || ctype.equals("rain_sum6")
                             || ctype.equals("rain_sum12") || ctype.equals("temp")
@@ -791,7 +790,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                             || ctype.equals("wind_1minute_avg")
                             || ctype.equals("humidity") || ctype.equals("pressure")
                             || ctype.equals("surface_temp")) {
-                        vis=1;
+                        vis = 1;
                     }
                     view_didver.setVisibility(View.VISIBLE);
                     recycle_skipto_position = 1;
@@ -810,9 +809,26 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     fragmentList.clear();
                     urls = DmcgjcDeen.getData().getUrls();
                     for (int i = 0; i < urls.size(); i++) {
-                        DmcgjcPicFragment fragment = DmcgjcPicFragment.newInstance(urls.get(i), urls,this,vis,interval);
+                        DmcgjcPicFragment fragment = DmcgjcPicFragment.newInstance(urls.get(i), urls, this, vis, interval, "dmcgjc/"+type+"/"+ctype);
                         fragmentList.add(fragment);
                     }
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            for (int i = 0; i < urls.size(); i++) {
+//                                PicUtils.decodeUriAsBitmapFromNet(urls.get(i), "dmcgjc/"+type+"/"+ctype);
+//                            }
+//                        }
+//                    }).start();
+//                    for (int i = 0; i < urls.size(); i++) {
+//                        int finalI = i;
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                PicUtils.decodeUriAsBitmapFromNet(urls.get(finalI),"dmcgjc/"+type+"/"+ctype);
+//                            }
+//                        }).start();
+//                    }
                     viewPagerAdapter = new MyPagerAdapter(
                             getChildFragmentManager(), fragmentList, HuancunfragmentList);
                     // 绑定适配器

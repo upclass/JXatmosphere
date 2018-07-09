@@ -2,10 +2,10 @@ package net.univr.pushi.jxatmosphere.feature;
 
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,19 +18,19 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.squareup.picasso.Picasso;
 
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
 import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
-import net.univr.pushi.jxatmosphere.adapter.ViewpageAdapter;
+import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
+import net.univr.pushi.jxatmosphere.fragments.PicLoadFragment;
 import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
@@ -84,8 +84,9 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
     //播放的下一位置
     int recycle_skipto_position = 2;
-    List<ImageView> list;
-    ViewpageAdapter viewPagerAdapter;
+    //    List<ImageView> list;
+    List<Fragment> list = new ArrayList<>();
+    MyPagerAdapter  viewPagerAdapter;
 
     @Override
     public int getLayoutId() {
@@ -104,7 +105,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
         getOneMenu();
         initOnclick();
-        type="rain";
+        type = "rain";
         testType = "rain";
         getTwoMenu();
 
@@ -204,10 +205,10 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxOneMenu -> {
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxOneMenu.getData().getMenu();
-                    List<DmcgjcmenuBeen.DataBean >destmenu=new ArrayList<>();
+                    List<DmcgjcmenuBeen.DataBean> destmenu = new ArrayList<>();
                     for (int i = 0; i < menu.size(); i++) {
-                        DmcgjcmenuBeen.DataBean dataBean=new DmcgjcmenuBeen.DataBean();
-                        if(i==0){
+                        DmcgjcmenuBeen.DataBean dataBean = new DmcgjcmenuBeen.DataBean();
+                        if (i == 0) {
                             dataBean.setSelect(true);
                         }
 
@@ -481,27 +482,35 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 //                    }
                     mViewPager.setScanScroll(true);
 
-                    list = new ArrayList<>();
+//                    list = new ArrayList<>();
                     List<String> picList = gdybtx.getData().getPicList();
-                    ArrayList<String> picTemp = new ArrayList<>();
-                    for (int i = 0; i < picList.size(); i++) {
-                        picTemp.add(picList.get(i));
-                        ImageView imageView = new ImageView(context);
-                        Picasso.with(context).load(picList.get(i)).placeholder(R.drawable.app_imageplacehold).into(imageView);
-                        int finalI = i;
-                        imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(context, PicDealActivity.class);
-                                intent.putExtra("url", picList.get(finalI));
-                                intent.putStringArrayListExtra("urls", picTemp);
-                                startActivity(intent);
-                            }
-                        });
-                        list.add(imageView);
+                    List<Fragment> fragmentHuancun = new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        fragmentHuancun.add(list.get(i));
                     }
-
-                    viewPagerAdapter = new ViewpageAdapter(list);
+                    list.clear();
+                    for (int i = 0; i < picList.size(); i++) {
+                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(picList.get(i), picList, "gdybtx/" + testType);
+                        list.add(picLoadFragment);
+                    }
+//                    ArrayList<String> picTemp = new ArrayList<>();
+//                    for (int i = 0; i < picList.size(); i++) {
+//                        picTemp.add(picList.get(i));
+//                        ImageView imageView = new ImageView(context);
+//                        Picasso.with(context).load(picList.get(i)).placeholder(R.drawable.app_imageplacehold).into(imageView);
+//                        int finalI = i;
+//                        imageView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent intent = new Intent(context, PicDealActivity.class);
+//                                intent.putExtra("url", picList.get(finalI));
+//                                intent.putStringArrayListExtra("urls", picTemp);
+//                                startActivity(intent);
+//                            }
+//                        });
+//                        list.add(imageView);
+//                    }
+                    viewPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), list, fragmentHuancun);
                     // 绑定适配器
                     mViewPager.setAdapter(viewPagerAdapter);
                     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -591,7 +600,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 //                            isStartPic = ((ImageView) view);
 //                            isStartPic.setImageResource(R.drawable.app_end);
                             MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_end);
-                            multitemList.set(0,multiItemGdybTx);
+                            multitemList.set(0, multiItemGdybTx);
                             getAdapter3().notifyItemChanged(0);
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
@@ -602,7 +611,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                             uiHandler.removeCallbacksAndMessages(null);
 //                            isStartPic.setImageResource(R.drawable.app_start);
                             MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
-                            multitemList.set(0,multiItemGdybTx);
+                            multitemList.set(0, multiItemGdybTx);
                             getAdapter3().notifyItemChanged(0);
                             isStart = false;
                             mViewPager.setScanScroll(true);

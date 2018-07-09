@@ -165,12 +165,29 @@ public class LdptRadarFragment extends RxLazyFragment {
                             huancunFragments.add(fragmentList.get(i));
                         }
                         fragmentList.clear();
-
                         urls = LdptBeen.getData().getImageUrl();
                         for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls,"ldptRadar/"+flag);
                             fragmentList.add(fragment);
                         }
+
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                for (int i = 0; i < urls.size(); i++) {
+//                                    PicUtils.decodeUriAsBitmapFromNet(urls.get(i),"ldptRadar/"+flag);
+//                                }
+//                            }
+//                        }).start();
+//                        for (int i = 0; i < urls.size(); i++) {
+//                            int finalI = i;
+//                            new Thread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    PicUtils.decodeUriAsBitmapFromNet(urls.get(finalI),"ldptRadar/"+flag);
+//                                }
+//                            }).start();
+//                        }
 
                         viewPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragmentList, huancunFragments);
                         mViewPager.setAdapter(viewPagerAdapter);
@@ -254,9 +271,28 @@ public class LdptRadarFragment extends RxLazyFragment {
 
                         urls = wxytBeen.getData().getImageUrl();
                         for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls,"ldptRadar/"+flag);
                             fragmentList.add(fragment);
                         }
+
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                for (int i = 0; i < urls.size(); i++) {
+//                                    PicUtils.decodeUriAsBitmapFromNet(urls.get(i),"ldptRadar/"+flag);
+//                                }
+//                            }
+//                        }).start();
+
+//                        for (int i = 0; i < urls.size(); i++) {
+//                            int finalI = i;
+//                            new Thread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    PicUtils.decodeUriAsBitmapFromNet(urls.get(finalI), "ldptRadar/"+flag);
+//                                }
+//                            }).start();
+//                        }
 
                         viewPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragmentList, huancunFragments);
                         mViewPager.setAdapter(viewPagerAdapter);

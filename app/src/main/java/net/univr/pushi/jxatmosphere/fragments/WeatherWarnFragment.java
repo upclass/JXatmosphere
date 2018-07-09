@@ -129,9 +129,19 @@ public class WeatherWarnFragment extends RxLazyFragment {
                     }
                     list.clear();
                     for (int i = 0; i < url.size(); i++) {
-                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(url.get(i), url);
+                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(url.get(i), url, "weathWarn/" + type);
                         list.add(picLoadFragment);
                     }
+//                    for (int i = 0; i < url.size(); i++) {
+//                        int finalI = i;
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                PicUtils.decodeUriAsBitmapFromNet(url.get(finalI), "weathWarn/" + type);
+//                            }
+//                        }).start();
+//                    }
+
                     pagerAdapter = new MyPagerAdapter(getChildFragmentManager(), list, fragmentHuancun);
                     viewPager.setAdapter(pagerAdapter);
                     viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

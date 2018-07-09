@@ -234,7 +234,7 @@ public class GKDMGCFragment extends RxLazyFragment {
 
                         urls = GKDMGCBeen.getData().getUrl();
                         for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls,"gkdm"+"/000");
                             fragmentList.add(fragment);
                         }
 
@@ -317,7 +317,7 @@ public class GKDMGCFragment extends RxLazyFragment {
                         fragmentList.clear();
                         urls = GKDMGCBeen.getData().getUrl();
                         for (int i = 0; i < urls.size(); i++) {
-                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls);
+                            PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls,"gkdm/"+item);
                             fragmentList.add(fragment);
                         }
                         viewPagerAdapter = new MyPagerAdapter(
@@ -332,7 +332,9 @@ public class GKDMGCFragment extends RxLazyFragment {
 
                             @Override
                             public void onPageSelected(int position) {
-
+                                if (CallBackUtil.picdispath!=null) {
+                                    CallBackUtil.doDispathPic(position);
+                                }
                                 MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
                                 GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
                                 clickBeenStop.setOnclick(false);
