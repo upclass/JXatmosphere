@@ -64,7 +64,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 3
-        versionName "1.3"
+        versionName "1.4"
         testInstrumentationRunner "android.support.popup_feedback_layout.runner.AndroidJUnitRunner"
         //方法>64k
         multiDexEnabled true
@@ -106,8 +106,8 @@ dependencies {
     //谷歌解析json工具
     compile 'com.google.code.gson:gson:2.8.2'
     //okHttp网络请求库
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     //retrofit
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
@@ -151,4 +151,12 @@ dependencies {
     compile 'com.github.applikeysolutions:cosmocalendar:1.0.4'
     //高德逆地理编码
     compile 'com.amap.api:search:latest.integration'
+
+    //版本自动更新,需要以下3个包
+    compile 'com.qianwen:update-app:3.5.2'
+    //okhttpUtils
+    compile 'com.qianwen:okhttp-utils:3.8.0'
+    //okgo
+    compile 'com.lzy.net:okgo:3.0.4'
+
 }

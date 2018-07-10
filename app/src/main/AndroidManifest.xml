@@ -69,6 +69,10 @@
             android:name="com.amap.api.v2.apikey"
             android:value="f679a8e521d005caabfdefbfbf67143d" />
 
+        <!--<meta-data-->
+            <!--android:name="UPDATE_APP_KEY"-->
+            <!--android:value="ab55ce55Ac4bcP408cPb8c1Aaeac179c5f6f"/>-->
+
         <service android:name="com.amap.api.location.APSService" />
 
         <activity

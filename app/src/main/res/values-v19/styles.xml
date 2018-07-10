@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/toolbar_color</item>
         <item name="colorPrimaryDark">@color/toolbar_color</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:popupMenuStyle">@style/MenuTextStyle</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>

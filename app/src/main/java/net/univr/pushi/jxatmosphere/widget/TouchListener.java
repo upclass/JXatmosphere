@@ -88,6 +88,7 @@ public class TouchListener implements View.OnTouchListener {
             // 手指离开屏幕
             case MotionEvent.ACTION_UP:
                 // 当触点离开屏幕，但是屏幕上还有触点(手指)
+
             case MotionEvent.ACTION_POINTER_UP:
                 mode = 0;
                 break;

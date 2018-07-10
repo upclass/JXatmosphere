@@ -1,10 +1,14 @@
 package net.univr.pushi.jxatmosphere.feature;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.percent.PercentRelativeLayout;
@@ -12,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -28,16 +33,30 @@ import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.vector.update_app.UpdateAppBean;
+import com.vector.update_app.UpdateAppManager;
+import com.vector.update_app.UpdateCallback;
+import com.vector.update_app.service.DownloadService;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.BdskBeen;
 import net.univr.pushi.jxatmosphere.beens.DutyBeen;
+import net.univr.pushi.jxatmosphere.remote.ApiConstants;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.CProgressDialogUtils;
+import net.univr.pushi.jxatmosphere.utils.HProgressDialogUtils;
+import net.univr.pushi.jxatmosphere.utils.OkGoUpdateHttpUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -148,6 +167,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     String lon;
     String address;
 
+    private boolean isShowDownloadProgress;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_main;
@@ -155,12 +176,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initViews(Bundle savedInstanceState) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        int i = (int) (55 * scale + 0.5f);
-
 //        PgyUpdateManager.register(this);
+        cheackVersion();
         initDuty();
-//        cheackVersion();
         initHeight();
         rememberLoginState();
         toolbar.setTitle("");
@@ -239,7 +257,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-    private void cheackVersion() throws Exception {
+
+    private void cheackVersion() {
         String versionName = getVersionName();
         RetrofitHelper.getUserAPI()
                 .cheackAppVersion(versionName)
@@ -247,21 +266,225 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(appVersionBeen -> {
-                    String version = appVersionBeen.getData().getVersion();
-                    String versionName1 = null;
-                    try {
-                        versionName1 = getVersionName();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if(Double.valueOf(versionName1)<Double.valueOf(version)){
-                    }
-                    appVersionBeen.getData().getUrl();
+                    if (appVersionBeen.getErrcode().equals("0"))
+                        update();
+                    else ;
                 }, throwable -> {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
+
+    private void update() {
+        isShowDownloadProgress = true;
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("version",
+                getVersionName());
+        new UpdateAppManager
+                .Builder()
+                //必须设置，当前Activity
+                .setActivity(this)
+                //必须设置，实现httpManager接口的对象
+                .setHttpManager(new OkGoUpdateHttpUtil())
+                //必须设置，更新地址
+                .setUpdateUrl(ApiConstants.API_BASE_URL + "appVersionCheackAction.do")
+                //以下设置，都是可选
+                //设置请求方式，默认get
+                .setPost(false)
+                //添加自定义参数，默认version=1.0.0（app的versionName）；apkKey=唯一表示（在AndroidManifest.xml配置）
+                .setParams(params)
+                //设置点击升级后，消失对话框，默认点击升级后，对话框显示下载进度
+//                .hideDialogOnDownloading(false)
+                //设置头部，不设置显示默认的图片，设置图片后自动识别主色调，然后为按钮，进度条设置颜色
+//                .setTopPic(R.drawable.top_8)
+                //为按钮，进度条设置颜色，默认从顶部图片自动识别。
+//                .setThemeColor(0xffffac5d)
+                //设置apk下砸路径，默认是在下载到sd卡下/Download/1.0.0/test.apk
+                .setTargetPath(path)
+                //设置appKey，默认从AndroidManifest.xml获取，如果，使用自定义参数，则此项无效
+                //.setAppKey("ab55ce55Ac4bcP408cPb8c1Aaeac179c5f6f")
+                //不显示通知栏进度条
+//                .dismissNotificationProgress()
+                //是否忽略版本
+                //.showIgnoreVersion()
+                .build()
+                //检测是否有新版本
+                .checkNewApp(new UpdateCallback() {
+                    /**
+                     * 解析json,自定义协议
+                     *
+                     * @param json 服务器返回的json
+                     * @return UpdateAppBean
+                     */
+                    @Override
+                    protected UpdateAppBean parseJson(String json) {
+                        UpdateAppBean updateAppBean = new UpdateAppBean();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONObject object = jsonObject.optJSONObject("data");
+                            String url = object.optString("url");
+                            String describe = object.optString("describe");
+                            String version = object.optString("version");
+                            String update;
+                            if (Double.valueOf(getVersionName()) < Double.valueOf(version)) {
+                                update = "Yes";
+                            } else {
+                                update = "No";
+                            }
+                            updateAppBean
+                                    //（必须）是否更新Yes,No
+                                    .setUpdate(update)
+                                    //（必须）新版本号，
+                                    .setNewVersion(version)
+                                    //（必须）下载地址
+                                    .setApkFileUrl(url)
+                                    //（必须）更新内容
+                                    .setUpdateLog(describe)
+                                    //大小，不设置不显示大小，可以不设置
+//                                    .setTargetSize(jsonObject.optString("target_size"))
+                                    //是否强制更新，可以不设置
+                                    .setConstraint(false);
+                            //设置md5，可以不设置
+//                                    .setNewMd5(jsonObject.optString("new_md51"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return updateAppBean;
+                    }
+
+                    /**
+                     * 有新版本
+                     *
+                     * @param updateApp        新版本信息
+                     * @param updateAppManager app更新管理器
+                     */
+                    @Override
+                    public void hasNewApp(UpdateAppBean updateApp, UpdateAppManager updateAppManager) {
+                        //自定义对话框
+                        showDiyDialog(updateApp, updateAppManager);
+
+                    }
+
+
+                    /**
+                     @Override protected void hasNewApp(UpdateAppBean updateApp, UpdateAppManager updateAppManager) {
+                     updateAppManager.showDialogFragment();
+                     }
+
+                     /**
+                      * 网络请求之前
+                     */
+                    @Override
+                    public void onBefore() {
+                        CProgressDialogUtils.showProgressDialog(MainActivity.this);
+                    }
+
+                    /**
+                     * 网路请求之后
+                     */
+                    @Override
+                    public void onAfter() {
+                        CProgressDialogUtils.cancelProgressDialog(MainActivity.this);
+                    }
+
+                    /**
+                     * 没有新版本
+                     */
+                    @Override
+                    public void noNewApp(String error) {
+                        Toast.makeText(MainActivity.this, "没有新版本", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    private void showDiyDialog(final UpdateAppBean updateApp, final UpdateAppManager updateAppManager) {
+//        String targetSize = updateApp.getTargetSize();
+        String updateLog = updateApp.getUpdateLog();
+
+        String msg = "";
+
+//        if (!TextUtils.isEmpty(targetSize)) {
+//            msg = "新版本大小：" + targetSize + "\n\n";
+//        }
+
+        if (!TextUtils.isEmpty(updateLog)) {
+            msg += updateLog;
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(String.format("检测到新版本"+updateApp.getNewVersion()+"是否更新？"))
+                .setMessage(msg)
+                .setPositiveButton("升级", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //显示下载进度
+                        if (isShowDownloadProgress) {
+                            updateAppManager.download(new DownloadService.DownloadCallback() {
+                                @Override
+                                public void onStart() {
+                                    HProgressDialogUtils.showHorizontalProgressDialog(MainActivity.this, "下载进度", false);
+                                }
+
+                                /**
+                                 * 进度
+                                 *
+                                 * @param progress  进度 0.00 -1.00 ，总大小
+                                 * @param totalSize 总大小 单位B
+                                 */
+                                @Override
+                                public void onProgress(float progress, long totalSize) {
+                                    HProgressDialogUtils.setProgress(Math.round(progress * 100));
+                                }
+
+                                /**
+                                 *
+                                 * @param total 总大小 单位B
+                                 */
+                                @Override
+                                public void setMax(long total) {
+
+                                }
+
+
+                                @Override
+                                public boolean onFinish(File file) {
+                                    HProgressDialogUtils.cancel();
+                                    return true;
+                                }
+
+                                @Override
+                                public void onError(String msg) {
+                                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                    HProgressDialogUtils.cancel();
+
+                                }
+
+                                @Override
+                                public boolean onInstallAppAndAppOnForeground(File file) {
+                                    return false;
+                                }
+                            });
+                        } else {
+                            //不显示下载进度
+                            updateAppManager.download();
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("暂不升级", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLUE);
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+    }
+
 
     private void rememberLoginState() {
         SPUtils.getInstance().put("isFirstLogin", false);
@@ -524,11 +747,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 });
     }
 
-    private String getVersionName() throws Exception {
+    private String getVersionName() {
         // 获取packagemanager的实例
         PackageManager packageManager = getPackageManager();
         // getPackageName()是你当前类的包名，0代表是获取版本信息
-        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(), 0);
+        PackageInfo packInfo = null;
+        try {
+            packInfo = packageManager.getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         String version = packInfo.versionName;
         return version;
     }

@@ -311,7 +311,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
 
                 }, throwable -> {
                     LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                    ToastUtils.showShort("没查询到数据");
                 });
     }
 
