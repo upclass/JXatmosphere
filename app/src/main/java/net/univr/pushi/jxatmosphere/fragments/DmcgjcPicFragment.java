@@ -133,7 +133,7 @@ public class DmcgjcPicFragment extends RxLazyFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        bitmap = PicUtils.readLocalImage(url, pack);
+        bitmap = PicUtils.readLocalImage(url, pack,getActivity());
         pic.setImageBitmap(bitmap);
     }
 
@@ -153,7 +153,7 @@ public class DmcgjcPicFragment extends RxLazyFragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                bitmap = PicUtils.readLocalImage(url, pack);
+                bitmap = PicUtils.readLocalImage(url, pack,getActivity());
                 if(pic!=null){
                     pic.setImageBitmap(bitmap);
                 }

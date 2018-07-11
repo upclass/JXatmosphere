@@ -60,18 +60,12 @@ public class PicLoadFragment extends RxLazyFragment {
 
     @Override
     public void finishCreateView(Bundle state) {
-
         url = "";
         if (getArguments() != null) {
-            //取出保存的值
             url = getArguments().getString("url");
             pack = getArguments().getString("pack");
         }
-//        Picasso.with(getActivity()).load(url).placeholder(R.drawable.app_imageplacehold).into(pic);
-
         finalUrl = url;
-
-
     }
 
 
@@ -79,7 +73,7 @@ public class PicLoadFragment extends RxLazyFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        bitmap = PicUtils.readLocalImage(url, pack);
+        bitmap = PicUtils.readLocalImage(url, pack, getActivity());
         if (bitmap == null) {
             new Thread(new Runnable() {
                 @Override
@@ -120,16 +114,6 @@ public class PicLoadFragment extends RxLazyFragment {
     }
 
 
-//    void recycleImageView(ImageView imageView) {
-//        if(imageView!=null){
-//            BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-//            //如果图片还未回收，先强制回收该图片
-//            if (bitmapDrawable!=null&&bitmapDrawable.getBitmap()!=null&&!bitmapDrawable.getBitmap().isRecycled()) {
-//                bitmapDrawable.getBitmap().recycle();
-//            }
-//            System.gc();
-//        }
-//    }
 
     private Handler uiHandler = new Handler() {
 
@@ -137,7 +121,7 @@ public class PicLoadFragment extends RxLazyFragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                bitmap = PicUtils.readLocalImage(url, pack);
+                bitmap = PicUtils.readLocalImage(url, pack, getActivity());
                 if (pic != null) {
                     pic.setImageBitmap(bitmap);
                 }

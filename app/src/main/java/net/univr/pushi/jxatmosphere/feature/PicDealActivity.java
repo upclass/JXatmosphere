@@ -36,12 +36,13 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
     private float moveLastX, moveLastY;//进行移动时用来记录上一个触点的坐标
 
     private static float max_scale = 4f;//缩放的最大值
-    private static float min_scale = 0.3f;//缩放的最小值
+    private static float min_scale = 1f;//缩放的最小值
     private ImageView image;
     List<String> urls = new ArrayList<>();
     String url;
     String pack;
     private Bitmap bitmap;
+    private Boolean isMove=false;
 
 
     @Override
@@ -82,7 +83,12 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
             if (currentMatrix != null) {
                 currentMatrix.set(matrix);
                 image.setImageMatrix(matrix);
+            }else{
+                currentMatrix= new Matrix();
+                currentMatrix.set(matrix);
+                image.setImageMatrix(matrix);
             }
+
         }
 
     }
@@ -95,7 +101,7 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
         CallBackUtil.setPicdispath(new Picdispath() {
             @Override
             public void onDispatchPic(int position) {
-                bitmap = PicUtils.readLocalImage(urls.get(position), pack);
+                bitmap = PicUtils.readLocalImage(urls.get(position), pack, PicDealActivity.this);
                 if (bitmap != null) {
 //                    bitmap = setImgSize(bitmap, 1000, 900);
                     image.setImageBitmap(bitmap);
@@ -105,47 +111,22 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
             }
         });
 
-//        Picasso.with(this).load(url).placeholder(R.drawable.app_imageplacehold).into(image);
-        bitmap = PicUtils.readLocalImage(url, pack);
+        bitmap = PicUtils.readLocalImage(url, pack, PicDealActivity.this);
         if (bitmap != null) {
             image.setImageBitmap(bitmap);
             image.setOnTouchListener(this);
         }
 
-
-//        CallBackUtil.setDispatchDrawable(this);
-//      try {
-//          Intent intent = getIntent();
-//          if (intent != null) {
-//              byte [] mypics = intent.getByteArrayExtra("picture");
-//              Bitmap bitmap = BitmapFactory.decodeByteArray(mypics,0,mypics.length);
-//              image.setImageBitmap(bitmap);
-//          }
-//      }catch (Exception e){
-//          e.printStackTrace();
-//      }
     }
 
 
     @Override
     public boolean onTouch(View v, MotionEvent motionEvent) {
-        //注意这一句的写法，用在多点触控中
-//        float pp1[] = new float[9];
-//        currentMatrix.getValues(pp1);
-//        float leftPosition1 = pp1[2];//图片左边的位置
-//        float upPostion2 = pp1[5];//图片顶部的位置
-//        if(motionEvent.getX()<leftPosition1||motionEvent.getX()>(leftPosition1+imageWidth)||motionEvent.getY()<upPostion2||motionEvent.getY()>(upPostion2+imageHeight)){
-//             finish();
-//        }
+
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             // 在这里解释一下，在程序中我们将单点控制移动和双点控制缩放区分开（但是双点也是可以
             // 控制移动的)flag 的作用很简单，主要是用在单点移动时判断是否此次点击是否将要移动（不好描述，请读者自行细想一下）
             // 否则容易与双点操作混乱在一起，给用户带来较差的用户体验
-            /*
-            *
-            *
-            *
-            * */
             case MotionEvent.ACTION_DOWN://第一个触点按下，将第一次的坐标保存下来
                 lastX[0] = motionEvent.getX(0);
                 lastY[0] = motionEvent.getY(0);
@@ -159,8 +140,9 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                 flag = false;//第二次点击，说明要进行双点操作,而不是单点移动，所以设为false
                 break;
             case MotionEvent.ACTION_MOVE:
+                isMove=true;
                 //计算上一次触点间的距离
-                float lastDistance = getDistance(lastX[0], lastY[0], lastX[1], lastY[1]);
+                float  lastDistance = getDistance(lastX[0], lastY[0], lastX[1], lastY[1]);
 
                 //如果有两个触点，进行放缩操作
                 if (motionEvent.getPointerCount() == 2) {
@@ -223,12 +205,9 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                             moveLastX = motionEvent.getX(0);
                             moveLastY = motionEvent.getY(0);
                             image.setImageMatrix(touchMatrix);
-//
                         }
 
-
                     }
-
                 }
                 break;
             case MotionEvent.ACTION_POINTER_UP:
@@ -237,10 +216,18 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                 moveLastX = motionEvent.getX(0);
                 moveLastY = motionEvent.getY(0);
                 flag = false;
+//                Toast.makeText(PicDealActivity.this,"111",Toast.LENGTH_LONG);
                 //松开手时，保存当前矩阵，此时的位置保存下来
                 //flag设为控制
+                if(isMove==false)
+                finish();
+                isMove=false;
                 break;
         }
+//        if (motionEvent.getAction() ==MotionEvent.ACTION_DOWN) {
+//            Toast.makeText(PicDealActivity.this,"111",Toast.LENGTH_LONG);
+//        }
+
         return true;
     }
 

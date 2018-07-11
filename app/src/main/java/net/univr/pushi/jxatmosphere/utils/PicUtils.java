@@ -1,8 +1,13 @@
 package net.univr.pushi.jxatmosphere.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Environment;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,7 +47,7 @@ public class PicUtils {
     }
 
     //读取本地图片
-    public static Bitmap readLocalImage(String name,String pack) {
+    public static Bitmap readLocalImage(String name,String pack,Context context) {
         int i = name.lastIndexOf("/");
         name = name.substring(i + 1, name.length());
         File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+ "/images" +"/"+pack);//设置保存路径
@@ -56,6 +61,9 @@ public class PicUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(bitmap!=null){
+            bitmap=changeBitmapSize(bitmap,context);
         }
         return bitmap;
     }
@@ -85,5 +93,36 @@ public class PicUtils {
         }
         return bitmap;
     }
+
+
+    private static Bitmap changeBitmapSize(Bitmap bitmap,Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        int wd = dm.widthPixels;         // 屏幕宽度（像素）
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        //设置想要的大小
+        int newWidth=wd;
+        int newHeight=wd;
+
+        //计算压缩的比率
+        float scaleWidth=((float)newWidth)/width;
+        float scaleHeight=((float)newHeight)/height;
+
+        //获取想要缩放的matrix
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth,scaleHeight);
+
+        //获取新的bitmap
+        bitmap=Bitmap.createBitmap(bitmap,0,0,width,height,matrix,true);
+        bitmap.getWidth();
+        bitmap.getHeight();
+        Log.e("newWidth","newWidth"+bitmap.getWidth());
+        Log.e("newHeight","newHeight"+bitmap.getHeight());
+        return bitmap;
+    }
+
+
 
 }
