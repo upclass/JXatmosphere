@@ -42,7 +42,10 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
     String url;
     String pack;
     private Bitmap bitmap;
-    private Boolean isMove=false;
+//    Integer a[]=new Integer[]{0,0,0};
+    Boolean isMove = false;
+    List<Object> object;
+
 
 
     @Override
@@ -83,8 +86,8 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
             if (currentMatrix != null) {
                 currentMatrix.set(matrix);
                 image.setImageMatrix(matrix);
-            }else{
-                currentMatrix= new Matrix();
+            } else {
+                currentMatrix = new Matrix();
                 currentMatrix.set(matrix);
                 image.setImageMatrix(matrix);
             }
@@ -140,9 +143,9 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                 flag = false;//第二次点击，说明要进行双点操作,而不是单点移动，所以设为false
                 break;
             case MotionEvent.ACTION_MOVE:
-                isMove=true;
+                isMove = true;
                 //计算上一次触点间的距离
-                float  lastDistance = getDistance(lastX[0], lastY[0], lastX[1], lastY[1]);
+                float lastDistance = getDistance(lastX[0], lastY[0], lastX[1], lastY[1]);
 
                 //如果有两个触点，进行放缩操作
                 if (motionEvent.getPointerCount() == 2) {
@@ -175,7 +178,6 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                     } else {
                         //图像缩放
                         touchMatrix.preScale(currentDistance / lastDistance, currentDistance / lastDistance);
-
                         //根据两个触点移动的距离实现位移（双触点平移）
                         float movex = (motionEvent.getX(0) - lastX[0] + motionEvent.getX(1) - lastX[1]) / 2;
                         float movey = (motionEvent.getY(0) - lastY[0] + motionEvent.getY(1) - lastY[1]) / 2;
@@ -187,7 +189,6 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
 
                 } else {
                     if (flag) {
-
                         //只有一个触点时进行位移
                         Matrix tmp = new Matrix();//临时矩阵用来判断此次平移是否会导致平移越界
                         tmp.set(currentMatrix);
@@ -211,22 +212,24 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                 }
                 break;
             case MotionEvent.ACTION_POINTER_UP:
+                object=new ArrayList<>();
+                object.add(new Object());
+                object.add(new Object());
             case MotionEvent.ACTION_UP:
                 currentMatrix = touchMatrix;
                 moveLastX = motionEvent.getX(0);
                 moveLastY = motionEvent.getY(0);
                 flag = false;
-//                Toast.makeText(PicDealActivity.this,"111",Toast.LENGTH_LONG);
                 //松开手时，保存当前矩阵，此时的位置保存下来
                 //flag设为控制
-                if(isMove==false)
-                finish();
+                if(object!=null&&object.size()!=0)object.remove(0);
+                else{
+                    if(isMove==true);
+                    else finish();
+                }
                 isMove=false;
                 break;
         }
-//        if (motionEvent.getAction() ==MotionEvent.ACTION_DOWN) {
-//            Toast.makeText(PicDealActivity.this,"111",Toast.LENGTH_LONG);
-//        }
 
         return true;
     }

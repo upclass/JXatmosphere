@@ -73,7 +73,7 @@ public class PicLoadFragment extends RxLazyFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        bitmap = PicUtils.readLocalImage(url, pack, getActivity());
+        bitmap = PicUtils.readLocalImageWithouChange(url, pack);
         if (bitmap == null) {
             new Thread(new Runnable() {
                 @Override
@@ -92,6 +92,7 @@ public class PicLoadFragment extends RxLazyFragment {
                     Intent intent = new Intent(getActivity(), PicDealActivity.class);
                     intent.putExtra("url", finalUrl);
                     intent.putExtra("pack", pack);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     intent.putStringArrayListExtra("urls", temp);
                     startActivity(intent);
                 }
@@ -114,14 +115,13 @@ public class PicLoadFragment extends RxLazyFragment {
     }
 
 
-
     private Handler uiHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                bitmap = PicUtils.readLocalImage(url, pack, getActivity());
+                bitmap = PicUtils.readLocalImageWithouChange(url, pack);
                 if (pic != null) {
                     pic.setImageBitmap(bitmap);
                 }
