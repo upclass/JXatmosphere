@@ -163,6 +163,7 @@
             android:name=".feature.PicDealActivity"
             android:exported="true"
             android:label="@string/title_activity_pic_deal"
+            android:launchMode="singleTop"
             android:theme="@style/TranslucentTheme" />
         <activity
             android:name=".feature.ZytqybActivity"
