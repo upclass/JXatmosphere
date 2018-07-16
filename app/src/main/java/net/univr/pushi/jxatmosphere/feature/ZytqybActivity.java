@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +31,7 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 
 import net.univr.pushi.jxatmosphere.R;
+import net.univr.pushi.jxatmosphere.adapter.ZytqybAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.ZytqybBeen;
 import net.univr.pushi.jxatmosphere.interfaces.MapI;
@@ -37,6 +40,7 @@ import net.univr.pushi.jxatmosphere.widget.MapScreenLinstenter;
 import net.univr.pushi.jxatmosphere.widget.TianDiTuMethodsClass;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -287,6 +291,7 @@ public class ZytqybActivity extends BaseActivity implements MapI {
      * @param graphic
      */
     public void ShowCallout(Graphic graphic) {
+        List<String> data = new ArrayList<>();
         String wep_now = (String) graphic.getAttributes().get("wep_now");
         String win_d_inst_max = (String) graphic.getAttributes().get("win_d_inst_max");
         String win_s_inst_max = (String) graphic.getAttributes().get("win_s_inst_max");
@@ -297,39 +302,38 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         String hail_diam_max = (String) graphic.getAttributes().get("hail_diam_max");
         String pre_1h = (String) graphic.getAttributes().get("pre_1h");
         String pre_3h = (String) graphic.getAttributes().get("pre_3h");
-
+        data.add(wep_now);
+        data.add(win_d_inst_max);
+        data.add(win_s_inst_max);
+        data.add(trod_type);
+        data.add(trod_bear);
+        data.add(snow_depth);
+        data.add(eiced);
+        data.add(hail_diam_max);
+        data.add(pre_1h);
+        data.add(pre_3h);
         mapView.getCallout().setStyle(new Callout.Style(context, R.xml.my_callout_identify));
         View view = getLayoutInflater().inflate(R.layout.zytqyb_xq_layout, null);
+        RecyclerView recyclerView = view.findViewById(R.id.zytq_xq_recycle);
+        LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        ZytqybAdapter adapter = new ZytqybAdapter(data);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
 
-
-        TextView xztq = view.findViewById(R.id.xztq);
-        TextView jdfsd = view.findViewById(R.id.jdfsd);
-        TextView jdfsm = view.findViewById(R.id.jdfsm);
-        TextView ljflx = view.findViewById(R.id.ljflx);
-        TextView ljffw = view.findViewById(R.id.ljffw);
-        TextView jxsd = view.findViewById(R.id.jxsd);
-        TextView djbzj = view.findViewById(R.id.djbzj);
-        TextView zdbbzj = view.findViewById(R.id.zdbbzj);
-        TextView gqyxsjyl = view.findViewById(R.id.gqyxsjyl);
-        TextView gqsxsjyl = view.findViewById(R.id.gqsxsjyl);
         ImageView imageView = view.findViewById(R.id.cancle_xq);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mapView.getCallout().dismiss();
+                mapView.setViewpointGeometryAsync(gridLayer.getFullExtent(), 10);
             }
         });
-        xztq.setText(wep_now);
-        jdfsd.setText(win_d_inst_max);
-        jdfsm.setText(win_s_inst_max);
-        ljflx.setText(trod_type);
-        ljffw.setText(trod_bear);
-        jxsd.setText(snow_depth);
-        djbzj.setText(eiced);
-        zdbbzj.setText(hail_diam_max);
-        gqyxsjyl.setText(pre_1h);
-        gqsxsjyl.setText(pre_3h);
         mapView.getCallout().show(view, graphic.getGeometry().getExtent().getCenter());
+        Point point =  graphic.getGeometry().getExtent().getCenter();
+        android.graphics.Point point1 =  mapView.locationToScreen(point);
+        point1.y = point1.y-200;
+        point = mapView.screenToLocation(point1);
+        mapView.setViewpointCenterAsync(point);
     }
 
 }

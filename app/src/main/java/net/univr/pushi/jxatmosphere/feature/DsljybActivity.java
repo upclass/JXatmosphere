@@ -273,7 +273,7 @@ public class DsljybActivity extends BaseActivity {
             GsonOption option = new GsonOption();
             //设置位置左上右下边距
             option.grid().x(46);
-            option.grid().y(10);
+            option.grid().y(30);
 //            option.legend().x(X.left);
             option.calculable(false);
             option.tooltip().trigger(Trigger.item).formatter("{a} <br/>{b} : {c}");

@@ -42,9 +42,11 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
     String url;
     String pack;
     private Bitmap bitmap;
-//    Integer a[]=new Integer[]{0,0,0};
     Boolean isMove = false;
     List<Object> object;
+    private long startTime = 0;
+    private long endTime = 0;
+
 
 
 
@@ -75,7 +77,6 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
         if (drawable != null)
             bitmap = drawable.getBitmap();
         if (bitmap != null) {
-//            bitmap=setImgSize(bitmap,1000,900);
             imageHeight = bitmap.getHeight();
             imageWidth = bitmap.getWidth();
 
@@ -106,10 +107,8 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
             public void onDispatchPic(int position) {
                 bitmap = PicUtils.readLocalImage(urls.get(position), pack, PicDealActivity.this);
                 if (bitmap != null) {
-//                    bitmap = setImgSize(bitmap, 1000, 900);
                     image.setImageBitmap(bitmap);
                 }
-
 //                center();
             }
         });
@@ -131,11 +130,13 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
             // 控制移动的)flag 的作用很简单，主要是用在单点移动时判断是否此次点击是否将要移动（不好描述，请读者自行细想一下）
             // 否则容易与双点操作混乱在一起，给用户带来较差的用户体验
             case MotionEvent.ACTION_DOWN://第一个触点按下，将第一次的坐标保存下来
+                startTime = System.currentTimeMillis();
                 lastX[0] = motionEvent.getX(0);
                 lastY[0] = motionEvent.getY(0);
                 moveLastX = motionEvent.getX();
                 moveLastY = motionEvent.getY();
                 flag = true;//第一次点击，说明有可能要进行单点移动，flag设为true
+
                 break;
             case MotionEvent.ACTION_POINTER_DOWN://第二个触点按下，保存下来
                 lastX[1] = motionEvent.getX(1);
@@ -216,6 +217,7 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                 object.add(new Object());
                 object.add(new Object());
             case MotionEvent.ACTION_UP:
+                endTime = System.currentTimeMillis();
                 currentMatrix = touchMatrix;
                 moveLastX = motionEvent.getX(0);
                 moveLastY = motionEvent.getY(0);
@@ -224,8 +226,15 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
                 //flag设为控制
                 if(object!=null&&object.size()!=0)object.remove(0);
                 else{
-                    if(isMove==true);
-                    else finish();
+                    if(isMove==true){
+                        if ((endTime - startTime) > 0.1 * 1000L) {
+                          ;
+                        }else{
+                            finish();
+                        }
+                    }else{
+                        finish();
+                    }
                 }
                 isMove=false;
                 break;

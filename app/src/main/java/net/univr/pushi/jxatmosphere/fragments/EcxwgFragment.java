@@ -37,6 +37,7 @@ import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
+import net.univr.pushi.jxatmosphere.widget.CustomNoPreLoadViewPager;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class EcxwgFragment extends RxLazyFragment {
     @BindView(R.id.recyclerView)
     RecyclerView recycleView;
     EcxwgOneMenuAdapter madapter;
-    CustomViewPager oneMenuViewpager;
+    CustomNoPreLoadViewPager oneMenuViewpager;
     List<Fragment> oneMenuFragmentList;
     int whichFragment;
 
@@ -103,7 +104,8 @@ public class EcxwgFragment extends RxLazyFragment {
     Boolean oneMenu = true;
 
 
-    public static EcxwgFragment newInstance(String ctype1, String ctype2, CustomViewPager oneMenuViewpager, List<Fragment> oneMenuFragmentList, int whichFragment) {
+
+    public static EcxwgFragment newInstance(String ctype1, String ctype2, CustomNoPreLoadViewPager oneMenuViewpager, List<Fragment> oneMenuFragmentList, int whichFragment) {
         EcxwgFragment ecxwgFragment = new EcxwgFragment();
         Bundle bundle = new Bundle();
         bundle.putString("ctype1", ctype1);
@@ -186,8 +188,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
-
-        getTestdata();
+            getTestdata();
     }
 
     private DmcgjcMenuAdapter getAdapter1() {
@@ -428,7 +429,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     oneMenu = false;
                 } else {
                     popupWindow.dismiss();
-                    isStart=false;
+                    isStart = false;
                     uiHandler.removeCallbacksAndMessages(null);
                     getTestDataBytime(menuTime.get(position));
                     time.setText(menuTime.get(position));
@@ -447,7 +448,7 @@ public class EcxwgFragment extends RxLazyFragment {
                 }
                 timeAdapter.notifyDataSetChanged();
                 popupWindow.show();
-                oneMenu=true;
+                oneMenu = true;
 
             }
         });
@@ -477,7 +478,7 @@ public class EcxwgFragment extends RxLazyFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timeTwoMenu -> {
                     twoTime = timeTwoMenu.getData();
-                    time.setText(twoTime.get(0));
+                        time.setText(twoTime.get(0));
 //                    menuTime.clear();
 //                    for (int i = 0; i < oneTime.size(); i++) {
 //                        menuTime.add(oneTime.get(i));
@@ -542,7 +543,7 @@ public class EcxwgFragment extends RxLazyFragment {
 //                            isStart = true;
 //                            mViewPager.setScanScroll(false);
                             MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_end);
-                            multitemList.set(0,multiItemGdybTx);
+                            multitemList.set(0, multiItemGdybTx);
                             getAdapter3().notifyItemChanged(0);
                             Message message = uiHandler.obtainMessage();
                             message.what = 1;
@@ -556,7 +557,7 @@ public class EcxwgFragment extends RxLazyFragment {
 //                            mViewPager.setScanScroll(true);
                             uiHandler.removeCallbacksAndMessages(null);
                             MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
-                            multitemList.set(0,multiItemGdybTx);
+                            multitemList.set(0, multiItemGdybTx);
                             getAdapter3().notifyItemChanged(0);
                             isStart = false;
                             mViewPager.setScanScroll(true);
@@ -592,7 +593,7 @@ public class EcxwgFragment extends RxLazyFragment {
 
                     if (madapter == null) {
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                        madapter = new EcxwgOneMenuAdapter(menu,getContext());
+                        madapter = new EcxwgOneMenuAdapter(menu, getContext());
                         recycleView.setLayoutManager(layoutManager);
                         recycleView.setAdapter(madapter);
                         recycleView.smoothScrollToPosition(whichFragment);
@@ -606,11 +607,25 @@ public class EcxwgFragment extends RxLazyFragment {
 //                            adapter.notifyItemChanged(lastclick);
 //                            adapter.notifyItemChanged(position);
 //                            ((EcxwgOneMenuAdapter) adapter).setLastposition(position);
-                            isStart=false;
+                            isStart = false;
                             MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
-                            multitemList.set(0,multiItemGdybTx);
+                            multitemList.set(0, multiItemGdybTx);
                             getAdapter3().notifyItemChanged(0);
                             oneMenuViewpager.setCurrentItem(position);
+                            onDestroy();
+
+//                            if (!((EcxwgActivity) getActivity()).getSelectTime().equals("")) {
+//                                uiHandler.postDelayed(
+//                                        (new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                EcxwgFragment fragment = (EcxwgFragment) oneMenuFragmentList.get(position);
+//                                                fragment.getTestDataBytime(((EcxwgActivity) getActivity()).getSelectTime());
+//                                                fragment.time.setText(((EcxwgActivity) getActivity()).getSelectTime());
+//                                            }
+//                                        }), 500);
+//                            }
+
 
 //                            for (int i = 0; i < oneMenuFragmentList.size(); i++) {
 //                                if (position == i) {
@@ -657,7 +672,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls, "ecmwf_thin/"+ctype1+"/"+ctype2);
+                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i), urls, "ecmwf_thin/" + ctype1 + "/" + ctype2);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(
@@ -752,7 +767,7 @@ public class EcxwgFragment extends RxLazyFragment {
                     fragmentList.clear();
                     urls = ecBeen.getData().getUrl();
                     for (int i = 0; i < urls.size(); i++) {
-                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i),urls, "ecmwf_thin/"+ctype1+"/"+ctype2);
+                        PicLoadFragment fragment = PicLoadFragment.newInstance(urls.get(i), urls, "ecmwf_thin/" + ctype1 + "/" + ctype2);
                         fragmentList.add(fragment);
                     }
                     viewPagerAdapter = new MyPagerAdapter(

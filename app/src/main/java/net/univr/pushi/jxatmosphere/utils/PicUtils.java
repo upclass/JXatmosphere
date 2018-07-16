@@ -118,15 +118,29 @@ public class PicUtils {
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
         int wd = dm.widthPixels;         // 屏幕宽度（像素）
-        int hg = dm.heightPixels;         // 屏幕宽度（像素）
+        int hg = dm.heightPixels;         // 屏幕高度（像素）
+
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        int newHeight = height;
-        if (height > hg)
-            newHeight = wd;
+        float wdf=Float.valueOf(width);
+        float hgf=Float.valueOf(height);
+        float scale=wdf/hgf;
+        float newHeight = height;
+        float newWidth = width;
         //设置想要的大小
-        int newWidth = wd;
-
+        if(width>wd&&height>hg){
+            newWidth=wd;
+            newHeight=wd/scale;
+        }else{
+            if(width>wd){
+                newWidth=wd;
+                newHeight=wd/scale;
+            }
+            if(height>hg){
+                newWidth=hg*scale;
+                newHeight=hg;
+            }
+        }
 
         //计算压缩的比率
         float scaleWidth = ((float) newWidth) / width;

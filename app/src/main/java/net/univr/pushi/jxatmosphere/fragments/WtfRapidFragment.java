@@ -516,10 +516,6 @@ public class WtfRapidFragment extends RxLazyFragment {
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
-//                    if (isStartPic != null) {
-//                        isStartPic.setImageResource(R.drawable.app_start);
-//                        mViewPager.setScanScroll(true);
-//                    }
                     mViewPager.setScanScroll(true);
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {

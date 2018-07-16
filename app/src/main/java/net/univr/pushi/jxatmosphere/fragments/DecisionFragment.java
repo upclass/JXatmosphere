@@ -55,10 +55,10 @@ public class DecisionFragment extends RxLazyFragment {
         settings.setJavaScriptEnabled(true);
 
 //              设置可以支持缩放
-        settings.setSupportZoom(true);
-        settings.setDefaultFontSize(12);
+//        settings.setSupportZoom(true);
+        settings.setDefaultFontSize(35);
 //      设置出现缩放工具
-        settings.setBuiltInZoomControls(true);
+//        settings.setBuiltInZoomControls(true);
 
 
         webView.setWebViewClient(new WebViewClient() {

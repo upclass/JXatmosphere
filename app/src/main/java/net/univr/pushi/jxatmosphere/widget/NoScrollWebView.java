@@ -38,6 +38,6 @@ public class NoScrollWebView extends WebView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        return false;
+        return true;
     }
 }

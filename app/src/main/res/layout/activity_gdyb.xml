@@ -89,7 +89,7 @@
         <android.support.percent.PercentRelativeLayout
             android:id="@+id/weizhi_relative"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="36dp"
             android:layout_gravity="bottom"
             android:background="@color/colorPrimary">
 
@@ -175,7 +175,10 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="6dp"
+        android:layout_weight="3.1"
         android:orientation="vertical">
 
         <LinearLayout
@@ -316,19 +319,20 @@
 
         </LinearLayout>
 
+
         <HorizontalScrollView
             android:id="@+id/scroll"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="200dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="200dp">
 
                 <net.univr.pushi.jxatmosphere.widget.NoScrollWebView
                     android:id="@+id/webView"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="200dp" />
             </LinearLayout>
 
 
