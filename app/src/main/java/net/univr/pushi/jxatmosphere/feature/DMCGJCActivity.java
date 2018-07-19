@@ -14,6 +14,7 @@ import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment;
 import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
+import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
 
     @BindView(R.id.back)
     ImageView leave;
+    @BindView(R.id.reload)
+    ImageView reload;
 
 
     private List<Fragment> list;
@@ -57,25 +60,25 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         viewPager.setScanScroll(false);
         list = new ArrayList<>();
         leave.setOnClickListener(this);
-
+        reload.setOnClickListener(this);
         String type1 = "rain";
         String ctype1 = "swzd";
-        fragment1 = DMCGJCFragment.newInstance(type1, ctype1, viewPager, list,0);
+        fragment1 = DMCGJCFragment.newInstance(type1, ctype1, viewPager, list, 0);
         String type2 = "temp";
         String ctype2 = "temp";
-        fragment2 = DMCGJCFragment.newInstance(type2, ctype2, viewPager, list,1);
+        fragment2 = DMCGJCFragment.newInstance(type2, ctype2, viewPager, list, 1);
         String type3 = "wind";
         String ctype3 = "wind_2minute_avg";
-        fragment3 = DMCGJCFragment.newInstance(type3, ctype3, viewPager, list,2);
+        fragment3 = DMCGJCFragment.newInstance(type3, ctype3, viewPager, list, 2);
         String type4 = "humidity";
         String ctype4 = "humidity";
-        fragment4 = DMCGJCFragment.newInstance(type4, ctype4, viewPager, list,3);
+        fragment4 = DMCGJCFragment.newInstance(type4, ctype4, viewPager, list, 3);
         String type5 = "pressure";
         String ctype5 = "pressure";
-        fragment5 = DMCGJCFragment.newInstance(type5, ctype5, viewPager, list,4);
+        fragment5 = DMCGJCFragment.newInstance(type5, ctype5, viewPager, list, 4);
         String type6 = "vis";
         String ctype6 = "vis_min";
-        fragment6 = DMCGJCFragment.newInstance(type6, ctype6, viewPager, list,5);
+        fragment6 = DMCGJCFragment.newInstance(type6, ctype6, viewPager, list, 5);
 
 
         list.add(fragment1);
@@ -133,6 +136,11 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.back:
                 finish();
+            case R.id.reload:
+                int currentItem = viewPager.getCurrentItem();
+                DMCGJCFragment fragment = (DMCGJCFragment) list.get(currentItem);
+                PicUtils.deleteDir("dmcgjc/" + fragment.type + "/" +fragment. ctype);
+                fragment.getTestdata();
                 break;
         }
 

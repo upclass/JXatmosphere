@@ -1,7 +1,6 @@
 package net.univr.pushi.jxatmosphere.fragments;
 
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -105,8 +104,6 @@ public class DmcgjcPicFragment extends RxLazyFragment {
             @Override
             public void onClick(View v) {
                 dmcgjcFragment.interval = "5";
-                dmcgjcFragment.progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-                dmcgjcFragment.progressDialog.setCancelable(true);
                 dmcgjcFragment.getTestdata();
             }
         });
@@ -114,8 +111,6 @@ public class DmcgjcPicFragment extends RxLazyFragment {
             @Override
             public void onClick(View v) {
                 dmcgjcFragment.interval = "1";
-                dmcgjcFragment.progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-                dmcgjcFragment.progressDialog.setCancelable(true);
                 dmcgjcFragment.getTestdata();
             }
         });

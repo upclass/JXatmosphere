@@ -1,6 +1,7 @@
 package net.univr.pushi.jxatmosphere.fragments;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,10 +42,12 @@ public class WeatherWarnFragment extends RxLazyFragment {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
+    ProgressDialog progressDialog;
+
     MultiGdybTxAdapter adapter;
     MyPagerAdapter pagerAdapter;
     List<Fragment> list = new ArrayList<>();
-    String type;
+    public String type;
 
     ImageView isStartPic;
 
@@ -93,7 +96,9 @@ public class WeatherWarnFragment extends RxLazyFragment {
             isStartPic.setImageResource(R.drawable.app_start);
     }
 
-    private void getPicList() {
+    public void getPicList() {
+        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
         getAdapter();
         RetrofitHelper.getForecastWarn()
                 .getQxfx(type)
@@ -101,7 +106,10 @@ public class WeatherWarnFragment extends RxLazyFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(QxfxBeen -> {
+                    progressDialog.dismiss();
                     multiItemGdybTxList.clear();
+                    isStart=false;
+                    uiHandler.removeCallbacksAndMessages(null);
                     int length = QxfxBeen.getData().getTime().size();
                     MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
                     multiItemGdybTxList.add(multiItemGdybTx);
@@ -110,6 +118,7 @@ public class WeatherWarnFragment extends RxLazyFragment {
                         String temp = QxfxBeen.getData().getTime().get(i);
                         GkdmClickBeen clickBeen = new GkdmClickBeen();
                         String time = temp;
+                        now_postion=1;
 //                        String time = temp.substring(length - 4, length);
 //                        StringBuilder timeBuilder = new StringBuilder(time);
 //                        timeBuilder.insert(2, ":");
@@ -182,6 +191,7 @@ public class WeatherWarnFragment extends RxLazyFragment {
 
 
                 }, throwable -> {
+                    progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(R.string.getInfo_error_toast);
                 });

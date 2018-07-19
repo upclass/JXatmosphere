@@ -77,7 +77,7 @@
                     android:layout_height="35dp"
                     android:gravity="center"
                     android:text="江西普适科技有限公司 版权所有"
-                    android:textColor="@color/tine_black"
+                    android:textColor="@color/black"
                     android:textSize="12dp" />
 
                 <TextView
@@ -85,7 +85,7 @@
                     android:layout_height="35dp"
                     android:gravity="center"
                     android:text="Copyright @ 2018年 jxpskj. All rights reserved"
-                    android:textColor="@color/tine_black"
+                    android:textColor="@color/black"
                     android:textSize="12dp" />
 
             </LinearLayout>

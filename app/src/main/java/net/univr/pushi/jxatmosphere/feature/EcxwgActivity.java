@@ -40,6 +40,7 @@ import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
+import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -54,6 +55,8 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
 
     @BindView(R.id.back)
     ImageView leave;
+    @BindView(R.id.reload)
+    ImageView reload;
     //一级菜单
     @BindView(R.id.recyclerView)
     RecyclerView recycleView;
@@ -68,7 +71,7 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
     List<String> twoTime = new ArrayList<>();
     Boolean oneMenu = true;
 
-    //
+
     String type = "ecmwf_thin";
     String ctype1 = "rain";
     String ctype2 = "rain03";
@@ -80,7 +83,7 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
     int now_postion = 1;
     ProgressDialog progressDialog;
 
-    //
+
     @BindView(R.id.recycler1)
     RecyclerView mRecyclerView1;
     @BindView(R.id.viepager)
@@ -112,6 +115,7 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
 
     private void initView() {
         leave.setOnClickListener(this);
+        reload.setOnClickListener(this);
         CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override
             public void onDispatchDarken() {
@@ -159,6 +163,10 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.reload:
+                PicUtils.deleteDir("ecmwf_thin/" + ctype1 + "/" + ctype2);
+                getTestDataBytime(selectTime);
                 break;
         }
 
@@ -792,6 +800,7 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
+                    uiHandler.removeCallbacksAndMessages(null);
                     mViewPager.setScanScroll(true);
 
                     List<Fragment> HuancunfragmentList = new ArrayList<>();

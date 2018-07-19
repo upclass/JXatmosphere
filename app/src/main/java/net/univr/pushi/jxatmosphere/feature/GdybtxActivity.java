@@ -35,6 +35,7 @@ import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
+import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
     @BindView(R.id.back)
     ImageView leave;
+    @BindView(R.id.reload)
+    ImageView reload;
 
 //    @BindView(R.id.spDwon)
 //    Spinner spDown;
@@ -150,6 +153,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
     private void initOnclick() {
         leave.setOnClickListener(this);
+        reload.setOnClickListener(this);
     }
 
 //    private void initSpinner() {
@@ -191,6 +195,10 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.reload:
+                PicUtils.deleteDir("gdybtx/" + testType);
+                getTestdata();
                 break;
         }
 
@@ -476,6 +484,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
+                    uiHandler.removeCallbacksAndMessages(null);
 //                    if (isStartPic != null) {
 //                        isStartPic.setImageResource(R.drawable.app_start);
 //                        mViewPager.setScanScroll(true);

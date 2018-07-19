@@ -44,8 +44,8 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
     int mDay;
     @BindView(R.id.back)
     ImageView back;
-//    @BindView(R.id.share_to)
-//    ImageView shareTo;
+    @BindView(R.id.reload)
+    ImageView reload;
 
     @BindView(R.id.relative2)
     RelativeLayout relative2;
@@ -77,13 +77,13 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
     View tabline5;
     List<Fragment> list;
     List<GeneforeMenuBeen> menuList;
-//    private int i;
     private String tag;
 
     @Override
     public int getLayoutId() {
         return R.layout.activity_genefore;
     }
+
 
     @Override
     public void initViews(Bundle savedInstanceState) {
@@ -95,14 +95,14 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
         if (mMonth < 10)
             timeStr = mYear + "-0" + mMonth + "-";
         else
-            timeStr = mYear + "-" + mMonth + "-" ;
-        if(mDay<10)
-            timeStr = timeStr + "0" + mDay ;
+            timeStr = mYear + "-" + mMonth + "-";
+        if (mDay < 10)
+            timeStr = timeStr + "0" + mDay;
         else
-            timeStr=timeStr+mDay;
+            timeStr = timeStr + mDay;
         time.setText(timeStr);
         time.setOnClickListener(this);
-//        shareTo.setOnClickListener(this);
+        reload.setOnClickListener(this);
         back.setOnClickListener(this);
         relative2.setOnClickListener(this);
         relative3.setOnClickListener(this);
@@ -112,7 +112,6 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
         getTestdata();
 
     }
-
 
 
     @Override
@@ -127,26 +126,14 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                 time.setText(timeStr);
                 picker.dismiss();
                 break;
-//            case R.id.share_to:
-//                OnekeyShare oks = new OnekeyShare();
-//                //关闭sso授权
-//                oks.disableSSOWhenAuthorize();
-//
-//                // title标题，微信、QQ和QQ空间等平台使用
-//                oks.setTitle(getString(R.string.sharetest));
-//                // titleUrl QQ和QQ空间跳转链接
-//                oks.setTitleUrl("http://sharesdk.cn");
-//                // text是分享文本，所有平台都需要这个字段
-//                oks.setText("我是分享文本");
-//                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-//                oks.setImagePath("/sdcard/popup_feedback_layout.jpg");//确保SDcard下面存在此张图片
-//                // url在微信、微博，Facebook等平台中使用
-//                oks.setUrl("http://sharesdk.cn");
-//                // comment是我对这条分享的评论，仅在人人网使用
-//                oks.setComment("我是测试评论文本");
-//                // 启动分享GUI
-//                oks.show(this);
-//                break;
+            case R.id.reload:
+                if (list != null && list.size() > 0) {
+                    int currentItem = viewPager.getCurrentItem();
+                    GeneforeFragment fragment = (GeneforeFragment) list.get(currentItem);
+                    fragment.getTestdata();
+                }
+
+                break;
             case R.id.back:
                 finish();
                 break;
@@ -203,19 +190,16 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                 picker.setOnWheelListener(new DatePicker.OnWheelListener() {
                     @Override
                     public void onYearWheeled(int index, String year) {
-//                        timeStr = year + "-" + picker.getSelectedMonth() + "-" + picker.getSelectedDay();
                         time.setText(year + "-" + picker.getSelectedMonth() + "-" + picker.getSelectedDay());
                     }
 
                     @Override
                     public void onMonthWheeled(int index, String month) {
-//                        timeStr = picker.getSelectedYear() + "-" + month + "-" + picker.getSelectedDay();
                         time.setText(picker.getSelectedYear() + "-" + month + "-" + picker.getSelectedDay());
                     }
 
                     @Override
                     public void onDayWheeled(int index, String day) {
-//                        timeStr = picker.getSelectedYear() + "-" + picker.getSelectedMonth() + "-" + day;
                         time.setText(picker.getSelectedYear() + "-" + picker.getSelectedMonth() + "-" + day);
                     }
                 });
@@ -234,7 +218,6 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                 .subscribe(geneforeBeen -> {
                     list = new ArrayList<>();
                     tag = geneforeBeen.getData().getClassX();
-//                    i = 0;
                     String timeParams = timeStr.substring(2, timeStr.length());
                     GeneforeFragment geneforeFragment1 = GeneforeFragment.newInstance(timeParams, "早晨");
                     GeneforeFragment geneforeFragment2 = GeneforeFragment.newInstance(timeParams, "中午");
@@ -401,58 +384,8 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-//    public void FragmentAdd() {
-//        i++;
-//        if(i == 2){
-//            if (tag.equals("早晨")) {
-//                viewPager.setCurrentItem(0);
-//                menuList.get(0).setSelect(true);
-//                changeMenuStyle();
-//            }
-//
-//            if (tag.equals("中午")) {
-//                viewPager.setCurrentItem(1);
-//                menuList.get(1).setSelect(true);
-//                changeMenuStyle();
-//            }
-//            if (tag.equals("下午")) {
-//                viewPager.setCurrentItem(2);
-//                menuList.get(2).setSelect(true);
-//                changeMenuStyle();
-//            }
-//
-//            if (tag.equals("三天")) {
-//                viewPager.setCurrentItem(3);
-//                menuList.get(3).setSelect(true);
-//                changeMenuStyle();
-//            }
-//            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//                @Override
-//                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//                }
-//
-//                @Override
-//                public void onPageSelected(int position) {
-//                    for (int i = 0; i < menuList.size(); i++) {
-//                        if (i == position) {
-//                            menuList.get(i).setSelect(true);
-//                        } else {
-//                            menuList.get(i).setSelect(false);
-//                        }
-//                    }
-//                    changeMenuStyle();
-//                }
-//
-//                @Override
-//                public void onPageScrollStateChanged(int state) {
-//
-//                }
-//            });
-//        }
-//    }
 
-    public void  setTime(String shijian){
-         time.setText(shijian);
+    public void setTime(String shijian) {
+        time.setText(shijian);
     }
 }

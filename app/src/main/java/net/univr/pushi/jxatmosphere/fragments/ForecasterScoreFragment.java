@@ -77,11 +77,11 @@ public class ForecasterScoreFragment extends RxLazyFragment {
         return mAdapter;
     }
 
-    private void getTestdata() {
-        if (grade.equals("main")) {
-            progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "获取数据中...", true);
-            progressDialog.setCancelable(true);
-        }
+    public void getTestdata() {
+//        if (grade.equals("main")) {
+        progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
+//        }
         getAdapter().openLoadAnimation();
         RetrofitHelper.getFeedbackAPI()
                 .getScore(grade)
@@ -90,14 +90,14 @@ public class ForecasterScoreFragment extends RxLazyFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ForecasterScore -> {
                     getAdapter().setNewData(ForecasterScore.getData().getDutygrade());
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
+//                    if (progressDialog != null) {
+                    progressDialog.dismiss();
+//                    }
 //                    LogUtils.i(ForecasterScore.getData().getTittleName());
                 }, throwable -> {
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
+//                    if (progressDialog != null) {
+                    progressDialog.dismiss();
+//                    }
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });

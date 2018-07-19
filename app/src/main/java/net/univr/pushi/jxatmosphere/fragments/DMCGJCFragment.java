@@ -66,8 +66,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     List<String> urls;
 
 
-    String type;
-    String ctype;
+    public String type;
+    public String ctype;
 
     //当前的位置
     int now_postion;
@@ -159,16 +159,28 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             type = getArguments().getString("type");
             ctype = getArguments().getString("ctype");
         }
-        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
         getAdapter1();
+        getMenu();
+        getTestdata();
+//        tv2.setOnClickListener(this);
+//        tv3.setOnClickListener(this);
+//        tv4.setOnClickListener(this);
+//        tv5.setOnClickListener(this);
+//        tv6.setOnClickListener(this);
+//        tv7.setOnClickListener(this);
+
+//        initOneMenu();
+        getMenuAdapter(position);
+//        initScrollView();
+    }
+
+    public void getMenu() {
         RetrofitHelper.getWeatherMonitorAPI()
                 .getDmcgjcMenu(type)
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dmcgjcBeen -> {
-                    progressDialog.dismiss();
                     List<DmcgjcmenuBeen.DataBean> data = dmcgjcBeen.getData();
                     if (type.equals("rain")) {
                         DmcgjcmenuBeen.DataBean swzd = new DmcgjcmenuBeen.DataBean();
@@ -188,22 +200,9 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     }
                     getAdapter1().setNewData(data);
                 }, throwable -> {
-                    progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
-
-        getTestdata();
-//        tv2.setOnClickListener(this);
-//        tv3.setOnClickListener(this);
-//        tv4.setOnClickListener(this);
-//        tv5.setOnClickListener(this);
-//        tv6.setOnClickListener(this);
-//        tv7.setOnClickListener(this);
-
-//        initOneMenu();
-        getMenuAdapter(position);
-//        initScrollView();
     }
 
 //    private void initOneMenu() {
@@ -409,8 +408,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     adapter.notifyItemChanged(lastclick);
                     adapter.notifyItemChanged(position);
                     ((DmcgjcMenuAdapter) adapter).setLastposition(position);
-                    progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-                    progressDialog.setCancelable(true);
                     getTestdata();
                 } else {
                     List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
@@ -549,8 +546,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     if (menu.equals("最小水平能见度")) {
                         ctype = "sea_level_pressure";
                     }
-                    progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-                    progressDialog.setCancelable(true);
+
                     getTestdata();
                 }
             });
@@ -561,7 +557,12 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
     private DmcgjcMenuAdapter getMenuAdapter(int position) {
         if (menuAdapter == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false) {
+                @Override
+                public boolean canScrollHorizontally() {
+                    return false;
+                }
+            };
             List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
             initMenuData(mData1, position);
             menuAdapter = new DmcgjcMenuAdapter(mData1);
@@ -572,7 +573,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                     TextView title = ((TextView) view);
                     String menu = title.getText().toString();
-                    if (menu.equals("累积降水")) {
+                    if (menu.equals("降水")) {
                         ((DMCGJCFragment) list.get(0)).initScrollView(0);
                         viewPager.setCurrentItem(0);
                         DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(0);
@@ -584,13 +585,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                         DMCGJCFragment dmcgjcFragment2 = (DMCGJCFragment) list.get(1);
                         dmcgjcFragment2.setIsPalyInit(1);
                     }
-                    if (menu.equals("风向风速")) {
+                    if (menu.equals("风")) {
                         ((DMCGJCFragment) list.get(2)).initScrollView(2);
                         viewPager.setCurrentItem(2);
                         DMCGJCFragment dmcgjcFragment3 = (DMCGJCFragment) list.get(2);
                         dmcgjcFragment3.setIsPalyInit(2);
                     }
-                    if (menu.equals("相对湿度")) {
+                    if (menu.equals("湿度")) {
                         ((DMCGJCFragment) list.get(3)).initScrollView(3);
                         viewPager.setCurrentItem(3);
                         DMCGJCFragment dmcgjcFragment4 = (DMCGJCFragment) list.get(3);
@@ -623,13 +624,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
         DmcgjcmenuBeen.DataBean dataBean4 = new DmcgjcmenuBeen.DataBean();
         DmcgjcmenuBeen.DataBean dataBean5 = new DmcgjcmenuBeen.DataBean();
         if (position == 0) {
-            dataBean.setZnName("累积降水");
+            dataBean.setZnName("降水");
             dataBean.setSelect(true);
             dataBean1.setZnName("气温");
             dataBean1.setSelect(false);
-            dataBean2.setZnName("风向风速");
+            dataBean2.setZnName("风");
             dataBean2.setSelect(false);
-            dataBean3.setZnName("相对湿度");
+            dataBean3.setZnName("湿度");
             dataBean3.setSelect(false);
             dataBean4.setZnName("气压");
             dataBean4.setSelect(false);
@@ -637,13 +638,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setSelect(false);
         }
         if (position == 1) {
-            dataBean.setZnName("累积降水");
+            dataBean.setZnName("降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
             dataBean1.setSelect(true);
-            dataBean2.setZnName("风向风速");
+            dataBean2.setZnName("风");
             dataBean2.setSelect(false);
-            dataBean3.setZnName("相对湿度");
+            dataBean3.setZnName("湿度");
             dataBean3.setSelect(false);
             dataBean4.setZnName("气压");
             dataBean4.setSelect(false);
@@ -651,13 +652,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setSelect(false);
         }
         if (position == 2) {
-            dataBean.setZnName("累积降水");
+            dataBean.setZnName("降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
             dataBean1.setSelect(false);
-            dataBean2.setZnName("风向风速");
+            dataBean2.setZnName("风");
             dataBean2.setSelect(true);
-            dataBean3.setZnName("相对湿度");
+            dataBean3.setZnName("湿度");
             dataBean3.setSelect(false);
             dataBean4.setZnName("气压");
             dataBean4.setSelect(false);
@@ -665,13 +666,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setSelect(false);
         }
         if (position == 3) {
-            dataBean.setZnName("累积降水");
+            dataBean.setZnName("降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
             dataBean1.setSelect(false);
-            dataBean2.setZnName("风向风速");
+            dataBean2.setZnName("风");
             dataBean2.setSelect(false);
-            dataBean3.setZnName("相对湿度");
+            dataBean3.setZnName("湿度");
             dataBean3.setSelect(true);
             dataBean4.setZnName("气压");
             dataBean4.setSelect(false);
@@ -679,13 +680,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setSelect(false);
         }
         if (position == 4) {
-            dataBean.setZnName("累积降水");
+            dataBean.setZnName("降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
             dataBean1.setSelect(false);
-            dataBean2.setZnName("风向风速");
+            dataBean2.setZnName("风");
             dataBean2.setSelect(false);
-            dataBean3.setZnName("相对湿度");
+            dataBean3.setZnName("湿度");
             dataBean3.setSelect(false);
             dataBean4.setZnName("气压");
             dataBean4.setSelect(true);
@@ -693,13 +694,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             dataBean5.setSelect(false);
         }
         if (position == 5) {
-            dataBean.setZnName("累积降水");
+            dataBean.setZnName("降水");
             dataBean.setSelect(false);
             dataBean1.setZnName("气温");
             dataBean1.setSelect(false);
-            dataBean2.setZnName("风向风速");
+            dataBean2.setZnName("风");
             dataBean2.setSelect(false);
-            dataBean3.setZnName("相对湿度");
+            dataBean3.setZnName("湿度");
             dataBean3.setSelect(false);
             dataBean4.setZnName("气压");
             dataBean4.setSelect(false);
@@ -761,6 +762,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
 
     public void getTestdata() {
+        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
         if (ctype.equals("swzd")) {
             progressDialog.dismiss();
             swzdInfo();
@@ -776,6 +779,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
+                    progressDialog.dismiss();
                     int vis = 0;
                     if (ctype.equals("rain_sum") || ctype.equals("rain_sum1")
                             || ctype.equals("rain_sum3") || ctype.equals("rain_sum6")
@@ -796,11 +800,12 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     recycle_skipto_position = 1;
                     now_postion = DmcgjcDeen.getData().getUrls().size();
                     isStart = false;
+                    uiHandler.removeCallbacksAndMessages(null);
                     if (isStartPic != null) {
                         isStartPic.setImageResource(R.drawable.app_start);
                         mViewPager.setScanScroll(true);
                     }
-                    progressDialog.dismiss();
+
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {
                         Fragment fragment = fragmentList.get(i);
@@ -809,7 +814,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     fragmentList.clear();
                     urls = DmcgjcDeen.getData().getUrls();
                     for (int i = 0; i < urls.size(); i++) {
-                        DmcgjcPicFragment fragment = DmcgjcPicFragment.newInstance(urls.get(i), urls, this, vis, interval, "dmcgjc/"+type+"/"+ctype);
+                        DmcgjcPicFragment fragment = DmcgjcPicFragment.newInstance(urls.get(i), urls, this, vis, interval, "dmcgjc/" + type + "/" + ctype);
                         fragmentList.add(fragment);
                     }
 //                    new Thread(new Runnable() {

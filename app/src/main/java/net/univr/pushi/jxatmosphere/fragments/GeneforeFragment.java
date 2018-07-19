@@ -88,7 +88,7 @@ public class GeneforeFragment extends RxLazyFragment {
     }
 
 
-    private void getTestdata() {
+    public void getTestdata() {
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
 

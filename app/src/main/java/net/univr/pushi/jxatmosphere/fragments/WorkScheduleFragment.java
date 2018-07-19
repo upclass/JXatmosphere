@@ -25,7 +25,7 @@ import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class WorkScheduleFragment extends RxLazyFragment{
+public class WorkScheduleFragment extends RxLazyFragment {
 
     @BindView(R.id.work_chedule_recycle)
     RecyclerView work_chedule_recycle;
@@ -38,7 +38,7 @@ public class WorkScheduleFragment extends RxLazyFragment{
     String tag;
 
 
-    public static  WorkScheduleFragment newInstance(String tag){
+    public static WorkScheduleFragment newInstance(String tag) {
         WorkScheduleFragment workScheduleFragment = new WorkScheduleFragment();
         Bundle bundle = new Bundle();
         bundle.putString("tag", tag);
@@ -53,40 +53,34 @@ public class WorkScheduleFragment extends RxLazyFragment{
     }
 
 
-
-
-
-
     @Override
     public void finishCreateView(Bundle state) {
 
-        mcontext=getActivity();
-        if(getArguments()!=null){
+        mcontext = getActivity();
+        if (getArguments() != null) {
             //取出保存的值
-            tag=getArguments().getString("tag");
+            tag = getArguments().getString("tag");
         }
-        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
         getTestdata();
     }
-
 
 
     private WorkScheduleAdapter getAdapter() {
         if (mAdapter == null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.VERTICAL, false);
-            ArrayList<DutyBeen.DataBean.DutysBean> mData=new ArrayList<>();
-            mAdapter=new WorkScheduleAdapter(mData);
+            ArrayList<DutyBeen.DataBean.DutysBean> mData = new ArrayList<>();
+            mAdapter = new WorkScheduleAdapter(mData);
             work_chedule_recycle.setLayoutManager(layoutManager);
             work_chedule_recycle.setAdapter(mAdapter);
-            work_chedule_recycle.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
-
+            work_chedule_recycle.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
         return mAdapter;
     }
 
-    private void getTestdata() {
-
+    public void getTestdata() {
+        mAdapter=null;
+        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
         getAdapter().openLoadAnimation();
         RetrofitHelper.getFeedbackAPI()
                 .getDuty(tag)
@@ -95,32 +89,35 @@ public class WorkScheduleFragment extends RxLazyFragment{
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DutyBeen -> {
                     progressDialog.dismiss();
-                    if(tag.equals("week")){
-                        int weizhi=0;
-                        long time=System.currentTimeMillis();
-                        Date nowdate=new Date(time);
-                        String mat="yyyy-MM-dd";
-                        SimpleDateFormat format=new SimpleDateFormat(mat);
+                    if (tag.equals("week")) {
+                        int weizhi = 0;
+                        long time = System.currentTimeMillis();
+                        Date nowdate = new Date(time);
+                        String mat = "yyyy-MM-dd";
+                        SimpleDateFormat format = new SimpleDateFormat(mat);
                         String nowdate1 = format.format(nowdate);
                         List<DutyBeen.DataBean.DutysBean> dutys = DutyBeen.getData().getDutys();
                         for (int i = 0; i < dutys.size(); i++) {
                             String date = dutys.get(i).getDate();
-                            if (date.equals(nowdate1)){
-                                weizhi=i;
+                            if (date.equals(nowdate1)) {
+                                weizhi = i;
                                 break;
                             }
                         }
                         getAdapter().setNewData(DutyBeen.getData().getDutys());
                         work_chedule_recycle.scrollToPosition(weizhi);
-                    }else getAdapter().setNewData(DutyBeen.getData().getDutys());
+                    } else getAdapter().setNewData(DutyBeen.getData().getDutys());
 
-
-//                    LogUtils.i(ForecasterScore.getData().getTittleName());
                 }, throwable -> {
                     progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
+    }
+
+    public void scrollTo0() {
+        if (work_chedule_recycle != null && mAdapter.getData() != null && mAdapter.getData().size() > 0)
+            work_chedule_recycle.scrollToPosition(0);
     }
 
 }

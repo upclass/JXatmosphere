@@ -20,6 +20,7 @@ import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.fragments.GKDMGCFragment;
 import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
+import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class GKDMGCActivity extends BaseActivity implements View.OnClickListener
 
     @BindView(R.id.tabline)
     ImageView tabline;
-//    @BindView(R.id.share_to)
-//    ImageView share_to;
+    @BindView(R.id.reload)
+    ImageView reload;
     @BindView(R.id.back)
     ImageView leave;
 
@@ -84,7 +85,7 @@ public class GKDMGCActivity extends BaseActivity implements View.OnClickListener
         list = new ArrayList<>();
         main_tv.setOnClickListener(this);
         vice_tv.setOnClickListener(this);
-//        share_to.setOnClickListener(this);
+        reload.setOnClickListener(this);
         leave.setOnClickListener(this);
 
         // 设置参数
@@ -211,27 +212,12 @@ public class GKDMGCActivity extends BaseActivity implements View.OnClickListener
                 fragment.setImage();
 
                 break;
-//            case R.id.share_to:
-//
-//                OnekeyShare oks = new OnekeyShare();
-//                //关闭sso授权
-//                oks.disableSSOWhenAuthorize();
-//
-//                // title标题，微信、QQ和QQ空间等平台使用
-//                oks.setTitle(getString(R.string.sharetest));
-//                // titleUrl QQ和QQ空间跳转链接
-//                oks.setTitleUrl("http://sharesdk.cn");
-//                // text是分享文本，所有平台都需要这个字段
-//                oks.setText("我是分享文本");
-//                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-//                oks.setImagePath("/sdcard/popup_feedback_layout.jpg");//确保SDcard下面存在此张图片
-//                // url在微信、微博，Facebook等平台中使用
-//                oks.setUrl("http://sharesdk.cn");
-//                // comment是我对这条分享的评论，仅在人人网使用
-//                oks.setComment("我是测试评论文本");
-//                // 启动分享GUI
-//                oks.show(this);
-//                break;
+            case R.id.reload:
+                int currentItem = viewPager.getCurrentItem();
+                GKDMGCFragment fragment = (GKDMGCFragment) list.get(currentItem);
+                PicUtils.deleteDir("gkdm/"+fragment.item);
+                fragment.getTestdata();
+                break;
             case R.id.back:
                 finish();
                 break;

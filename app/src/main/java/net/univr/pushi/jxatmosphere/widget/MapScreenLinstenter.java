@@ -171,10 +171,16 @@ public class MapScreenLinstenter extends DefaultMapViewOnTouchListener {
                     if (graphic != null) {
                         mapI.showIdentQueryPoint(graphic);
                     } else {
-                        identifyLayerAsync(screenPoint, 5, false, 1);
+//                        identifyLayerAsync(screenPoint, 5, false, 1);
+                        handler.sendEmptyMessage(0);
+                        mapView.setViewpointGeometryAsync(mapView.getMap().getBasemap().getBaseLayers().get(1).getFullExtent(),10);
+                        mapView.getCallout().dismiss();
                     }
                 } else {
-                    identifyLayerAsync(screenPoint, 5, false, 1);
+//                    identifyLayerAsync(screenPoint, 5, false, 1);
+                    handler.sendEmptyMessage(0);
+                    mapView.setViewpointGeometryAsync(mapView.getMap().getBasemap().getBaseLayers().get(1).getFullExtent(),10);
+                    mapView.getCallout().dismiss();
                 }
             } catch (InterruptedException e) {
                 LogUtils.e(e.getMessage());

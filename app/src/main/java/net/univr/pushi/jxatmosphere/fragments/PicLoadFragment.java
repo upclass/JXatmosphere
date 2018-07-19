@@ -72,7 +72,6 @@ public class PicLoadFragment extends RxLazyFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         bitmap = PicUtils.readLocalImageWithouChange(url, pack);
         if (bitmap == null) {
             new Thread(new Runnable() {

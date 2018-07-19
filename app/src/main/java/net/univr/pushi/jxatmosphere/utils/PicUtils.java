@@ -160,4 +160,23 @@ public class PicUtils {
     }
 
 
+    //删除文件夹和文件夹里面的文件
+    public static void deleteDir(String pack) {
+        File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/images" + "/" + pack);//设置保存路径
+        deleteDirWihtFile(PHOTO_DIR);
+    }
+
+    public static void deleteDirWihtFile(File dir) {
+        if (dir == null || !dir.exists() || !dir.isDirectory())
+            return;
+        for (File file : dir.listFiles()) {
+            if (file.isFile())
+                file.delete(); // 删除所有文件
+            else if (file.isDirectory())
+                deleteDirWihtFile(file); // 递规的方式删除文件夹
+        }
+        dir.delete();// 删除目录本身
+    }
+
+
 }

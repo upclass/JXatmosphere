@@ -26,18 +26,18 @@
         android:textColor="@color/white"
         style="@style/one_title" />
 
-    <!--<LinearLayout-->
-        <!--style="@style/feture_pic"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:gravity="center"-->
-        <!--android:orientation="horizontal">-->
+    <LinearLayout
+        style="@style/feture_pic"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <!--<ImageView-->
-            <!--android:id="@+id/share_to"-->
-            <!--style="@style/feture_pic"-->
-            <!--android:src="@drawable/nav_share" />-->
+        <ImageView
+            android:id="@+id/reload"
+            style="@style/feture_pic"
+            android:src="@drawable/app_reload" />
 
-    <!--</LinearLayout>-->
+    </LinearLayout>
 
 </RelativeLayout>

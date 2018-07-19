@@ -188,7 +188,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
 
                 }, throwable -> {
                     LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
 
@@ -268,7 +268,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
 
                 }, throwable -> {
                     LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
 
 
@@ -341,14 +341,14 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                     }
                 }, throwable -> {
                     LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
 
     }
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-        city = regeocodeResult.getRegeocodeAddress().getTownship();
+        city = regeocodeResult.getRegeocodeAddress().getCity();
         getTestData3();
     }
 

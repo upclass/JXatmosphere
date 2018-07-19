@@ -63,6 +63,7 @@
     </LinearLayout>
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
@@ -70,22 +71,30 @@
         android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/see_xiangqing"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/map_bottom_list" />
-
-        <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="20dp"
-            android:text="查看详情"
-            android:textColor="@color/yujin_black"
-            android:textSize="15dp" />
+            android:orientation="horizontal">
+            <ImageView
+
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/map_bottom_list" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="9dp"
+                android:layout_marginRight="20dp"
+                android:text="查看详情"
+                android:textColor="@color/yujin_black"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+
 
         <TextView
             android:layout_width="0dp"

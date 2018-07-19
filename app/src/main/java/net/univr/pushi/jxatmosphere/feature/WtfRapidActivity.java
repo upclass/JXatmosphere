@@ -42,6 +42,7 @@ import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
+import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -63,6 +64,8 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
     ImageView tabline;
     @BindView(R.id.back)
     ImageView leave;
+    @BindView(R.id.reload)
+    ImageView reload;
 
     private int tabLineLength;// 1/2屏幕宽
     int marginleft;
@@ -177,6 +180,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
         main_tv.setOnClickListener(this);
         vice_tv.setOnClickListener(this);
         leave.setOnClickListener(this);
+        reload.setOnClickListener(this);
         LinearLayout.LayoutParams ll = (android.widget.LinearLayout.LayoutParams) tabline
                 .getLayoutParams();
         ll.leftMargin = marginleft;
@@ -260,6 +264,10 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.back:
                 finish();
+                break;
+            case R.id.reload:
+                PicUtils.deleteDir(type + "/" + ctype);
+                getTestDataBytime(selectTime);
                 break;
         }
 
@@ -628,6 +636,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                     recycle_skipto_position = 2;
                     now_postion = 1;
                     isStart = false;
+                    uiHandler.removeCallbacksAndMessages(null);
                     mViewPager.setScanScroll(true);
                     List<Fragment> HuancunfragmentList = new ArrayList<>();
                     for (int i = 0; i < fragmentList.size(); i++) {

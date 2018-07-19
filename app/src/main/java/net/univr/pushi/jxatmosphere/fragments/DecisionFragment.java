@@ -121,26 +121,26 @@ public class DecisionFragment extends RxLazyFragment {
     }
 
 
-    private void getTestdata() {
-        if (type.equals("qkfy")) {
+    public void getTestdata() {
+//        if (type.equals("qkfy")) {
             progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "获取数据中...", true);
             progressDialog.setCancelable(true);
-        }
+//        }
         RetrofitHelper.getFeedbackAPI()
                 .getDecision(type)
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(decisionBeen -> {
-                    if (progressDialog != null) {
+//                    if (progressDialog != null) {
                         progressDialog.dismiss();
-                    }
+//                    }
                     String url = decisionBeen.getData().getUrl();
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("User-Agent", "Android");
                     webView.loadUrl(url, map);
                 }, throwable -> {
-                    if (progressDialog != null)
+//                    if (progressDialog != null)
                         progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));

@@ -30,8 +30,8 @@ public class DecisionActivity extends BaseActivity implements View.OnClickListen
     TextView main_tv;//气象情况反馈
     @BindView(R.id.vice_tv)
     TextView vice_tv; //气象呈阅件
-//    @BindView(R.id.share_to)
-//    ImageView share_to;
+    @BindView(R.id.reload)
+    ImageView reload;
     @BindView(R.id.back)
     ImageView leave;
     @BindView(R.id.tabline)
@@ -72,7 +72,7 @@ public class DecisionActivity extends BaseActivity implements View.OnClickListen
         list = new ArrayList<>();
         main_tv.setOnClickListener(this);
         vice_tv.setOnClickListener(this);
-//        share_to.setOnClickListener(this);
+        reload.setOnClickListener(this);
         leave.setOnClickListener(this);
 
 
@@ -153,27 +153,11 @@ public class DecisionActivity extends BaseActivity implements View.OnClickListen
                 ll.leftMargin = tabLineLength + marginleft;
                 tabline.setLayoutParams(ll);
                 break;
-//            case R.id.share_to:
-//
-//                OnekeyShare oks = new OnekeyShare();
-//                //关闭sso授权
-//                oks.disableSSOWhenAuthorize();
-//
-//                // title标题，微信、QQ和QQ空间等平台使用
-//                oks.setTitle(getString(R.string.sharetest));
-//                // titleUrl QQ和QQ空间跳转链接
-//                oks.setTitleUrl("http://sharesdk.cn");
-//                // text是分享文本，所有平台都需要这个字段
-//                oks.setText("我是分享文本");
-//                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-//                oks.setImagePath("/sdcard/popup_feedback_layout.jpg");//确保SDcard下面存在此张图片
-//                // url在微信、微博，Facebook等平台中使用
-//                oks.setUrl("http://sharesdk.cn");
-//                // comment是我对这条分享的评论，仅在人人网使用
-//                oks.setComment("我是测试评论文本");
-//                // 启动分享GUI
-//                oks.show(this);
-//                break;
+            case R.id.reload:
+                int currentItem = viewPager.getCurrentItem();
+                DecisionFragment fragment = (DecisionFragment) list.get(currentItem);
+                fragment.getTestdata();
+                break;
             case R.id.back:
                 finish();
                 break;

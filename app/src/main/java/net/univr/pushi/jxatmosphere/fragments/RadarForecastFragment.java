@@ -61,7 +61,7 @@ public class RadarForecastFragment extends RxLazyFragment {
     List<Fragment> fragmentList = new ArrayList<>();
     List<String> urls = new ArrayList<>();
     MyPagerAdapter viewPagerAdapter;
-    String type;
+    public  String type;
 
     private MultiGdybTxAdapter mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
@@ -170,10 +170,10 @@ public class RadarForecastFragment extends RxLazyFragment {
     }
 
 
-    private void getTestdata() {
-        getAdapter3();
+    public void getTestdata() {
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
+        getAdapter3();
         if (type.equals("rain")) {
             RetrofitHelper.getForecastWarn()
                     .radarForecastFrom20(type)
@@ -181,10 +181,10 @@ public class RadarForecastFragment extends RxLazyFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(radarForecastBeen -> {
-                        progressDialog.dismiss();
                         recycle_skipto_position = 2;
                         now_postion = 1;
                         isStart = false;
+                        uiHandler.removeCallbacksAndMessages(null);
                         if (isStartPic != null) {
                             isStartPic.setImageResource(R.drawable.app_start);
                             mViewPager.setScanScroll(true);
@@ -257,13 +257,13 @@ public class RadarForecastFragment extends RxLazyFragment {
                             multitemList.add(multiItemGdybTx);
                         }
                         getAdapter3().setNewData(multitemList);
+                        progressDialog.dismiss();
                     }, throwable -> {
                         progressDialog.dismiss();
                         LogUtils.e(throwable);
                         ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                     });
         } else {
-            getAdapter3();
             RetrofitHelper.getForecastWarn()
                     .radarForecastFrom20("ref")
                     .compose(bindToLifecycle())
@@ -274,6 +274,7 @@ public class RadarForecastFragment extends RxLazyFragment {
                         recycle_skipto_position = 2;
                         now_postion = 1;
                         isStart = false;
+                        uiHandler.removeCallbacksAndMessages(null);
                         if (isStartPic != null) {
                             isStartPic.setImageResource(R.drawable.app_start);
                             mViewPager.setScanScroll(true);

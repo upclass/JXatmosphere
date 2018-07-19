@@ -19,6 +19,7 @@ import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.fragments.LdptRadarFragment;
 import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
+import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class LdptRadarActivity extends BaseActivity implements View.OnClickListe
 
     @BindView(R.id.tabline)
     ImageView tabline;
-    //    @BindView(R.id.share_to)
-//    ImageView share_to;
+    @BindView(R.id.reload)
+    ImageView reload;
     @BindView(R.id.back)
     ImageView leave;
 
@@ -118,7 +119,7 @@ public class LdptRadarActivity extends BaseActivity implements View.OnClickListe
         list = new ArrayList<>();
         main_tv.setOnClickListener(this);
         vice_tv.setOnClickListener(this);
-//        share_to.setOnClickListener(this);
+        reload.setOnClickListener(this);
         leave.setOnClickListener(this);
 
         String flag = "0";
@@ -154,10 +155,6 @@ public class LdptRadarActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
-             /*   arg0 :当前页面，及你点击滑动的页面
-                arg1:当前页面偏移的百分比
-                arg2:当前页面偏移的像素位置*/
-                // 取得该控件的实例
                 LinearLayout.LayoutParams ll = (android.widget.LinearLayout.LayoutParams) tabline
                         .getLayoutParams();
 
@@ -202,8 +199,8 @@ public class LdptRadarActivity extends BaseActivity implements View.OnClickListe
                 fragment.setImage();
 
                 break;
-//            case R.id.share_to:
-//
+            case R.id.reload:
+
 //                OnekeyShare oks = new OnekeyShare();
 //                //关闭sso授权
 //                oks.disableSSOWhenAuthorize();
@@ -222,7 +219,12 @@ public class LdptRadarActivity extends BaseActivity implements View.OnClickListe
 //                oks.setComment("我是测试评论文本");
 //                // 启动分享GUI
 //                oks.show(this);
-//                break;
+                int currentItem = viewPager.getCurrentItem();
+                LdptRadarFragment fragment = (LdptRadarFragment) list.get(currentItem);
+                PicUtils.deleteDir("ldptRadar/"+fragment.flag);
+                fragment.getTestdata();
+
+                break;
             case R.id.back:
                 finish();
                 break;

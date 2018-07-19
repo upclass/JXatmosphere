@@ -34,8 +34,8 @@ public class WorkScheduleActivity extends BaseActivity implements View.OnClickLi
     TextView tv3;
     @BindView(R.id.tabline)
     ImageView tabline;
-//    @BindView(R.id.share_to)
-//    ImageView share_to;
+    @BindView(R.id.reload)
+    ImageView reload;
     @BindView(R.id.work_schedule_leave)
     ImageView leave;
 
@@ -72,8 +72,8 @@ public class WorkScheduleActivity extends BaseActivity implements View.OnClickLi
         // 1/24屏幕宽度
         marginleft = tabLineLength / 8;
         // 控件参数
-        LinearLayout.LayoutParams ps= (LinearLayout.LayoutParams) tabline.getLayoutParams();
-        ps.width=tabLineLength*3/4;
+        LinearLayout.LayoutParams ps = (LinearLayout.LayoutParams) tabline.getLayoutParams();
+        ps.width = tabLineLength * 3 / 4;
         tabline.setLayoutParams(ps);
     }
 
@@ -84,7 +84,7 @@ public class WorkScheduleActivity extends BaseActivity implements View.OnClickLi
         tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
         tv3.setOnClickListener(this);
-//        share_to.setOnClickListener(this);
+        reload.setOnClickListener(this);
         leave.setOnClickListener(this);
 
         // 设置参数
@@ -147,21 +147,22 @@ public class WorkScheduleActivity extends BaseActivity implements View.OnClickLi
 
                 if (currentPage == 0 && arg0 == 0) { // 0->1移动(第一页到第二页)
                     ll.leftMargin = (int) (currentPage * tabLineLength + arg1
-                            * tabLineLength+marginleft);
+                            * tabLineLength + marginleft);
                 } else if (currentPage == 1 && arg0 == 1) { // 1->2移动（第二页到第三页）
                     ll.leftMargin = (int) (currentPage * tabLineLength + arg1
-                            * tabLineLength+marginleft);
+                            * tabLineLength + marginleft);
                 } else if (currentPage == 1 && arg0 == 0) { // 1->0移动（第二页到第一页）
-                    ll.leftMargin = (int) (currentPage * tabLineLength - ((1 - arg1) * tabLineLength)+marginleft);
+                    ll.leftMargin = (int) (currentPage * tabLineLength - ((1 - arg1) * tabLineLength) + marginleft);
                 } else if (currentPage == 2 && arg0 == 1) { // 2->1移动（第三页到第二页）
                     ll.leftMargin = (int) (currentPage * tabLineLength - (1 - arg1)
-                            * tabLineLength+marginleft);
+                            * tabLineLength + marginleft);
                 }
                 tabline.setLayoutParams(ll);
             }
 
 
         });
+        viewPager.setCurrentItem(1);
 
     }
 
@@ -181,37 +182,22 @@ public class WorkScheduleActivity extends BaseActivity implements View.OnClickLi
                 currentPage = 1;
                 changeSize(1);
                 viewPager.setCurrentItem(1);
-                ll.leftMargin =  tabLineLength + marginleft;
+                ll.leftMargin = tabLineLength + marginleft;
                 tabline.setLayoutParams(ll);
                 break;
             case R.id.tv3:
                 currentPage = 2;
                 changeSize(2);
                 viewPager.setCurrentItem(2);
-                ll.leftMargin =  tabLineLength*2 + marginleft;
+                ll.leftMargin = tabLineLength * 2 + marginleft;
                 tabline.setLayoutParams(ll);
                 break;
-//            case R.id.share_to:
-//
-//                OnekeyShare oks = new OnekeyShare();
-//                //关闭sso授权
-//                oks.disableSSOWhenAuthorize();
-//
-//                // title标题，微信、QQ和QQ空间等平台使用
-//                oks.setTitle(getString(R.string.sharetest));
-//                // titleUrl QQ和QQ空间跳转链接
-//                oks.setTitleUrl("http://sharesdk.cn");
-//                // text是分享文本，所有平台都需要这个字段
-//                oks.setText("我是分享文本");
-//                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-//                oks.setImagePath("/sdcard/popup_feedback_layout.jpg");//确保SDcard下面存在此张图片
-//                // url在微信、微博，Facebook等平台中使用
-//                oks.setUrl("http://sharesdk.cn");
-//                // comment是我对这条分享的评论，仅在人人网使用
-//                oks.setComment("我是测试评论文本");
-//                // 启动分享GUI
-//                oks.show(this);
-//                break;
+            case R.id.reload:
+                int currentItem = viewPager.getCurrentItem();
+                WorkScheduleFragment fragment = ((WorkScheduleFragment) list.get(currentItem));
+//                fragment.scrollTo0();
+                fragment.getTestdata();
+                break;
             case R.id.work_schedule_leave:
                 finish();
                 break;

@@ -707,7 +707,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                        aMapLocation.getLongitude();//获取经度
 //                        aMapLocation.getAccuracy();//获取精度信息
 
-                        address = aMapLocation.getProvince() + aMapLocation.getCity();
+//                        address = aMapLocation.getProvince() + aMapLocation.getCity();
+                        address=aMapLocation.getAoiName();
                         lat = String.valueOf(aMapLocation.getLatitude());//获取纬度
                         lon = String.valueOf(aMapLocation.getLongitude());//获取经度
                         location.setText(address);

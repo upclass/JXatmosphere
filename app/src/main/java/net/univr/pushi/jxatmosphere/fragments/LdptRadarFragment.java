@@ -63,7 +63,7 @@ public class LdptRadarFragment extends RxLazyFragment {
     List<String> urls = new ArrayList<>();
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
     MyPagerAdapter viewPagerAdapter;
-    String flag;
+    public String flag;
     private MultiGdybTxAdapter mAdapter;
     ImageView isStartPic;
 
@@ -145,7 +145,8 @@ public class LdptRadarFragment extends RxLazyFragment {
     }
 
 
-    private void getTestdata() {
+    public void getTestdata() {
+        isStart=false;
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
         if (flag.equals("1")) {

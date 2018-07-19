@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -64,6 +65,8 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
     String tag;
     PopupWindow popupWindow;
     PopupWindow popupWindowXq;
+    private View popLayoutXq;
+    private View popLayout;
 
 
     @Override
@@ -76,8 +79,32 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
         super.initViews(savedInstanceState);
         initArcgis();
         initOnclick();
+        initPopWindow();
+        initPopWindowXq();
 
 
+    }
+
+    private void initPopWindowXq() {
+        popLayoutXq = LayoutInflater.from(this).inflate(R.layout.yujin_popup_xq_layout, null);
+        popupWindowXq = new PopupWindow(popLayoutXq, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindowXq.setTouchable(true);
+        popupWindowXq.setFocusable(false);
+        popupWindowXq.setOutsideTouchable(false);
+//        Drawable drawable = getResources().getDrawable(R.drawable.popbackground);
+//        popupWindowXq.setBackgroundDrawable(drawable);
+//        popupWindowXq.setAnimationStyle(R.style.pop_anim);
+//        popupWindowXq.showAtLocation(mapView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    private void initPopWindow() {
+        popLayout = LayoutInflater.from(this).inflate(R.layout.yujin_popup_layout, null);
+        popupWindow = new PopupWindow(popLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(false);
+        popupWindow.setOutsideTouchable(false);
+//        popupWindow.setAnimationStyle(R.style.pop_anim);
+//        popupWindow.showAtLocation(mapView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
     private void initOnclick() {
@@ -143,7 +170,7 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
 //            mapView.getMap().getOperationalLayers().add(gridLayer);
             gridLayer.addDoneLoadingListener(() -> {
                 if (gridLayer.getLoadStatus() == LoadStatus.LOADED) {
-//                    mapView.setViewpointGeometryAsync(gridLayer.getFullExtent());
+                    if(mapView!=null)
                     mapView.setViewpointGeometryAsync(gridLayer.getFullExtent(), 10);
                 } else {
                     ToastUtils.showShort("图层加载失败");
@@ -244,6 +271,7 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
         updateBottomState(false);
         Graphic graphic = new Graphic(geoElement.getGeometry(), geoElement.getAttributes());
         showIdentQueryPoint(graphic);
+
     }
 
     @Override
@@ -251,6 +279,8 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
         updateBottomState(false);
 //        mapView.setViewpointGeometryAsync(graphic.getGeometry(), 100);
         loadBottomLayout(graphic);
+        Point point = graphic.getGeometry().getExtent().getCenter();
+        mapView.setViewpointCenterAsync(point);
     }
 
     /**
@@ -260,7 +290,11 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
      */
     private void loadBottomLayout(Graphic graphic) {
         Map<String, Object> selectMap = graphic.getAttributes();
-        show(context, selectMap);
+        if (popupWindowXq.isShowing())
+            showXq(context, selectMap);
+        else {
+            show(context, selectMap);
+        }
     }
 
 
@@ -302,18 +336,12 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
 
 
     private void show(Context context, Map<String, Object> selectMap) {
-        View popLayout = LayoutInflater.from(this).inflate(R.layout.yujin_popup_layout, null);
-        popupWindow = new PopupWindow(popLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-//        popupWindow.setAnimationStyle(R.style.pop_anim);
         popupWindow.showAtLocation(mapView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         ImageView gaikuanPic = popLayout.findViewById(R.id.gaikuan_pic);
         TextView gaikuanSubclass = popLayout.findViewById(R.id.gaikuan_subclass);
         TextView gaikuanQxj = popLayout.findViewById(R.id.gaikuan_qxj);
         TextView gaikuanSj = popLayout.findViewById(R.id.gaikuan_sj);
-        ImageView see_xiangqing = popLayout.findViewById(R.id.see_xiangqing);
+        LinearLayout see_xiangqing = popLayout.findViewById(R.id.see_xiangqing);
         TextView gb = popLayout.findViewById(R.id.gb);
         String subclass = (String) selectMap.get("subclass");
         String danwei = (String) selectMap.get("danwei");
@@ -328,7 +356,6 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                ;
                 showXq(context, selectMap);
             }
         });
@@ -336,33 +363,24 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
+                mapView.setViewpointGeometryAsync(getGridLayer().getFullExtent(), 10);
             }
         });
 
     }
 
     private void showXq(Context context, Map<String, Object> selectMap) {
-        View popLayout = LayoutInflater.from(this).inflate(R.layout.yujin_popup_xq_layout, null);
-        popupWindowXq = new PopupWindow(popLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindowXq.setTouchable(true);
-        popupWindowXq.setFocusable(true);
-        popupWindowXq.setOutsideTouchable(true);
-//        Drawable drawable = getResources().getDrawable(R.drawable.popbackground);
-//        popupWindowXq.setBackgroundDrawable(drawable);
-//        popupWindowXq.setAnimationStyle(R.style.pop_anim);
         popupWindowXq.showAtLocation(mapView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-
-
-        ImageView xiangqingPic = popLayout.findViewById(R.id.xiangqing_pic);
-        TextView xiangqingSubclass = popLayout.findViewById(R.id.xiangqing_subclass);
-        TextView qxjXq = popLayout.findViewById(R.id.qxj_xq);
-        TextView sjXq = popLayout.findViewById(R.id.sj_xq);
-        TextView yby = popLayout.findViewById(R.id.yby);
-        TextView qfr = popLayout.findViewById(R.id.qfr);
-        TextView ybfw = popLayout.findViewById(R.id.ybfw);
-        TextView ybxx = popLayout.findViewById(R.id.ybxx);
-        ImageView ditu = popLayout.findViewById(R.id.ditu);
-        TextView gb_xq = popLayout.findViewById(R.id.gb_xq);
+        ImageView xiangqingPic = popLayoutXq.findViewById(R.id.xiangqing_pic);
+        TextView xiangqingSubclass = popLayoutXq.findViewById(R.id.xiangqing_subclass);
+        TextView qxjXq = popLayoutXq.findViewById(R.id.qxj_xq);
+        TextView sjXq = popLayoutXq.findViewById(R.id.sj_xq);
+        TextView yby = popLayoutXq.findViewById(R.id.yby);
+        TextView qfr = popLayoutXq.findViewById(R.id.qfr);
+        TextView ybfw = popLayoutXq.findViewById(R.id.ybfw);
+        TextView ybxx = popLayoutXq.findViewById(R.id.ybxx);
+        LinearLayout ditu = popLayoutXq.findViewById(R.id.ditu);
+        TextView gb_xq = popLayoutXq.findViewById(R.id.gb_xq);
 
         String subclass = (String) selectMap.get("subclass");
         String danwei = (String) selectMap.get("danwei");
@@ -393,6 +411,7 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
             @Override
             public void onClick(View v) {
                 popupWindowXq.dismiss();
+                mapView.setViewpointGeometryAsync(getGridLayer().getFullExtent(), 10);
             }
         });
     }
