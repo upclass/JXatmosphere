@@ -12,13 +12,16 @@ import java.util.List;
 
 
 public class DsljybBeen {
+
     /**
-     * data : ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1","1"]
+     * data : ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"]
      * errmsg : success
+     * forecast_time : 2018-07-14 06:00
      * errcode : 0
      */
 
     private String errmsg;
+    private String forecast_time;
     private int errcode;
     private List<String> data;
 
@@ -28,6 +31,14 @@ public class DsljybBeen {
 
     public void setErrmsg(String errmsg) {
         this.errmsg = errmsg;
+    }
+
+    public String getForecast_time() {
+        return forecast_time;
+    }
+
+    public void setForecast_time(String forecast_time) {
+        this.forecast_time = forecast_time;
     }
 
     public int getErrcode() {

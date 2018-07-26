@@ -57,7 +57,7 @@ import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class GdybActivity extends BaseActivity implements View.OnClickListener,MapCall {
+public class GdybActivity extends BaseActivity implements View.OnClickListener, MapCall {
     @BindView(R.id.webView)
     WebView mWebView;
     @BindView(R.id.tuxin_tv)
@@ -111,7 +111,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
     private List<GdybBeen.DataBean> data = new ArrayList<>();
     Double x;
     Double y;
-    int i=0;
+    int i = 0;
 
 
     @Override
@@ -146,7 +146,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
     }
 
     private void startMapLinstenter() {
-        MapScreenClickListen mapScreenClickListen = new MapScreenClickListen(context, mapView,this);
+        MapScreenClickListen mapScreenClickListen = new MapScreenClickListen(context, mapView, this);
         mapView.setOnTouchListener(mapScreenClickListen);
     }
 
@@ -193,8 +193,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
     private void initGps() {
         LocationManager locationManager = (LocationManager) (context).getSystemService(Context
                 .LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-                locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
+        if (locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
             initArcgisLocation();
             return;
         }
@@ -219,10 +218,10 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
         locationDisplay.addLocationChangedListener(new LocationDisplay.LocationChangedListener() {
             @Override
             public void onLocationChanged(LocationDisplay.LocationChangedEvent locationChangedEvent) {
-                x=locationChangedEvent.getLocation().getPosition().getX();
-                y=locationChangedEvent.getLocation().getPosition().getY();
-                if(i==0)
-                getTestdata();
+                x = locationChangedEvent.getLocation().getPosition().getX();
+                y = locationChangedEvent.getLocation().getPosition().getY();
+                if (i == 0)
+                    getTestdata();
                 i++;
             }
         });
@@ -434,8 +433,8 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener,M
 
     @Override
     public void getNewData(Point point) {
-         x = point.getX();
-         y = point.getY();
+        x = point.getX();
+        y = point.getY();
         getTestdata();
     }
 

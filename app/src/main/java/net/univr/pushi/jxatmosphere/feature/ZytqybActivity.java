@@ -36,6 +36,7 @@ import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.ZytqybBeen;
 import net.univr.pushi.jxatmosphere.interfaces.MapI;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 import net.univr.pushi.jxatmosphere.widget.MapScreenLinstenter;
 import net.univr.pushi.jxatmosphere.widget.TianDiTuMethodsClass;
 
@@ -123,6 +124,10 @@ public class ZytqybActivity extends BaseActivity implements MapI {
                             String hail_diam_max = data.get(i).getHAIL_Diam_Max();
                             String pre_1h = data.get(i).getPRE_1h();
                             String pre_3h = data.get(i).getPRE_3h();
+                            String city = data.get(i).getCity();
+                            String cnty = data.get(i).getCnty();
+                            String shi=city+cnty;
+                            String forecast_time = data.get(i).getDatetime();
                             Map<String, Object> stringObjectMap = new HashMap<>();
                             stringObjectMap.put("wep_now", wep_now);
                             stringObjectMap.put("win_d_inst_max", win_d_inst_max);
@@ -134,6 +139,8 @@ public class ZytqybActivity extends BaseActivity implements MapI {
                             stringObjectMap.put("hail_diam_max", hail_diam_max);
                             stringObjectMap.put("pre_1h", pre_1h);
                             stringObjectMap.put("pre_3h", pre_3h);
+                            stringObjectMap.put("shi", shi);
+                            stringObjectMap.put("forecast_time", forecast_time);
 
                             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.location);
                             PictureMarkerSymbol pictureMarkerSymbol = new PictureMarkerSymbol(new BitmapDrawable(bitmap));
@@ -159,7 +166,7 @@ public class ZytqybActivity extends BaseActivity implements MapI {
     private void initBottomTime() {
         Date now = new Date();
         long nowLong = now.getTime();
-        long oneDayBeforeLong = nowLong - 3600 * 1000;
+        long oneDayBeforeLong = nowLong - 24*3600 * 1000;
         Date oneDayBefore = new Date(oneDayBeforeLong);
         String oneDayBeforeStr = getTime(oneDayBefore);
         String nowTimeStr = getTime(now);
@@ -302,6 +309,8 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         String hail_diam_max = (String) graphic.getAttributes().get("hail_diam_max");
         String pre_1h = (String) graphic.getAttributes().get("pre_1h");
         String pre_3h = (String) graphic.getAttributes().get("pre_3h");
+        String shi = (String) graphic.getAttributes().get("shi");
+        String forecast_time = (String) graphic.getAttributes().get("forecast_time");
         data.add(wep_now);
         data.add(win_d_inst_max);
         data.add(win_s_inst_max);
@@ -312,14 +321,25 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         data.add(hail_diam_max);
         data.add(pre_1h);
         data.add(pre_3h);
-        mapView.getCallout().setStyle(new Callout.Style(context, R.xml.my_callout_identify));
+        Callout.Style style = new Callout.Style(context, R.xml.my_callout_identify);
+        style.setMaxHeight(950);
+        mapView.getCallout().setStyle(style);
         View view = getLayoutInflater().inflate(R.layout.zytqyb_xq_layout, null);
         RecyclerView recyclerView = view.findViewById(R.id.zytq_xq_recycle);
+
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
+        int height = ShipeiUtils.getHeight(context);
+        double v = height * 0.5;
+        layoutParams.height= Integer.parseInt(new java.text.DecimalFormat("0").format(v));
+        recyclerView.setLayoutParams(layoutParams);
         LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         ZytqybAdapter adapter = new ZytqybAdapter(data);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
-
+        TextView shi_tv = view.findViewById(R.id.shi);
+        shi_tv.setText(shi);
+        TextView forecast_time_tv = view.findViewById(R.id.forecast_time);
+        forecast_time_tv.setText(forecast_time);
         ImageView imageView = view.findViewById(R.id.cancle_xq);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -330,8 +350,8 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         });
         mapView.getCallout().show(view, graphic.getGeometry().getExtent().getCenter());
         Point point =  graphic.getGeometry().getExtent().getCenter();
-        android.graphics.Point point1 =  mapView.locationToScreen(point);
-        point1.y = point1.y-200;
+        android.graphics.Point point1 = mapView.locationToScreen(point);
+        point1.y = point1.y - 400;
         point = mapView.screenToLocation(point1);
         mapView.setViewpointCenterAsync(point);
     }

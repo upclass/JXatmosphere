@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,7 +33,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
@@ -62,7 +63,7 @@ import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener {
     @BindView(R.id.home_drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.nav)
@@ -140,6 +141,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //预警信号
     @BindView(R.id.main_content_item2_1)
     PercentRelativeLayout YujinXinhao;
+    @BindView(R.id.main_content_item0_2)
+    PercentRelativeLayout grapes_ms;
+    @BindView(R.id.main_content_item0_3)
+    PercentRelativeLayout hdqyms;
+    @BindView(R.id.notice_img)
+    ImageView notice;
 
 
     @BindView(R.id.duty_name)
@@ -180,30 +187,53 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         cheackVersion();
         initDuty();
         initHeight();
+        initNotice();
         rememberLoginState();
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         imageView.setOnClickListener(this);
         see_more_chedule.setOnClickListener(this);
         info_feddback.setOnClickListener(this);
+        info_feddback.setOnTouchListener(this);
         forcast_score.setOnClickListener(this);
+        forcast_score.setOnTouchListener(this);
         decision_service.setOnClickListener(this);
+        decision_service.setOnTouchListener(this);
         typhoonMonitoring.setOnClickListener(this);
+        typhoonMonitoring.setOnTouchListener(this);
         gdyb.setOnClickListener(this);
+        gdyb.setOnTouchListener(this);
         help.setOnClickListener(this);
+        help.setOnTouchListener(this);
         gkdmgc.setOnClickListener(this);
+        gkdmgc.setOnTouchListener(this);
         dmcgjc.setOnClickListener(this);
+        dmcgjc.setOnTouchListener(this);
         ldpt_Wx.setOnClickListener(this);
+        ldpt_Wx.setOnTouchListener(this);
         ecxwg.setOnClickListener(this);
+        ecxwg.setOnTouchListener(this);
         qxfx.setOnClickListener(this);
+        qxfx.setOnTouchListener(this);
         genefore.setOnClickListener(this);
+        genefore.setOnTouchListener(this);
         gdybtx.setOnClickListener(this);
+        gdybtx.setOnTouchListener(this);
         wtfdlxh.setOnClickListener(this);
+        wtfdlxh.setOnTouchListener(this);
         more_weath.setOnClickListener(this);
         radarForecast.setOnClickListener(this);
+        radarForecast.setOnTouchListener(this);
         YujinXinhao.setOnClickListener(this);
+        YujinXinhao.setOnTouchListener(this);
         Zytqyb.setOnClickListener(this);
+        Zytqyb.setOnTouchListener(this);
         dsljyb.setOnClickListener(this);
+        dsljyb.setOnTouchListener(this);
+        grapes_ms.setOnClickListener(this);
+        grapes_ms.setOnTouchListener(this);
+        hdqyms.setOnClickListener(this);
+        hdqyms.setOnTouchListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -257,6 +287,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    private void initNotice() {
+        Glide.with(context).load(R.drawable.noti).into(notice);
+    }
+
 
     private void cheackVersion() {
         String versionName = getVersionName();
@@ -271,7 +305,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     else ;
                 }, throwable -> {
                     LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
 
@@ -414,7 +448,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(String.format("检测到新版本"+updateApp.getNewVersion()+"是否更新？"))
+                .setTitle(String.format("检测到新版本" + updateApp.getNewVersion() + "是否更新？"))
                 .setMessage(msg)
                 .setPositiveButton("升级", new DialogInterface.OnClickListener() {
                     @Override
@@ -527,7 +561,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 }, throwable -> {
                     LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
 
@@ -708,7 +742,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                        aMapLocation.getAccuracy();//获取精度信息
 
 //                        address = aMapLocation.getProvince() + aMapLocation.getCity();
-                        address=aMapLocation.getAoiName();
+                        address = aMapLocation.getAoiName();
                         lat = String.valueOf(aMapLocation.getLatitude());//获取纬度
                         lon = String.valueOf(aMapLocation.getLongitude());//获取经度
                         location.setText(address);
@@ -744,7 +778,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 }, throwable -> {
                     LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
 
@@ -763,4 +797,610 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()) {
+            case R.id.main_content_item1_1:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) ldpt_Wx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_cl_1));
+                    TextView childAt1 = (TextView) ldpt_Wx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) ldpt_Wx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_1));
+                    TextView childAt1 = (TextView) ldpt_Wx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) ldpt_Wx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_1));
+                    TextView childAt1 = (TextView) ldpt_Wx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) ldpt_Wx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_1));
+                    TextView childAt1 = (TextView) ldpt_Wx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item1_2:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) typhoonMonitoring.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_cl_2));
+                    TextView childAt1 = (TextView) typhoonMonitoring.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) typhoonMonitoring.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_2));
+                    TextView childAt1 = (TextView) typhoonMonitoring.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) typhoonMonitoring.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_2));
+                    TextView childAt1 = (TextView) typhoonMonitoring.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) typhoonMonitoring.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_2));
+                    TextView childAt1 = (TextView) typhoonMonitoring.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item1_3:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) dmcgjc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_cl_3));
+                    TextView childAt1 = (TextView) dmcgjc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) dmcgjc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_3));
+                    TextView childAt1 = (TextView) dmcgjc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) dmcgjc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_3));
+                    TextView childAt1 = (TextView) dmcgjc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) dmcgjc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_3));
+                    TextView childAt1 = (TextView) dmcgjc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item1_4:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) gkdmgc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_cl_4));
+                    TextView childAt1 = (TextView) gkdmgc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gkdmgc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_4));
+                    TextView childAt1 = (TextView) gkdmgc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gkdmgc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_4));
+                    TextView childAt1 = (TextView) gkdmgc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gkdmgc.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.wt_monitor_4));
+                    TextView childAt1 = (TextView) gkdmgc.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item2_1:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) YujinXinhao.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_1));
+                    TextView childAt1 = (TextView) YujinXinhao.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) YujinXinhao.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_1));
+                    TextView childAt1 = (TextView) YujinXinhao.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) YujinXinhao.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_1));
+                    TextView childAt1 = (TextView) YujinXinhao.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) YujinXinhao.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_1));
+                    TextView childAt1 = (TextView) YujinXinhao.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item2_2:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) Zytqyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_2));
+                    TextView childAt1 = (TextView) Zytqyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) Zytqyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_2));
+                    TextView childAt1 = (TextView) Zytqyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) Zytqyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_2));
+                    TextView childAt1 = (TextView) Zytqyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) Zytqyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_2));
+                    TextView childAt1 = (TextView) Zytqyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item2_3:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) radarForecast.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_3));
+                    TextView childAt1 = (TextView) radarForecast.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) radarForecast.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_3));
+                    TextView childAt1 = (TextView) radarForecast.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) radarForecast.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_3));
+                    TextView childAt1 = (TextView) radarForecast.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) radarForecast.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_3));
+                    TextView childAt1 = (TextView) radarForecast.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item2_4:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) gdyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_4));
+                    TextView childAt1 = (TextView) gdyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gdyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_4));
+                    TextView childAt1 = (TextView) gdyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gdyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_4));
+                    TextView childAt1 = (TextView) gdyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gdyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_4));
+                    TextView childAt1 = (TextView) gdyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item3_1:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) qxfx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_5));
+                    TextView childAt1 = (TextView) qxfx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) qxfx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_5));
+                    TextView childAt1 = (TextView) qxfx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) qxfx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_5));
+                    TextView childAt1 = (TextView) qxfx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) qxfx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_5));
+                    TextView childAt1 = (TextView) qxfx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item3_2:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) genefore.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_6));
+                    TextView childAt1 = (TextView) genefore.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) genefore.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_6));
+                    TextView childAt1 = (TextView) genefore.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) genefore.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_6));
+                    TextView childAt1 = (TextView) genefore.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) genefore.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_6));
+                    TextView childAt1 = (TextView) genefore.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item3_3:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) gdybtx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_7));
+                    TextView childAt1 = (TextView) gdybtx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gdybtx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_7));
+                    TextView childAt1 = (TextView) gdybtx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gdybtx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_7));
+                    TextView childAt1 = (TextView) gdybtx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) gdybtx.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_7));
+                    TextView childAt1 = (TextView) gdybtx.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item3_4:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) dsljyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_cl_8));
+                    TextView childAt1 = (TextView) dsljyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) dsljyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_8));
+                    TextView childAt1 = (TextView) dsljyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) dsljyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_8));
+                    TextView childAt1 = (TextView) dsljyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) dsljyb.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.fc_warn_8));
+                    TextView childAt1 = (TextView) dsljyb.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item0_1:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) ecxwg.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_cl_1));
+                    TextView childAt1 = (TextView) ecxwg.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) ecxwg.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_1));
+                    TextView childAt1 = (TextView) ecxwg.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) ecxwg.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_1));
+                    TextView childAt1 = (TextView) ecxwg.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) ecxwg.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_1));
+                    TextView childAt1 = (TextView) ecxwg.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item0_2:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) grapes_ms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_cl_2));
+                    TextView childAt1 = (TextView) grapes_ms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) grapes_ms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_2));
+                    TextView childAt1 = (TextView) grapes_ms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) grapes_ms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_2));
+                    TextView childAt1 = (TextView) grapes_ms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) grapes_ms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_2));
+                    TextView childAt1 = (TextView) grapes_ms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item0_3:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) hdqyms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_cl_3));
+                    TextView childAt1 = (TextView) hdqyms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) hdqyms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_3));
+                    TextView childAt1 = (TextView) hdqyms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) hdqyms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_3));
+                    TextView childAt1 = (TextView) hdqyms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) hdqyms.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_3));
+                    TextView childAt1 = (TextView) hdqyms.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item0_4:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) wtfdlxh.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_cl_4));
+                    TextView childAt1 = (TextView) wtfdlxh.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) wtfdlxh.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_4));
+                    TextView childAt1 = (TextView) wtfdlxh.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) wtfdlxh.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_4));
+                    TextView childAt1 = (TextView) wtfdlxh.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) wtfdlxh.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.data_forecast_4));
+                    TextView childAt1 = (TextView) wtfdlxh.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item4_1:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) decision_service.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_cl_1));
+                    TextView childAt1 = (TextView) decision_service.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) decision_service.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_1));
+                    TextView childAt1 = (TextView) decision_service.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) decision_service.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_1));
+                    TextView childAt1 = (TextView) decision_service.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) decision_service.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_1));
+                    TextView childAt1 = (TextView) decision_service.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item4_2:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) forcast_score.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_cl_2));
+                    TextView childAt1 = (TextView) forcast_score.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) forcast_score.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_2));
+                    TextView childAt1 = (TextView) forcast_score.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) forcast_score.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_2));
+                    TextView childAt1 = (TextView) forcast_score.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) forcast_score.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_2));
+                    TextView childAt1 = (TextView) forcast_score.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item4_3:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) info_feddback.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_cl_3));
+                    TextView childAt1 = (TextView) info_feddback.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) info_feddback.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_3));
+                    TextView childAt1 = (TextView) info_feddback.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) info_feddback.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_3));
+                    TextView childAt1 = (TextView) info_feddback.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) info_feddback.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_3));
+                    TextView childAt1 = (TextView) info_feddback.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+            case R.id.main_content_item4_4:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg));
+                    ImageView childAt = (ImageView) help.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_cl_4));
+                    TextView childAt1 = (TextView) help.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.white));
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) help.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_4));
+                    TextView childAt1 = (TextView) help.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) help.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_4));
+                    TextView childAt1 = (TextView) help.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    ((PercentRelativeLayout) v).setBackground(getResources().getDrawable(R.drawable.main_layout_select_bg1));
+                    ImageView childAt = (ImageView) help.getChildAt(0);
+                    childAt.setImageDrawable(getResources().getDrawable(R.drawable.sercice_feedback_4));
+                    TextView childAt1 = (TextView) help.getChildAt(1);
+                    childAt1.setTextColor(getResources().getColor(R.color.black));
+                }
+                break;
+        }
+        return false;
+    }
 }

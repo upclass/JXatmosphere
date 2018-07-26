@@ -37,7 +37,7 @@ public class GeneforeFragment extends RxLazyFragment {
     RecyclerView recyclerView;
 
     String tag;
-    String time;
+    public String time;
     GeneforeAdapter geneforeAdapter;
     List<String> mData;
     View header;
@@ -118,7 +118,7 @@ public class GeneforeFragment extends RxLazyFragment {
             header = inflater.inflate(R.layout.item_recycle_genefore_header_layout, null, false);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             mData = new ArrayList<>();
-            geneforeAdapter = new GeneforeAdapter(mData);
+            geneforeAdapter = new GeneforeAdapter(mData,getContext());
             geneforeAdapter.addHeaderView(header);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(geneforeAdapter);

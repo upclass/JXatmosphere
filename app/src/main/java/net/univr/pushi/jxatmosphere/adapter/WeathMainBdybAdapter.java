@@ -60,8 +60,17 @@ public class WeathMainBdybAdapter extends BaseQuickAdapter<GdybBeen.DataBean, Ba
         int month = date.getMonth() + 1;
         int day = date.getDate();
         int hours = date.getHours();
+        int day1 = date.getDay();
+        String day1str = null;
+        if (day1 == 0) day1str = "星期天";
+        if (day1 == 1) day1str = "星期一";
+        if (day1 == 2) day1str = "星期二";
+        if (day1 == 3) day1str = "星期三";
+        if (day1 == 4) day1str = "星期四";
+        if (day1 == 5) day1str = "星期五";
+        if (day1 == 6) day1str = "星期六";
         String temp = month + "月" + day + "日";
-        helper.setText(R.id.time, temp);
+        helper.setText(R.id.time, day1str);
 
         //得到预报图片
         String tqxx = (String) item.getWeatherDesc();
@@ -75,10 +84,13 @@ public class WeathMainBdybAdapter extends BaseQuickAdapter<GdybBeen.DataBean, Ba
                 break;
             } else continue;
         }
-        String imageName = "weath_" + picBiaoJi;
+//        String imageName = "weath_" + picBiaoJi;
+        String imageName = picBiaoJi;
         helper.setImageResource(R.id.weath, getResource(imageName));
-        helper.setText(R.id.temper_max, (String) item.getHeightTemper());
-        helper.setText(R.id.temper_min, item.getTemper());
+//        helper.setText(R.id.temper_max, (String) item.getHeightTemper());
+        helper.setText(R.id.temper_min, item.getTemper()+"~"+item.getHeightTemper()+"℃");
+        helper.setText(R.id.tqms, tqxx);
+
 
     }
 

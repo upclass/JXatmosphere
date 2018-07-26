@@ -1,43 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="40dp"
     android:layout_marginLeft="16dp"
-    android:orientation="horizontal"
-    android:layout_height="40dp">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/time"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:text="11"
         android:layout_weight="1"
-        android:gravity="center" />
+        android:gravity="left|center"
+        android:text="11"
+        android:textColor="@color/white" />
+
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1">
+
         <ImageView
-           android:layout_centerInParent="true"
             android:id="@+id/weath"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginRight="18dp"/>
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tqms"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/weath"
+            android:gravity="center"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/temper_max"
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
         android:layout_height="match_parent"
-        />
-    <TextView
-        android:id="@+id/temper_min"
-        android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/temper_min"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/white" />
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:text="~"-->
+            <!--android:textColor="@color/white" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/temper_max"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/white" />-->
+
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -20,6 +22,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
+import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.WebTiledLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -35,7 +38,9 @@ import com.github.abel533.echarts.series.Bar;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
+import net.univr.pushi.jxatmosphere.interfaces.MapCall;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.widget.MapScreenClickListen;
 import net.univr.pushi.jxatmosphere.widget.TianDiTuMethodsClass;
 
 import java.util.List;
@@ -44,12 +49,18 @@ import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DsljybActivity extends BaseActivity {
+public class DsljybActivity extends BaseActivity implements MapCall {
 
     @BindView(R.id.webView)
     WebView mWebView;
     @BindView(R.id.scroll)
     HorizontalScrollView scrollView;
+    @BindView(R.id.type)
+    LinearLayout type;
+    @BindView(R.id.now_time)
+    TextView now_time;
+    @BindView(R.id.sum_time)
+    TextView sum_time;
     @BindView(R.id.city)
     TextView city;
     @BindView(R.id.town)
@@ -70,7 +81,8 @@ public class DsljybActivity extends BaseActivity {
 
     public AMapLocationClient mlocationClient;
     public AMapLocationClientOption mLocationOption;
-//    String type="0";
+    //    String type="0";
+    String select = "now";
 
 
     @Override
@@ -90,6 +102,12 @@ public class DsljybActivity extends BaseActivity {
         initBaseMap();//初始化底图
         initGps();//初始化gps
         initArcgisUtils();
+        startMapLinstenter();
+    }
+
+    private void startMapLinstenter() {
+        MapScreenClickListen mapScreenClickListen = new MapScreenClickListen(context, mapView, this);
+        mapView.setOnTouchListener(mapScreenClickListen);
     }
 
     private void initBaseMap() {
@@ -140,24 +158,55 @@ public class DsljybActivity extends BaseActivity {
     }
 
     private void getDsljyb() {
+        ProgressDialog progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
         RetrofitHelper.getForecastWarn()
                 .getRainGird(String.valueOf(x), String.valueOf(y))
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dsljybBeen -> {
+                    progressDialog.dismiss();
                     scrollView.setVisibility(View.VISIBLE);
+                    type.setVisibility(View.VISIBLE);
                     List<String> data = dsljybBeen.getData();
                     barData = new Object[data.size()];
                     for (int i = 0; i < data.size(); i++) {
-                        barData[i]=data.get(i);
+                        barData[i] = data.get(i);
                     }
                     mWebView.loadUrl("file:///android_asset/jsWeb/ZhuZhuangechart.html");
                 }, throwable -> {
+                    progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
+
+    private void getDsljybSum() {
+        ProgressDialog progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
+        RetrofitHelper.getForecastWarn()
+                .getRainSumGird(String.valueOf(x), String.valueOf(y))
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(dsljybBeen -> {
+                    progressDialog.dismiss();
+                    scrollView.setVisibility(View.VISIBLE);
+                    type.setVisibility(View.VISIBLE);
+                    List<String> data = dsljybBeen.getData();
+                    barData = new Object[data.size()];
+                    for (int i = 0; i < data.size(); i++) {
+                        barData[i] = data.get(i);
+                    }
+                    mWebView.loadUrl("file:///android_asset/jsWeb/ZhuZhuangechart.html");
+                }, throwable -> {
+                    progressDialog.dismiss();
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
 
     private ArcGISMapImageLayer getGridLayer() {
         if (gridLayer == null) {
@@ -215,6 +264,28 @@ public class DsljybActivity extends BaseActivity {
                 finish();
             }
         });
+        now_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                now_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1_select));
+                now_time.setTextColor(getResources().getColor(R.color.white));
+                sum_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
+                sum_time.setTextColor(getResources().getColor(R.color.toolbar_color));
+                getDsljyb();
+                select = "now";
+            }
+        });
+        sum_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                now_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
+                now_time.setTextColor(getResources().getColor(R.color.toolbar_color));
+                sum_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3_select));
+                sum_time.setTextColor(getResources().getColor(R.color.white));
+                getDsljybSum();
+                select = "sum";
+            }
+        });
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -244,6 +315,14 @@ public class DsljybActivity extends BaseActivity {
 //        mWebView.setHorizontalScrollBarEnabled(false);//禁止水平滚动
 
 
+    }
+
+    @Override
+    public void getNewData(Point point) {
+        x = point.getX();
+        y = point.getY();
+        if (select.equals("now")) getDsljyb();
+        else getDsljybSum();
     }
 
     /**

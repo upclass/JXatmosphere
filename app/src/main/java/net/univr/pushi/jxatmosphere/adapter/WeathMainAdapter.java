@@ -118,66 +118,94 @@ public class WeathMainAdapter extends BaseQuickAdapter<GdybBeen.DataBean, BaseVi
                 break;
             } else continue;
         }
-        String imageName = "weath_" + picBiaoJi;
+//        String imageName = "weath_" + picBiaoJi;
+        String imageName = picBiaoJi;
         helper.setImageResource(R.id.forecast_image, getResource(imageName));
         helper.setText(R.id.forecast_weath, tqxx);
+        helper.setText(R.id.forecast_temp, item.getTemper()+"℃");
 
     }
 
 
+//    public static JsonArray initWeathTuPianJson() {
+//        String jsonArrayStr = " [\n" +
+//                "  {\"name\":\"晴\",\"image\":\"100\"},\n" +
+//                "  {\"name\":\"多云\",\"image\":\"101\"},\n" +
+//                "  {\"name\":\"少云\",\"image\":\"102\"},\n" +
+//                "  {\"name\":\"晴间多云\",\"image\":\"103\"},\n" +
+//                "  {\"name\":\"阴\",\"image\":\"104\"},\n" +
+//                "  {\"name\":\"有风\",\"image\":\"200\"},\n" +
+//                "  {\"name\":\"平静\",\"image\":\"201\"},\n" +
+//                "  {\"name\":\"微风\",\"image\":\"202\"},\n" +
+//                "  {\"name\":\"和风\",\"image\":\"203\"},\n" +
+//                "  {\"name\":\"清风\",\"image\":\"204\"},\n" +
+//                "  {\"name\":\"强风/劲风\",\"image\":\"205\"},\n" +
+//                "  {\"name\":\"疾风\",\"image\":\"206\"},\n" +
+//                "  {\"name\":\"大风\",\"image\":\"207\"},\n" +
+//                "  {\"name\":\"烈风\",\"image\":\"208\"},\n" +
+//                "  {\"name\":\"风暴\",\"image\":\"209\"},\n" +
+//                "  {\"name\":\"狂爆风\",\"image\":\"210\"},\n" +
+//                "  {\"name\":\"飓风\",\"image\":\"211\"},\n" +
+//                "  {\"name\":\"龙卷风\",\"image\":\"212\"},\n" +
+//                "  {\"name\":\"热带风暴\",\"image\":\"213\"},\n" +
+//                "  {\"name\":\"阵雨\",\"image\":\"300\"},\n" +
+//                "  {\"name\":\"强阵雨\",\"image\":\"301\"},\n" +
+//                "  {\"name\":\"雷阵雨\",\"image\":\"302\"},\n" +
+//                "  {\"name\":\"强雷阵雨\",\"image\":\"303\"},\n" +
+//                "  {\"name\":\"雷阵雨伴有冰雹\",\"image\":\"304\"},\n" +
+//                "  {\"name\":\"雨\",\"image\":\"305\"},\n" +
+//                "  {\"name\":\"中雨\",\"image\":\"306\"},\n" +
+//                "  {\"name\":\"大雨\",\"image\":\"307\"},\n" +
+//                "  {\"name\":\"极端降雨\",\"image\":\"308\"},\n" +
+//                "  {\"name\":\"毛毛雨/细雨\",\"image\":\"309\"},\n" +
+//                "  {\"name\":\"暴雨\",\"image\":\"310\"},\n" +
+//                "  {\"name\":\"大暴雨\",\"image\":\"311\"},\n" +
+//                "  {\"name\":\"特大暴雨\",\"image\":\"312\"},\n" +
+//                "  {\"name\":\"冻雨\",\"image\":\"313\"},\n" +
+//                "  {\"name\":\"小雪\",\"image\":\"400\"},\n" +
+//                "  {\"name\":\"中雪\",\"image\":\"401\"},\n" +
+//                "  {\"name\":\"大雪\",\"image\":\"402\"},\n" +
+//                "  {\"name\":\"暴雪\",\"image\":\"403\"},\n" +
+//                "  {\"name\":\"雨夹雪\",\"image\":\"404\"},\n" +
+//                "  {\"name\":\"雨雪天气\",\"image\":\"405\"},\n" +
+//                "  {\"name\":\"阵雨夹雪\",\"image\":\"406\"},\n" +
+//                "  {\"name\":\"阵雪\",\"image\":\"407\"},\n" +
+//                "  {\"name\":\"薄雾\",\"image\":\"500\"},\n" +
+//                "  {\"name\":\"雾\",\"image\":\"501\"},\n" +
+//                "  {\"name\":\"霾\",\"image\":\"502\"},\n" +
+//                "  {\"name\":\"扬沙\",\"image\":\"503\"},\n" +
+//                "  {\"name\":\"浮尘\",\"image\":\"504\"},\n" +
+//                "  {\"name\":\"沙尘暴\",\"image\":\"507\"},\n" +
+//                "  {\"name\":\"强沙尘暴\",\"image\":\"508\"},\n" +
+//                "  {\"name\":\"热\",\"image\":\"900\"},\n" +
+//                "  {\"name\":\"冷\",\"image\":\"901\"},\n" +
+//                "  {\"name\":\"未知\",\"image\":\"999\"}\n" +
+//                "  ]\n";
+//        JsonParser parser = new JsonParser();
+//        JsonArray JsonArray = parser.parse(jsonArrayStr).getAsJsonArray();
+//        return JsonArray;
+//    }
+
+
     public static JsonArray initWeathTuPianJson() {
         String jsonArrayStr = " [\n" +
-                "  {\"name\":\"晴\",\"image\":\"100\"},\n" +
-                "  {\"name\":\"多云\",\"image\":\"101\"},\n" +
-                "  {\"name\":\"少云\",\"image\":\"102\"},\n" +
-                "  {\"name\":\"晴间多云\",\"image\":\"103\"},\n" +
-                "  {\"name\":\"阴\",\"image\":\"104\"},\n" +
-                "  {\"name\":\"有风\",\"image\":\"200\"},\n" +
-                "  {\"name\":\"平静\",\"image\":\"201\"},\n" +
-                "  {\"name\":\"微风\",\"image\":\"202\"},\n" +
-                "  {\"name\":\"和风\",\"image\":\"203\"},\n" +
-                "  {\"name\":\"清风\",\"image\":\"204\"},\n" +
-                "  {\"name\":\"强风/劲风\",\"image\":\"205\"},\n" +
-                "  {\"name\":\"疾风\",\"image\":\"206\"},\n" +
-                "  {\"name\":\"大风\",\"image\":\"207\"},\n" +
-                "  {\"name\":\"烈风\",\"image\":\"208\"},\n" +
-                "  {\"name\":\"风暴\",\"image\":\"209\"},\n" +
-                "  {\"name\":\"狂爆风\",\"image\":\"210\"},\n" +
-                "  {\"name\":\"飓风\",\"image\":\"211\"},\n" +
-                "  {\"name\":\"龙卷风\",\"image\":\"212\"},\n" +
-                "  {\"name\":\"热带风暴\",\"image\":\"213\"},\n" +
-                "  {\"name\":\"阵雨\",\"image\":\"300\"},\n" +
-                "  {\"name\":\"强阵雨\",\"image\":\"301\"},\n" +
-                "  {\"name\":\"雷阵雨\",\"image\":\"302\"},\n" +
-                "  {\"name\":\"强雷阵雨\",\"image\":\"303\"},\n" +
-                "  {\"name\":\"雷阵雨伴有冰雹\",\"image\":\"304\"},\n" +
-                "  {\"name\":\"雨\",\"image\":\"305\"},\n" +
-                "  {\"name\":\"中雨\",\"image\":\"306\"},\n" +
-                "  {\"name\":\"大雨\",\"image\":\"307\"},\n" +
-                "  {\"name\":\"极端降雨\",\"image\":\"308\"},\n" +
-                "  {\"name\":\"毛毛雨/细雨\",\"image\":\"309\"},\n" +
-                "  {\"name\":\"暴雨\",\"image\":\"310\"},\n" +
-                "  {\"name\":\"大暴雨\",\"image\":\"311\"},\n" +
-                "  {\"name\":\"特大暴雨\",\"image\":\"312\"},\n" +
-                "  {\"name\":\"冻雨\",\"image\":\"313\"},\n" +
-                "  {\"name\":\"小雪\",\"image\":\"400\"},\n" +
-                "  {\"name\":\"中雪\",\"image\":\"401\"},\n" +
-                "  {\"name\":\"大雪\",\"image\":\"402\"},\n" +
-                "  {\"name\":\"暴雪\",\"image\":\"403\"},\n" +
-                "  {\"name\":\"雨夹雪\",\"image\":\"404\"},\n" +
-                "  {\"name\":\"雨雪天气\",\"image\":\"405\"},\n" +
-                "  {\"name\":\"阵雨夹雪\",\"image\":\"406\"},\n" +
-                "  {\"name\":\"阵雪\",\"image\":\"407\"},\n" +
-                "  {\"name\":\"薄雾\",\"image\":\"500\"},\n" +
-                "  {\"name\":\"雾\",\"image\":\"501\"},\n" +
-                "  {\"name\":\"霾\",\"image\":\"502\"},\n" +
-                "  {\"name\":\"扬沙\",\"image\":\"503\"},\n" +
-                "  {\"name\":\"浮尘\",\"image\":\"504\"},\n" +
-                "  {\"name\":\"沙尘暴\",\"image\":\"507\"},\n" +
-                "  {\"name\":\"强沙尘暴\",\"image\":\"508\"},\n" +
-                "  {\"name\":\"热\",\"image\":\"900\"},\n" +
-                "  {\"name\":\"冷\",\"image\":\"901\"},\n" +
-                "  {\"name\":\"未知\",\"image\":\"999\"}\n" +
+                "  {\"name\":\"大雪\",\"image\":\"weather_daxue_2x\"},\n" +
+                "  {\"name\":\"大雨\",\"image\":\"weather_dayu_2x\"},\n" +
+                "  {\"name\":\"冻雨\",\"image\":\"weather_dongyu_2x\"},\n" +
+                "  {\"name\":\"多云夜\",\"image\":\"weather_duoyun_ye_2x\"},\n" +
+                "  {\"name\":\"多云\",\"image\":\"weather_duoyun_2x\"},\n" +
+                "  {\"name\":\"风\",\"image\":\"weather_feng_2x\"},\n" +
+                "  {\"name\":\"霾\",\"image\":\"weather_mai_2x\"},\n" +
+                "  {\"name\":\"晴\",\"image\":\"weather_qing_2x\"},\n" +
+                "  {\"name\":\"晴夜\",\"image\":\"weather_qingye_2x\"},\n" +
+                "  {\"name\":\"雾\",\"image\":\"weather_wu_2x\"},\n" +
+                "  {\"name\":\"小雪\",\"image\":\"weather_xiaoxue_2x\"},\n" +
+                "  {\"name\":\"小雨\",\"image\":\"weather_xiaoyu_2x\"},\n" +
+                "  {\"name\":\"雨\",\"image\":\"weather_xiaoyu_2x\"},\n" +
+                "  {\"name\":\"雪\",\"image\":\"weather_xiaoxue_2x\"},\n" +
+                "  {\"name\":\"阴\",\"image\":\"weather_yin_2x\"},\n" +
+                "  {\"name\":\"中雪\",\"image\":\"weather_zhongxue_2x\"},\n" +
+                "  {\"name\":\"中雨\",\"image\":\"weather_zhongyu_2x\"}\n" +
                 "  ]\n";
         JsonParser parser = new JsonParser();
         JsonArray JsonArray = parser.parse(jsonArrayStr).getAsJsonArray();

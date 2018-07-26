@@ -25,6 +25,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/titleBar_title"
             style="@style/one_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,20 +33,20 @@
             android:text="本地信息"
             android:textColor="@color/white" />
 
-        <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:gravity="center"-->
-        <!--android:orientation="horizontal">-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <!--<ImageView-->
-        <!--android:id="@+id/share_to"-->
-        <!--style="@style/feture_pic"-->
-        <!--android:src="@drawable/nav_share" />-->
+            <ImageView
+                android:id="@+id/reload"
+                style="@style/feture_pic"
+                android:src="@drawable/app_reload" />
 
-        <!--</LinearLayout>-->
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -74,7 +75,23 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="text"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="4">
+
+                    <TextView
+                        android:id="@+id/temper"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="N/A℃"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,145 +99,123 @@
                     android:layout_weight="2"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:src="@drawable/location" />
-
-                        <TextView
-                            android:id="@+id/loc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="location"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginLeft="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/jsl"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
                                 android:layout_gravity="center"
-                                android:layout_marginRight="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
                                 android:text="降雨量(cm)"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/white" />
 
                             <TextView
                                 android:id="@+id/jsl_data"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
                                 android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
                                 android:text="N/A"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/white" />
+
+
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginLeft="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/xdsd"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="15dp"
-                                android:text="相对湿度(%)"
-                                android:textColor="@color/black" />
-
-                            <TextView
-                                android:id="@+id/xdsd_data"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:text="N/A"
-                                android:textColor="@color/black" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/fsfx"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
                                 android:layout_gravity="center"
-                                android:layout_marginRight="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
                                 android:text="风速方向(m/s)"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/white" />
 
-                            <TextView
-                                android:id="@+id/fsfx_data"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:text="N/A"
-                                android:textColor="@color/black" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/fsfx_data1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:text="N/A"
-                                android:textColor="@color/black" />
+                                <TextView
+                                    android:id="@+id/fsfx_data"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="right|center"
+                                    android:text="N/A"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
+                                    android:gravity="right|center"
+                                    android:text="/"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:id="@+id/fsfx_data1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="left|center"
+                                    android:text="N/A"
+                                    android:textColor="@color/white" />
+
+                            </LinearLayout>
+
+
                         </LinearLayout>
 
-                    </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/xdsd"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="相对湿度(%)"
+                                android:textColor="@color/white" />
 
-                        <TextView
-                            android:id="@+id/temper"
-                            android:layout_width="wrap_content"
-                            android:layout_height="60dp"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="N/A℃"
-                            android:textColor="@color/black"
-                            android:textSize="30sp" />
+                            <TextView
+                                android:id="@+id/xdsd_data"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="N/A"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -232,16 +227,16 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/white" />
+                android:layout_height="1dp"
+                android:background="#50FFFFFF" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="10dp"
-                android:text="未来三天天气趋势"
-                android:textColor="@color/black"
+                android:text="未来24小时天气"
+                android:textColor="@color/white"
                 android:textSize="16dp" />
 
 
@@ -268,8 +263,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/white" />
+                android:layout_height="1dp"
+                android:background="#50FFFFFF" />
 
             <LinearLayout
                 android:id="@+id/yjxh"
@@ -284,7 +279,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
                     android:text="预警信号"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16dp" />
 
                 <TextView
@@ -293,7 +288,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="当前位置暂无预警信息"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
@@ -310,7 +305,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
                     android:text="预警信号"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16dp" />
 
                 <LinearLayout
@@ -336,8 +331,8 @@
                             android:id="@+id/tqms"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="高温黄色预警新海"
-                            android:textColor="@color/black"
+                            android:text="高温黄色预警信号"
+                            android:textColor="@color/white"
                             android:textSize="17sp" />
 
                         <LinearLayout
@@ -349,7 +344,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:text="发布单位:"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/white" />
 
                             <TextView
                                 android:id="@+id/fbdw"
@@ -357,7 +352,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:text="发布单位"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/white" />
                         </LinearLayout>
 
                     </LinearLayout>

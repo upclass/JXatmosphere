@@ -76,7 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:gravity="center"
-                    android:text="江西普适科技有限公司 版权所有"
+                    android:text="江西省气象台 版权所有"
                     android:textColor="@color/black"
                     android:textSize="12dp" />
 

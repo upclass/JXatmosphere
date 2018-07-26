@@ -102,24 +102,66 @@
             </LinearLayout>
         </LinearLayout>
 
-        <HorizontalScrollView
-            android:id="@+id/scroll"
-            android:layout_width="wrap_content"
-            android:layout_height="160dp"
-            android:visibility="gone">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp">
+
+
+            <HorizontalScrollView
+                android:id="@+id/scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="160dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="160dp">
+
+                    <net.univr.pushi.jxatmosphere.widget.NoScrollWebView
+                        android:id="@+id/webView"
+                        android:layout_width="800dp"
+                        android:layout_height="160dp" />
+                </LinearLayout>
+
+
+            </HorizontalScrollView>
 
             <LinearLayout
+                android:id="@+id/type"
                 android:layout_width="wrap_content"
-                android:layout_height="160dp">
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-                <net.univr.pushi.jxatmosphere.widget.NoScrollWebView
-                    android:id="@+id/webView"
-                    android:layout_width="800dp"
-                    android:layout_height="160dp" />
+                <TextView
+                    android:id="@+id/now_time"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/gd_text_bg1_select"
+                    android:gravity="center"
+                    android:text="当前"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/sum_time"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-1dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/gd_text_bg3"
+                    android:gravity="center"
+                    android:text="累积"
+                    android:textColor="@color/toolbar_color"
+                    android:textSize="13sp" />
+
             </LinearLayout>
+        </FrameLayout>
 
-
-        </HorizontalScrollView>
 
     </LinearLayout>
 

@@ -15,9 +15,9 @@
         <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/home_toolbar"
+            style="@style/header_color"
             android:layout_width="match_parent"
             android:layout_height="@dimen/spacing_40"
-            style="@style/header_color"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <ImageView
@@ -43,85 +43,38 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#fcf4d8"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/notice_img"
+                    style="@style/main_image_style"
+                    android:layout_marginLeft="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:text="             欢迎使用江西气象业务平台，祝您生活愉快!"
+                    android:textColor="#fd6901"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/main_weath_loc"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/spacing_50"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
-                <!--<LinearLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="1">-->
-
-                <!--<ImageView-->
-                <!--style="@style/main_image_style"-->
-                <!--android:layout_marginLeft="@dimen/spacing_4"-->
-                <!--android:src="@drawable/location" />-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/main_loc"-->
-                <!--style="@style/main_text_style"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center"-->
-                <!--android:text="高新区" />-->
-
-                <!--</LinearLayout>-->
-                <!---->
-                <!--<android.support.percent.PercentRelativeLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="3">-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/pic_cloud"-->
-                <!--style="@style/main_image_style"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:gravity="center"-->
-                <!--android:src="@drawable/cloudy"-->
-                <!--app:layout_marginLeftPercent="10%" />-->
-
-
-                <!--<TextView-->
-                <!--android:id="@+id/main_temp"-->
-                <!--style="@style/main_text_style"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_toRightOf="@+id/pic_cloud"-->
-                <!--android:gravity="center"-->
-                <!--android:text="18.1℃"-->
-                <!--app:layout_marginLeftPercent="5%" />-->
-
-
-                <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_toRightOf="@+id/main_temp"-->
-                <!--android:gravity="center"-->
-                <!--android:orientation="vertical"-->
-                <!--app:layout_marginLeftPercent="8%">-->
-
-                <!--<TextView-->
-                <!--style="@style/main_text_style"-->
-                <!--android:layout_gravity="left"-->
-                <!--android:gravity="center"-->
-                <!--android:text="今日" />-->
-
-                <!--<TextView-->
-                <!--style="@style/main_text_style"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:gravity="center"-->
-                <!--android:text="22.6℃-14.6℃" />-->
-                <!--</LinearLayout>-->
-
-                <!--<ImageView-->
-                <!--android:layout_width="@dimen/spacing_20"-->
-                <!--android:layout_height="@dimen/spacing_20"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:src="@drawable/app_right" />-->
-
-                <!--</android.support.percent.PercentRelativeLayout>-->
 
                 <LinearLayout
                     android:id="@+id/more_weath"
@@ -268,9 +221,9 @@
                         android:id="@+id/duty_name1"
                         style="@style/main_text_style"
                         android:layout_gravity="center"
-                        android:gravity="center"
                         android:layout_marginBottom="3dp"
                         android:layout_marginTop="2dp"
+                        android:gravity="center"
                         android:text="徐彬(带班领导)" />
 
                 </LinearLayout>
@@ -312,8 +265,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="15dp"
-                    android:gravity="right"
                     android:layout_toRightOf="@id/duty_time_group"
+                    android:gravity="right"
                     android:orientation="vertical">
 
                     <TextView

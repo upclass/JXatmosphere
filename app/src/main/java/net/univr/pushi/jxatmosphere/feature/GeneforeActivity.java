@@ -1,6 +1,8 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -87,7 +89,21 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void initViews(Bundle savedInstanceState) {
+        getNowTime();
+        time.setText(timeStr);
+        time.setOnClickListener(this);
+        reload.setOnClickListener(this);
+        back.setOnClickListener(this);
+        relative2.setOnClickListener(this);
+        relative3.setOnClickListener(this);
+        relative4.setOnClickListener(this);
+        relative5.setOnClickListener(this);
+        initMenu();
+        getTestdata();
 
+    }
+
+    private void getNowTime() {
         Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH) + 1;
@@ -100,17 +116,6 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
             timeStr = timeStr + "0" + mDay;
         else
             timeStr = timeStr + mDay;
-        time.setText(timeStr);
-        time.setOnClickListener(this);
-        reload.setOnClickListener(this);
-        back.setOnClickListener(this);
-        relative2.setOnClickListener(this);
-        relative3.setOnClickListener(this);
-        relative4.setOnClickListener(this);
-        relative5.setOnClickListener(this);
-        initMenu();
-        getTestdata();
-
     }
 
 
@@ -130,6 +135,16 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                 if (list != null && list.size() > 0) {
                     int currentItem = viewPager.getCurrentItem();
                     GeneforeFragment fragment = (GeneforeFragment) list.get(currentItem);
+                    ProgressDialog progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+                    progressDialog.setCancelable(true);
+                    Handler handler=new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    },1000);
+                    fragment.time=time.getText().toString().substring(2, time.getText().toString().length());
                     fragment.getTestdata();
                 }
 

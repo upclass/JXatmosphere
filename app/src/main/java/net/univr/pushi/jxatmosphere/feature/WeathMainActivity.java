@@ -1,16 +1,17 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
@@ -45,8 +46,8 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
 
     @BindView(R.id.work_schedule_leave)
     ImageView workScheduleLeave;
-    //    @BindView(R.id.share_to)
-//    ImageView shareTo;
+    @BindView(R.id.reload)
+    ImageView reload;
     @BindView(R.id.date)
     TextView date;
     @BindView(R.id.jsl_data)
@@ -59,7 +60,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     TextView fsfxData1;
     @BindView(R.id.temper)
     TextView temper;
-    @BindView(R.id.loc)
+    @BindView(R.id.titleBar_title)
     TextView loc;
     @BindView(R.id.recycler)
     RecyclerView recyclerView;
@@ -85,6 +86,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     String adress;
     GeocodeSearch geocoderSearch;
     String city;
+    private ProgressDialog progressDialog;
 
     @Override
     public int getLayoutId() {
@@ -94,7 +96,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void initViews(Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
-//        shareTo.setOnClickListener(this);
+        reload.setOnClickListener(this);
         workScheduleLeave.setOnClickListener(this);
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
@@ -103,8 +105,8 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         lon = intent.getStringExtra("lon");
         adress = intent.getStringExtra("address");
         initDate();
-        if (lat == null)
-            Toast.makeText(context, "没有定位权限", Toast.LENGTH_SHORT).show();
+        if (lat == null);
+//            Toast.makeText(context, "没有定位权限", Toast.LENGTH_SHORT).show();
         else {
             getAddress(new LatLonPoint(Double.valueOf(lat), Double.valueOf(lon)));
             getTestData();
@@ -131,13 +133,13 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         int mMonth = c.get(Calendar.MONTH) + 1;
         mDay = c.get(Calendar.DAY_OF_MONTH);
         int weekday = c.get(Calendar.DAY_OF_WEEK);
-        if (weekday == 1) weekdayStr = "周日";
-        if (weekday == 2) weekdayStr = "周一";
-        if (weekday == 3) weekdayStr = "周二";
-        if (weekday == 4) weekdayStr = "周三";
-        if (weekday == 5) weekdayStr = "周四";
-        if (weekday == 6) weekdayStr = "周五";
-        if (weekday == 7) weekdayStr = "周六";
+        if (weekday == 1) weekdayStr = "星期天";
+        if (weekday == 2) weekdayStr = "星期一";
+        if (weekday == 3) weekdayStr = "星期二";
+        if (weekday == 4) weekdayStr = "星期三";
+        if (weekday == 5) weekdayStr = "星期四";
+        if (weekday == 6) weekdayStr = "星期五";
+        if (weekday == 7) weekdayStr = "星期六";
         String dateStr = mYear + "-" + mMonth + "-" + mDay + " " + weekdayStr;
         date.setText(dateStr);
     }
@@ -145,25 +147,21 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.share_to:
-//                OnekeyShare oks = new OnekeyShare();
-//                //关闭sso授权
-//                oks.disableSSOWhenAuthorize();
-//                // title标题，微信、QQ和QQ空间等平台使用
-//                oks.setTitle(getString(R.string.sharetest));
-//                // titleUrl QQ和QQ空间跳转链接
-//                oks.setTitleUrl("http://sharesdk.cn");
-//                // text是分享文本，所有平台都需要这个字段
-//                oks.setText("我是分享文本");
-//                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-//                oks.setImagePath("/sdcard/popup_feedback_layout.jpg");//确保SDcard下面存在此张图片
-//                // url在微信、微博，Facebook等平台中使用
-//                oks.setUrl("http://sharesdk.cn");
-//                // comment是我对这条分享的评论，仅在人人网使用
-//                oks.setComment("我是测试评论文本");
-//                // 启动分享GUI
-//                oks.show(this);
-//                break;
+            case R.id.reload:
+                progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+                progressDialog.setCancelable(true);
+                getTestData();
+                getTestData1();
+                getTestData2();
+                getTestData3();
+                Handler handler=new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                    progressDialog.dismiss();
+                    }
+                },1000);
+                break;
             case R.id.work_schedule_leave:
                 finish();
                 break;
