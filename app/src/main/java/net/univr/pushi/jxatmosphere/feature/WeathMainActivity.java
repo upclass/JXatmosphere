@@ -78,7 +78,9 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     LinearLayout yjxh;
     @BindView(R.id.yjxh1)
     LinearLayout yjxh1;
-
+    @BindView(R.id.yujin_info)
+    LinearLayout yujin_info;
+    private List<YuJinXinhaoBeen.DataBean> data;
 
     private int mDay;
     private String lat;
@@ -87,6 +89,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     GeocodeSearch geocoderSearch;
     String city;
     private ProgressDialog progressDialog;
+
 
     @Override
     public int getLayoutId() {
@@ -97,6 +100,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     public void initViews(Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
         reload.setOnClickListener(this);
+        yujin_info.setOnClickListener(this);
         workScheduleLeave.setOnClickListener(this);
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
@@ -164,6 +168,13 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.work_schedule_leave:
                 finish();
+                break;
+            case R.id.yujin_info:
+                Intent intent=new Intent(context,YujinInfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("data",data.get(0));
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
         }
     }
@@ -320,7 +331,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(yuJinXinhaoBeen -> {
-                    List<YuJinXinhaoBeen.DataBean> data = yuJinXinhaoBeen.getData();
+                    data = yuJinXinhaoBeen.getData();
                     if (data.size() > 0) yjxh1.setVisibility(View.VISIBLE);
                     else yjxh.setVisibility(View.VISIBLE);
                     for (int i = 0; i < data.size(); i++) {

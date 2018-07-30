@@ -67,6 +67,8 @@ public class DsljybActivity extends BaseActivity implements MapCall {
     TextView town;
     @BindView(R.id.didian)
     TextView didian;
+    @BindView(R.id.forecast_time)
+    TextView forecast_time;
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.mapview)
@@ -168,12 +170,12 @@ public class DsljybActivity extends BaseActivity implements MapCall {
                 .subscribe(dsljybBeen -> {
                     progressDialog.dismiss();
                     scrollView.setVisibility(View.VISIBLE);
-                    type.setVisibility(View.VISIBLE);
                     List<String> data = dsljybBeen.getData();
                     barData = new Object[data.size()];
                     for (int i = 0; i < data.size(); i++) {
                         barData[i] = data.get(i);
                     }
+                    forecast_time.setText("预报时间:"+dsljybBeen.getForecast_time());
                     mWebView.loadUrl("file:///android_asset/jsWeb/ZhuZhuangechart.html");
                 }, throwable -> {
                     progressDialog.dismiss();
@@ -240,7 +242,7 @@ public class DsljybActivity extends BaseActivity implements MapCall {
                     if (aMapLocation.getErrorCode() == 0) {
                         city.setText(aMapLocation.getCity());
                         town.setText(aMapLocation.getDistrict());
-                        didian.setText(aMapLocation.getDescription());
+                        didian.setText(aMapLocation.getPoiName());
                         x = aMapLocation.getLatitude();//获取纬度
                         y = aMapLocation.getLongitude();//获取经度
                         getDsljyb();
@@ -267,10 +269,10 @@ public class DsljybActivity extends BaseActivity implements MapCall {
         now_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                now_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1_select));
-                now_time.setTextColor(getResources().getColor(R.color.white));
-                sum_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
-                sum_time.setTextColor(getResources().getColor(R.color.toolbar_color));
+                now_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg_select));
+                now_time.setTextColor(getResources().getColor(R.color.black));
+                sum_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg1));
+                sum_time.setTextColor(getResources().getColor(R.color.white));
                 getDsljyb();
                 select = "now";
             }
@@ -278,10 +280,10 @@ public class DsljybActivity extends BaseActivity implements MapCall {
         sum_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                now_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
-                now_time.setTextColor(getResources().getColor(R.color.toolbar_color));
-                sum_time.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3_select));
-                sum_time.setTextColor(getResources().getColor(R.color.white));
+                now_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg));
+                now_time.setTextColor(getResources().getColor(R.color.white));
+                sum_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg1_select));
+                sum_time.setTextColor(getResources().getColor(R.color.black));
                 getDsljybSum();
                 select = "sum";
             }
@@ -305,14 +307,13 @@ public class DsljybActivity extends BaseActivity implements MapCall {
         } else if (mDensity == 240) {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
         }
-        //自适应屏幕
-//        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-//        mWebView.setInitialScale(200);
-//        mWebView.setVerticalScrollBarEnabled(false);//允许垂直滚动
+        //设置webview背景色
+        mWebView.setBackgroundColor(0);
         mWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
-//        mWebView.setHorizontalScrollBarEnabled(false);//禁止水平滚动
+
 
 
     }

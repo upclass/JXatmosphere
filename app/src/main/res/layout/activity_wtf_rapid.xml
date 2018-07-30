@@ -109,7 +109,8 @@
     <net.univr.pushi.jxatmosphere.widget.CustomViewPager
         android:id="@+id/viepager"
         android:layout_width="match_parent"
-        android:layout_height="350dp"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
+        android:layout_height="350dp"
+        android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
 
 
     <View
@@ -120,17 +121,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="@dimen/spacing_2"
+            android:layout_marginLeft="16dp"
             android:background="@color/white"></android.support.v7.widget.RecyclerView>
 
     </LinearLayout>

@@ -22,7 +22,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
-import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
+import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapterForGdybtx;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
@@ -71,7 +71,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
     private DmcgjcMenuAdapter mAdapter1;
     private DmcgjcMenuAdapter menuAdapter;
-    private MultiGdybTxAdapter mAdapter3;
+    private MultiGdybTxAdapterForGdybtx mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
 
 //    ImageView isStartPic;
@@ -585,7 +585,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 });
     }
 
-    private MultiGdybTxAdapter getAdapter3() {
+    private MultiGdybTxAdapterForGdybtx getAdapter3() {
         if (mAdapter3 == null) {
 //            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
 //                @Override
@@ -593,8 +593,8 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 //                    return false;
 //                }
 //            };
-            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL);
-            mAdapter3 = new MultiGdybTxAdapter(multitemList);
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(8, StaggeredGridLayoutManager.VERTICAL);
+            mAdapter3 = new MultiGdybTxAdapterForGdybtx(multitemList);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
             mAdapter3.setOnItemChildClickListener((adapter, view, position) -> {

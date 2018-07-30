@@ -17,7 +17,7 @@ import com.blankj.utilcode.util.ToastUtils;
 
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
+import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapterForDmcgjc;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
@@ -63,7 +63,7 @@ public class RadarForecastFragment extends RxLazyFragment {
     MyPagerAdapter viewPagerAdapter;
     public  String type;
 
-    private MultiGdybTxAdapter mAdapter3;
+    private MultiGdybTxAdapterForDmcgjc mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
     ImageView isStartPic;
 
@@ -127,15 +127,15 @@ public class RadarForecastFragment extends RxLazyFragment {
     }
 
 
-    private MultiGdybTxAdapter getAdapter3() {
+    private MultiGdybTxAdapterForDmcgjc getAdapter3() {
         if (mAdapter3 == null) {
-            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(8, StaggeredGridLayoutManager.VERTICAL) {
                 @Override
                 public boolean canScrollVertically() {
                     return false;
                 }
             };
-            mAdapter3 = new MultiGdybTxAdapter(multitemList);
+            mAdapter3 = new MultiGdybTxAdapterForDmcgjc(multitemList);
             mRecyclerView3.setLayoutManager(layoutManager);
             mRecyclerView3.setAdapter(mAdapter3);
             mAdapter3.setOnItemChildClickListener((adapter, view, position) -> {
