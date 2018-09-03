@@ -74,6 +74,9 @@ public class ZytqybActivity extends BaseActivity implements MapI {
     LinearLayout bottom_lay;
     @BindView(R.id.rili_lay)
     LinearLayout rili_lay;
+    @BindView(R.id.reload)
+    ImageView reload;
+
 
 
     @Override
@@ -95,7 +98,15 @@ public class ZytqybActivity extends BaseActivity implements MapI {
                 finish();
             }
         });
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getZytqyb(data_qi_bottom.getText().toString(), data_zhi_bottom.getText().toString());
+            }
+        });
     }
+
+
 
     private void getZytqyb(String startTime, String endTime) {
         getMissionGraphicLayer().getGraphics().clear();
@@ -114,37 +125,45 @@ public class ZytqybActivity extends BaseActivity implements MapI {
                             Double aDouble = Double.valueOf(lat);
                             String lon = data.get(i).getLon();
                             Double aDouble1 = Double.valueOf(lon);
-                            String wep_now = data.get(i).getWEP_Now();
-                            String win_d_inst_max = data.get(i).getWIN_D_INST_Max();
-                            String win_s_inst_max = data.get(i).getWIN_S_Inst_Max();
-                            String trod_type = data.get(i).getTrod_Type();
-                            String trod_bear = data.get(i).getTrod_Bear();
-                            String snow_depth = data.get(i).getSnow_Depth();
-                            String eiced = data.get(i).getEICED();
-                            String hail_diam_max = data.get(i).getHAIL_Diam_Max();
-                            String pre_1h = data.get(i).getPRE_1h();
-                            String pre_3h = data.get(i).getPRE_3h();
-                            String city = data.get(i).getCity();
                             String cnty = data.get(i).getCnty();
-                            String shi=city+cnty;
+                            String city = data.get(i).getCity();
+                            String weatherDes = data.get(i).getWeatherDes();
+                            List<ZytqybBeen.DataBean.InfoArrayBean> infoArray = data.get(i).getInfoArray();
+                            String shi = city + cnty;
                             String forecast_time = data.get(i).getDatetime();
                             Map<String, Object> stringObjectMap = new HashMap<>();
-                            stringObjectMap.put("wep_now", wep_now);
-                            stringObjectMap.put("win_d_inst_max", win_d_inst_max);
-                            stringObjectMap.put("win_s_inst_max", win_s_inst_max);
-                            stringObjectMap.put("trod_type", trod_type);
-                            stringObjectMap.put("trod_bear", trod_bear);
-                            stringObjectMap.put("snow_depth", snow_depth);
-                            stringObjectMap.put("eiced", eiced);
-                            stringObjectMap.put("hail_diam_max", hail_diam_max);
-                            stringObjectMap.put("pre_1h", pre_1h);
-                            stringObjectMap.put("pre_3h", pre_3h);
                             stringObjectMap.put("shi", shi);
                             stringObjectMap.put("forecast_time", forecast_time);
-
+                            if (infoArray.size() == 1) {
+                                stringObjectMap.put("infoArray_key", infoArray.get(0).getInfo_key());
+                                stringObjectMap.put("infoArray_values", infoArray.get(0).getInfo_values());
+                            }
+                            if (infoArray.size() == 2) {
+                                stringObjectMap.put("infoArray_key", infoArray.get(0).getInfo_key());
+                                stringObjectMap.put("infoArray_values", infoArray.get(0).getInfo_values());
+                                stringObjectMap.put("infoArray_key1", infoArray.get(1).getInfo_key());
+                                stringObjectMap.put("infoArray_values1", infoArray.get(1).getInfo_values());
+                            }
                             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.location);
+                            if (weatherDes.equals("冰雹"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bingbao);
+                            if (weatherDes.equals("积冰"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.jibing);
+                            if (weatherDes.equals("积雪"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.jixue);
+                            if (weatherDes.equals("极大风"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.jidafeng);
+                            if (weatherDes.equals("降水"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.jiangshui);
+                            if (weatherDes.equals("雷暴"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.leibao);
+                            if (weatherDes.equals("龙卷风"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.longjuanfeng);
+                            if (weatherDes.equals("雾"))
+                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.wu);
+//                            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.location);
                             PictureMarkerSymbol pictureMarkerSymbol = new PictureMarkerSymbol(new BitmapDrawable(bitmap));
-                            pictureMarkerSymbol.setWidth(30);
+                            pictureMarkerSymbol.setWidth(24);
                             pictureMarkerSymbol.setHeight(30);
                             try {
                                 Graphic graphic = new Graphic(new Point(aDouble1,
@@ -166,7 +185,7 @@ public class ZytqybActivity extends BaseActivity implements MapI {
     private void initBottomTime() {
         Date now = new Date();
         long nowLong = now.getTime();
-        long oneDayBeforeLong = nowLong - 24*3600 * 1000;
+        long oneDayBeforeLong = nowLong - 24 * 3600 * 1000;
         Date oneDayBefore = new Date(oneDayBeforeLong);
         String oneDayBeforeStr = getTime(oneDayBefore);
         String nowTimeStr = getTime(now);
@@ -298,31 +317,29 @@ public class ZytqybActivity extends BaseActivity implements MapI {
      * @param graphic
      */
     public void ShowCallout(Graphic graphic) {
-        List<String> data = new ArrayList<>();
-        String wep_now = (String) graphic.getAttributes().get("wep_now");
-        String win_d_inst_max = (String) graphic.getAttributes().get("win_d_inst_max");
-        String win_s_inst_max = (String) graphic.getAttributes().get("win_s_inst_max");
-        String trod_type = (String) graphic.getAttributes().get("trod_type");
-        String trod_bear = (String) graphic.getAttributes().get("trod_bear");
-        String snow_depth = (String) graphic.getAttributes().get("snow_depth");
-        String eiced = (String) graphic.getAttributes().get("eiced");
-        String hail_diam_max = (String) graphic.getAttributes().get("hail_diam_max");
-        String pre_1h = (String) graphic.getAttributes().get("pre_1h");
-        String pre_3h = (String) graphic.getAttributes().get("pre_3h");
+        List<ZytqybBeen.DataBean.InfoArrayBean> infoArray = new ArrayList<>();
+        String infoArray_key = (String) graphic.getAttributes().get("infoArray_key");
+        String infoArray_values = (String) graphic.getAttributes().get("infoArray_values");
+        String infoArray_key1 = (String) graphic.getAttributes().get("infoArray_key1");
+        String infoArray_values1 = (String) graphic.getAttributes().get("infoArray_values1");
+        if (infoArray_key != null) {
+            ZytqybBeen.DataBean.InfoArrayBean infoData = new ZytqybBeen.DataBean.InfoArrayBean();
+            infoData.setInfo_key(infoArray_key+":");
+            infoData.setInfo_values(infoArray_values);
+            infoArray.add(infoData);
+        }
+
+        if (infoArray_key1 != null) {
+            ZytqybBeen.DataBean.InfoArrayBean infoData = new ZytqybBeen.DataBean.InfoArrayBean();
+            infoData.setInfo_key(infoArray_key1+":");
+            infoData.setInfo_values(infoArray_values1);
+            infoArray.add(infoData);
+        }
+
         String shi = (String) graphic.getAttributes().get("shi");
         String forecast_time = (String) graphic.getAttributes().get("forecast_time");
-        data.add(wep_now);
-        data.add(win_d_inst_max);
-        data.add(win_s_inst_max);
-        data.add(trod_type);
-        data.add(trod_bear);
-        data.add(snow_depth);
-        data.add(eiced);
-        data.add(hail_diam_max);
-        data.add(pre_1h);
-        data.add(pre_3h);
         Callout.Style style = new Callout.Style(context, R.xml.my_callout_identify);
-        style.setMaxHeight(950);
+//        style.setMaxHeight(950);
         mapView.getCallout().setStyle(style);
         View view = getLayoutInflater().inflate(R.layout.zytqyb_xq_layout, null);
         RecyclerView recyclerView = view.findViewById(R.id.zytq_xq_recycle);
@@ -330,16 +347,21 @@ public class ZytqybActivity extends BaseActivity implements MapI {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
         int height = ShipeiUtils.getHeight(context);
         double v = height * 0.5;
-        layoutParams.height= Integer.parseInt(new java.text.DecimalFormat("0").format(v));
+        layoutParams.height = Integer.parseInt(new java.text.DecimalFormat("0").format(v));
         recyclerView.setLayoutParams(layoutParams);
-        LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        ZytqybAdapter adapter = new ZytqybAdapter(data);
+        LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        ZytqybAdapter adapter = new ZytqybAdapter(infoArray);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         TextView shi_tv = view.findViewById(R.id.shi);
         shi_tv.setText(shi);
         TextView forecast_time_tv = view.findViewById(R.id.forecast_time);
-        forecast_time_tv.setText(forecast_time);
+        forecast_time_tv.setText("起报时间:"+forecast_time);
         ImageView imageView = view.findViewById(R.id.cancle_xq);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,7 +371,7 @@ public class ZytqybActivity extends BaseActivity implements MapI {
             }
         });
         mapView.getCallout().show(view, graphic.getGeometry().getExtent().getCenter());
-        Point point =  graphic.getGeometry().getExtent().getCenter();
+        Point point = graphic.getGeometry().getExtent().getCenter();
         android.graphics.Point point1 = mapView.locationToScreen(point);
         point1.y = point1.y - 400;
         point = mapView.screenToLocation(point1);

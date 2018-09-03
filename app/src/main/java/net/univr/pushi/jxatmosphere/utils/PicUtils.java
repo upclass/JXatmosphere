@@ -35,8 +35,13 @@ public class PicUtils {
             PHOTO_DIR.mkdirs();
         File avaterFile = new File(PHOTO_DIR, name);//设置文件名称
         try {
+
             FileOutputStream fos = new FileOutputStream(avaterFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            if (!name.toUpperCase().contains("PNG")) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            } else {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            }
             fos.flush();
             fos.close();
 
@@ -122,25 +127,60 @@ public class PicUtils {
 
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        float wdf=Float.valueOf(width);
-        float hgf=Float.valueOf(height);
-        float scale=wdf/hgf;
+        float wdf = Float.valueOf(width);
+        float hgf = Float.valueOf(height);
+        float scale = wdf / hgf;
         float newHeight = height;
         float newWidth = width;
         //设置想要的大小
-        if(width>wd&&height>hg){
-            newWidth=wd;
-            newHeight=wd/scale;
-        }else{
-            if(width>wd){
-                newWidth=wd;
-                newHeight=wd/scale;
+        if (width > wd && height > hg) {
+            newWidth = wd;
+            newHeight = wd / scale;
+        } else {
+            if (width > wd) {
+                newWidth = wd;
+                newHeight = wd / scale;
             }
-            if(height>hg){
-                newWidth=hg*scale;
-                newHeight=hg;
+            if (height > hg) {
+                newWidth = hg * scale;
+                newHeight = hg;
             }
         }
+
+        //计算压缩的比率
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        //获取想要缩放的matrix
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        //获取新的bitmap
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+        bitmap.getWidth();
+        bitmap.getHeight();
+        Log.e("newWidth", "newWidth" + bitmap.getWidth());
+        Log.e("newHeight", "newHeight" + bitmap.getHeight());
+        return bitmap;
+    }
+
+
+    public static Bitmap changeBitmapSizeToScreenWidth(Bitmap bitmap, Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        int wd = dm.widthPixels;         // 屏幕宽度（像素）
+        int hg = dm.heightPixels;         // 屏幕高度（像素）
+
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float wdf = Float.valueOf(width);
+        float hgf = Float.valueOf(height);
+        float scale = wdf / hgf;
+
+        float newWidth = wd;
+        float newHeight = wd / scale;
+
 
         //计算压缩的比率
         float scaleWidth = ((float) newWidth) / width;

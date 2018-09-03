@@ -1,52 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="40dp"
+    android:orientation="horizontal">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/item_1"
-            android:layout_width="0dp"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:gravity="center|left"
-            android:text="极大的风速的风向(m/s)"
+            android:gravity="left|center"
+            android:text="极大的风速的风向(m/s) "
             android:textColor="@color/black"
             android:textSize="13dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="|"
-            android:textColor="@color/toolbar_color"
-            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/item_2"
-            android:layout_width="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
+            android:gravity="left|center"
             android:text="现在天气"
             android:textColor="@color/black"
             android:textSize="13dp" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/toolbar_color" />
 
 </LinearLayout>

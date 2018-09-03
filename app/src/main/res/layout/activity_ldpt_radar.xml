@@ -70,7 +70,7 @@
                     style="@style/one_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="卫星云图"
+                    android:text="雷达拼图"
                     android:textColor="@color/white" />
             </LinearLayout>
 
@@ -85,7 +85,7 @@
                     style="@style/two_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fc_warn_pg_name3"
+                    android:text="卫星云图"
                     android:textColor="@color/white" />
             </LinearLayout>
 

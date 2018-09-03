@@ -2,6 +2,7 @@ package net.univr.pushi.jxatmosphere.interfaces;
 
 
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.mapping.view.Graphic;
 
 /**
  * author : Administrator wl
@@ -13,5 +14,8 @@ import com.esri.arcgisruntime.geometry.Point;
 
 
 public interface MapCall {
-   public void  getNewData(Point point);
+   void  getNewData(Point point);
+   void clearGra();
+   void addGra(Graphic graphic);
+
 }

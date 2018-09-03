@@ -109,7 +109,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         getOneMenu();
         initOnclick();
         type = "rain";
-        testType = "rain";
+        testType = "rain12";
         getTwoMenu();
 
         CallBackUtil.setBrightness(new BrightnessActivity() {
@@ -261,8 +261,16 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                         dataBeans.add(temp);
                     }
 
+
                     if (menu != null && menu.size() > 0) {
-                        getAdapter1();
+                        getAdapter1().setLastposition(3);
+                        if(type.equals("rain")||type.equals("wp")||type.equals("vis")||type.equals("10uv")||type.equals("tcc")){
+                            DmcgjcmenuBeen.DataBean dataBean = dataBeans.get(0);
+                            dataBean.setSelect(false);
+                            DmcgjcmenuBeen.DataBean dataBean1 = dataBeans.get(3);
+                            dataBean1.setSelect(true);
+                        }
+
                         mAdapter1.setNewData(dataBeans);
                     }
                 }, throwable -> {
@@ -419,7 +427,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 String menu = title.getText().toString();
                 if (menu.equals("降水量")) {
                     type = "rain";
-                    testType = "rain";
+                    testType = "rain12";
                 }
                 if (menu.equals("最高温")) {
                     type = "tmax24";
@@ -431,7 +439,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 }
                 if (menu.equals("天气现象")) {
                     type = "wp";
-                    testType = "wp";
+                    testType = "wp12";
                 }
                 if (menu.equals("2米温度")) {
                     type = "t2m";
@@ -439,11 +447,11 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 }
                 if (menu.equals("雾")) {
                     type = "vis";
-                    testType = "vis";
+                    testType = "vis12";
                 }
                 if (menu.equals("10米风")) {
                     type = "10uv";
-                    testType = "10uv";
+                    testType = "10uv12";
                 }
                 if (menu.equals("2米湿度")) {
                     type = "rh2m";
@@ -451,7 +459,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 }
                 if (menu.equals("总云量")) {
                     type = "tcc";
-                    testType = "tcc";
+                    testType = "tcc12";
                 }
                 getTwoMenu();
             });

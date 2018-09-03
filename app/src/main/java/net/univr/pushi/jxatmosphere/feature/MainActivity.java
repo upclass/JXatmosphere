@@ -48,6 +48,7 @@ import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.CProgressDialogUtils;
 import net.univr.pushi.jxatmosphere.utils.HProgressDialogUtils;
 import net.univr.pushi.jxatmosphere.utils.OkGoUpdateHttpUtil;
+import net.univr.pushi.jxatmosphere.utils.RandomNum;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -166,6 +167,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @BindView(R.id.more_weath)
     LinearLayout more_weath;
 
+    @BindView(R.id.main_divider_0)
+    View main_divider_0;
+    @BindView(R.id.main_divider_1)
+    View main_divider_1;
+    @BindView(R.id.main_divider_2)
+    View main_divider_2;
+    @BindView(R.id.main_divider_3)
+    View main_divider_3;
+    @BindView(R.id.main_divider_4)
+    View main_divider_4;
+    @BindView(R.id.main_divider_veritical_0)
+    View main_divider_veritical_0;
+    @BindView(R.id.main_divider_veritical_1)
+    View main_divider_veritical_1;
+    @BindView(R.id.main_divider_veritical_2)
+    View main_divider_veritical_2;
+    @BindView(R.id.main_divider_veritical_3)
+    View main_divider_veritical_3;
+    @BindView(R.id.main_divider_veritical_4)
+    View main_divider_veritical_4;
+
     //声明mlocationClient对象
     public AMapLocationClient mlocationClient;
     //声明mLocationOption对象
@@ -185,6 +207,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void initViews(Bundle savedInstanceState) {
 //        PgyUpdateManager.register(this);
         cheackVersion();
+        initDivider();
         initDuty();
         initHeight();
         initNotice();
@@ -285,6 +308,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             ActivityCompat.requestPermissions(MainActivity.this, permissionList.toArray(new String[permissionList.size()]), 1);
         }
 
+    }
+
+    private void initDivider() {
+        int rgb0 = Color.rgb(RandomNum.getRandomNum(), RandomNum.getRandomNum(), RandomNum.getRandomNum());
+        int rgb1 = Color.rgb(RandomNum.getRandomNum(), RandomNum.getRandomNum(), RandomNum.getRandomNum());
+        int rgb2 = Color.rgb(RandomNum.getRandomNum(), RandomNum.getRandomNum(), RandomNum.getRandomNum());
+        int rgb3 = Color.rgb(RandomNum.getRandomNum(), RandomNum.getRandomNum(), RandomNum.getRandomNum());
+        int rgb4 = Color.rgb(RandomNum.getRandomNum(), RandomNum.getRandomNum(), RandomNum.getRandomNum());
+        main_divider_0.setBackgroundColor(rgb0);
+        main_divider_veritical_0.setBackgroundColor(rgb0);
+        main_divider_1.setBackgroundColor(rgb1);
+        main_divider_veritical_1.setBackgroundColor(rgb1);
+        main_divider_2.setBackgroundColor(rgb2);
+        main_divider_veritical_2.setBackgroundColor(rgb2);
+        main_divider_3.setBackgroundColor(rgb3);
+        main_divider_veritical_3.setBackgroundColor(rgb3);
+        main_divider_4.setBackgroundColor(rgb4);
+        main_divider_veritical_4.setBackgroundColor(rgb4);
     }
 
     private void initNotice() {
@@ -541,25 +582,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DutyBeen -> {
                     List<DutyBeen.DataBean.DutysBean> dutys = DutyBeen.getData().getDutys();
-                    for (int i = 0; i < dutys.size(); i++) {
-                        String duty = dutys.get(i).getDuty();
-                        String name = dutys.get(i).getName();
-                        String property = dutys.get(i).getProperty();
-                        String date = dutys.get(i).getDate();
-                        if (duty.equals("带班领导")) {
-                            leader.setText(name + "(" + duty + ")");
-                            leader_time.setText(property);
-                            leader_date.setText(date);
-                        }
-                        if (duty.equals("预报首席")) {
-                            chief.setText(name + "(" + duty + ")");
-                            chief_time.setText(property);
-                            chief_date.setText(date);
-                        }
-                    }
 
+                    String duty = dutys.get(0).getDuty();
+                    String name = dutys.get(0).getName();
+                    String property = dutys.get(0).getProperty();
+                    String date = dutys.get(0).getDate();
+                    leader.setText(name + "(" + duty + ")");
+                    leader_time.setText(property);
+                    leader_date.setText(date);
+                    String duty1 = dutys.get(1).getDuty();
+                    String name1 = dutys.get(1).getName();
+                    String property1 = dutys.get(1).getProperty();
+                    String date1 = dutys.get(1).getDate();
+                    chief.setText(name1 + "(" + duty1 + ")");
+                    chief_time.setText(property1);
+                    chief_date.setText(date1);
+                }, throwable ->
 
-                }, throwable -> {
+                {
                     LogUtils.e(throwable);
 //                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
@@ -1403,4 +1443,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         return false;
     }
+
 }

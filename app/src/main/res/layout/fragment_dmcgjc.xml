@@ -5,28 +5,35 @@
     android:orientation="vertical"
     tools:context="net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment">
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:id="@+id/swzd_lay"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:text="数据加载中" />
-
-        <ImageView
-            android:id="@+id/image"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
-    </LinearLayout>
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="数据加载中" />
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </ScrollView>
+
 
     <net.univr.pushi.jxatmosphere.widget.CustomViewPager
         android:id="@+id/viepager"
@@ -38,8 +45,8 @@
         android:id="@+id/swzd_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/tine_black"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="4dp"
+        android:background="@color/tine_black" />
 
 
     <LinearLayout
@@ -52,9 +59,9 @@
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="6dp"
-            android:background="@color/white"
-            android:layout_marginBottom="4dp"></android.support.v7.widget.RecyclerView>
+            android:background="@color/white"></android.support.v7.widget.RecyclerView>
 
 
     </LinearLayout>
@@ -82,7 +89,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/tine_black"/>
+        android:background="@color/tine_black" />
 
     <LinearLayout
         android:layout_width="match_parent"

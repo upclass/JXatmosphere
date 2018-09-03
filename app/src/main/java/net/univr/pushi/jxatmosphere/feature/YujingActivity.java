@@ -57,6 +57,8 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
     GraphicsOverlay mMissionGraphicLayer;
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.reload)
+    ImageView reload;
     @BindView(R.id.shengtai)
     TextView shengtai;
     @BindView(R.id.shixian)
@@ -115,6 +117,7 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
         shengtai.setOnClickListener(this);
         shixian.setOnClickListener(this);
         back.setOnClickListener(this);
+        reload.setOnClickListener(this);
     }
 
     private void initArcgis() {
@@ -331,6 +334,10 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
             case R.id.back:
                 finish();
                 break;
+            case R.id.reload:
+                getYujinInfo();
+                break;
+
         }
     }
 

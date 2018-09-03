@@ -22,7 +22,7 @@ import java.util.List;
 
 
 public class PicDealActivity extends Activity implements View.OnTouchListener {
-
+    Context context;
     private float lastX[] = {0, 0};//用来记录上一次两个触点的横坐标
     private float lastY[] = {0, 0};//用来记录上一次两个触点的纵坐标
 
@@ -99,6 +99,7 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
 
 
     public void initView() {
+        context=this;
         urls = getIntent().getStringArrayListExtra("urls");
         url = getIntent().getStringExtra("url");
         pack = getIntent().getStringExtra("pack");
@@ -115,6 +116,7 @@ public class PicDealActivity extends Activity implements View.OnTouchListener {
 
         bitmap = PicUtils.readLocalImage(url, pack, PicDealActivity.this);
         if (bitmap != null) {
+            bitmap= PicUtils.changeBitmapSizeToScreenWidth(bitmap,context);
             image.setImageBitmap(bitmap);
             image.setOnTouchListener(this);
         }

@@ -130,12 +130,20 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
+                    <View
+                        android:id="@+id/main_divider_veritical_0"
+                        android:layout_width="3dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        />
+
                     <TextView
                         style="@style/two_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:layout_marginLeft="6dp"
                         android:gravity="center"
                         android:text="@string/work_schedule"
                         android:textColor="@color/black" />
@@ -163,9 +171,9 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/main_divider_0"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/spacing_4"
                     android:background="@color/view_color" />
             </LinearLayout>
 
@@ -336,13 +344,19 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="horizontal">
-
+                    <View
+                        android:id="@+id/main_divider_veritical_1"
+                        android:layout_width="3dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        />
                     <TextView
                         style="@style/two_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:layout_marginLeft="6dp"
                         android:gravity="center"
                         android:text="@string/weather_monitor"
                         android:textColor="@color/black" />
@@ -350,9 +364,9 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/main_divider_1"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/spacing_4"
                     android:background="@color/view_color" />
             </LinearLayout>
 
@@ -484,13 +498,19 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="horizontal">
-
+                    <View
+                        android:id="@+id/main_divider_veritical_2"
+                        android:layout_width="3dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        />
                     <TextView
                         style="@style/two_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:layout_marginLeft="6dp"
                         android:gravity="center"
                         android:text="@string/forecast_warn"
                         android:textColor="@color/black" />
@@ -498,9 +518,9 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/main_divider_2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/spacing_4"
                     android:background="@color/view_color" />
             </LinearLayout>
 
@@ -511,40 +531,13 @@
                 android:background="@color/light_white">
 
                 <android.support.percent.PercentRelativeLayout
-                    android:id="@+id/main_content_item2_1"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    app:layout_heightPercent="100%"
-                    app:layout_widthPercent="24.5%">
-
-                    <ImageView
-                        android:id="@+id/fc_warn_1"
-                        style="@style/main_pic_style"
-                        android:src="@drawable/fc_warn_1"
-                        app:layout_marginTopPercent="25%" />
-
-                    <TextView
-                        android:id="@+id/main_fc_warn_text_1"
-                        style="@style/home_png_text"
-                        android:layout_below="@id/fc_warn_1"
-                        android:text="@string/fc_warn_pg_name1"
-                        app:layout_marginTopPercent="10%" />
-
-                </android.support.percent.PercentRelativeLayout>
-
-                <android.support.percent.PercentRelativeLayout
                     android:id="@+id/main_content_item2_2"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
-                    android:layout_toRightOf="@id/main_content_item2_1"
                     android:background="@color/white"
                     android:orientation="vertical"
                     app:layout_heightPercent="100%"
-                    app:layout_marginLeftPercent="1%"
                     app:layout_widthPercent="24.5%">
 
                     <ImageView
@@ -563,11 +556,39 @@
                 </android.support.percent.PercentRelativeLayout>
 
                 <android.support.percent.PercentRelativeLayout
-                    android:id="@+id/main_content_item2_3"
+                    android:id="@+id/main_content_item2_1"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_toRightOf="@id/main_content_item2_2"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_heightPercent="100%"
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_widthPercent="24.5%">
+
+                    <ImageView
+                        android:id="@+id/fc_warn_1"
+                        style="@style/main_pic_style"
+                        android:src="@drawable/fc_warn_1"
+                        app:layout_marginTopPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/main_fc_warn_text_1"
+                        style="@style/home_png_text"
+                        android:layout_below="@id/fc_warn_1"
+                        android:text="@string/fc_warn_pg_name1"
+                        app:layout_marginTopPercent="10%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/main_content_item2_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@id/main_content_item2_1"
                     android:background="@color/white"
                     android:orientation="vertical"
                     app:layout_heightPercent="100%"
@@ -748,13 +769,20 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="horizontal">
+                    <View
+                        android:id="@+id/main_divider_veritical_3"
+                        android:layout_width="3dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        />
 
                     <TextView
                         style="@style/two_title"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="18dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:layout_marginLeft="6dp"
                         android:gravity="center"
                         android:text="@string/data_forecast"
                         android:textColor="@color/black" />
@@ -762,9 +790,9 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/main_divider_3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/spacing_4"
                     android:background="@color/view_color" />
             </LinearLayout>
 
@@ -898,12 +926,20 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
+                    <View
+                        android:id="@+id/main_divider_veritical_4"
+                        android:layout_width="3dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        />
+
                     <TextView
                         style="@style/two_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/spacing_10"
+                        android:layout_marginLeft="6dp"
                         android:gravity="center"
                         android:text="@string/service_feedback"
                         android:textColor="@color/black" />
@@ -911,9 +947,9 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/main_divider_4"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/spacing_4"
                     android:background="@color/view_color" />
             </LinearLayout>
 

@@ -62,8 +62,8 @@ public class MapScreenClickListen extends DefaultMapViewOnTouchListener {
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-        if (getMissionGraphicLayer() != null)
-            getMissionGraphicLayer().getGraphics().clear();
+//        if (getMissionGraphicLayer() != null)
+//            getMissionGraphicLayer().getGraphics().clear();
         android.graphics.Point screenPoint = new android.graphics.Point((int) e.getX(), (int) e
                 .getY());
 //        point = mMapView.screenToLocation(screenPoint);
@@ -87,21 +87,22 @@ public class MapScreenClickListen extends DefaultMapViewOnTouchListener {
             Graphic graphic = new Graphic(new Point(lon,
                     lat,
                     mapView.getSpatialReference()), stringObjectMap, pictureMarkerSymbol);
-            getMissionGraphicLayer().getGraphics().add(graphic);
+//            getMissionGraphicLayer().getGraphics().add(graphic);
+            callBack.addGra(graphic);
         } catch (NumberFormatException exepction) {
             exepction.printStackTrace();
         }
     }
 
-    public GraphicsOverlay getMissionGraphicLayer() {
-        if (!mapView.getGraphicsOverlays().contains(mMissionGraphicLayer)) {
-            if (mMissionGraphicLayer == null) {
-                mMissionGraphicLayer = new GraphicsOverlay();
-            }
-            mapView.getGraphicsOverlays().add(mMissionGraphicLayer);
-        }
-        return mMissionGraphicLayer;
-    }
+//    public GraphicsOverlay getMissionGraphicLayer() {
+//        if (!mapView.getGraphicsOverlays().contains(mMissionGraphicLayer)) {
+//            if (mMissionGraphicLayer == null) {
+//                mMissionGraphicLayer = new GraphicsOverlay();
+//            }
+//            mapView.getGraphicsOverlays().add(mMissionGraphicLayer);
+//        }
+//        return mMissionGraphicLayer;
+//    }
 
     /**
      * i查询地图上所有可见的layer
@@ -125,6 +126,8 @@ public class MapScreenClickListen extends DefaultMapViewOnTouchListener {
                     if (geoElement != null) {
                         LogUtils.i(geoElement.getAttributes().toString());
                     }
+//                    getMissionGraphicLayer().getGraphics().clear();
+                    callBack.clearGra();
                     //点击图内添加覆盖物
                     addLayout();
                     callBack.getNewData(point);

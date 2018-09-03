@@ -40,7 +40,7 @@
 
 
     <string name="weather_monitor">天气监测</string>
-    <string name="wea_monitor_pg_name1">卫星雷达</string>
+    <string name="wea_monitor_pg_name1">雷达卫星</string>
     <string name="wea_monitor_pg_name2">台风监测</string>
     <string name="wea_monitor_pg_name3">地面常规监测</string>
     <string name="wea_monitor_pg_name4">高空地面图</string>
@@ -49,7 +49,7 @@
 
     <string name="forecast_warn">预警预报</string>
     <string name="fc_warn_pg_name1">预警信号</string>
-    <string name="fc_warn_pg_name2">重要天气预报</string>
+    <string name="fc_warn_pg_name2">重要天气报</string>
     <string name="fc_warn_pg_name3">雷达预报</string>
     <string name="fc_warn_pg_name4">格点预报</string>
     <string name="fc_warn_pg_name5">气象风险预报</string>

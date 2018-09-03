@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -17,6 +18,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapter;
+import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapterForDmcgjc;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
@@ -65,6 +67,7 @@ public class LdptRadarFragment extends RxLazyFragment {
     MyPagerAdapter viewPagerAdapter;
     public String flag;
     private MultiGdybTxAdapter mAdapter;
+    private MultiGdybTxAdapterForDmcgjc mAdapterForLdpt;
     ImageView isStartPic;
 
 
@@ -101,7 +104,47 @@ public class LdptRadarFragment extends RxLazyFragment {
         getTestdata();
     }
 
+    private MultiGdybTxAdapterForDmcgjc getAdapter3ForgetLdpt() {
+        if (mAdapterForLdpt == null) {
+            ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
+                @Override
+                public boolean canScrollVertically() {
+                    return false;
+                }
+            };
+            mAdapterForLdpt = new MultiGdybTxAdapterForDmcgjc(mData3);
+            mRecyclerView3.setLayoutManager(layoutManager);
+            mRecyclerView3.setAdapter(mAdapterForLdpt);
+            mAdapterForLdpt.setOnItemChildClickListener((adapter, view, position) -> {
+                switch (view.getId()) {
+                    case R.id.time:
+                        if (isStart == false) {
+                            mViewPager.setCurrentItem(position - 1);
+                        }
+                        break;
+                    case R.id.pic_ready:
+                        if (isStart == false) {
+                            isStartPic = ((ImageView) view);
+                            isStartPic.setImageResource(R.drawable.app_end);
+                            Message message = uiHandler.obtainMessage();
+                            message.what = 1;
+                            uiHandler.sendMessageDelayed(message, MyApplication.getInstance().auto_time);
+                            isStart = true;
+                            mViewPager.setScanScroll(false);
+                        } else {
+                            uiHandler.removeCallbacksAndMessages(null);
+                            isStartPic.setImageResource(R.drawable.app_start);
+                            isStart = false;
+                            mViewPager.setScanScroll(true);
+                        }
 
+                        break;
+
+                }
+            });
+        }
+        return mAdapterForLdpt;
+    }
     private MultiGdybTxAdapter getAdapter3() {
         if (mAdapter == null) {
             ExStaggeredGridLayoutManager layoutManager = new ExStaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) {
@@ -149,8 +192,11 @@ public class LdptRadarFragment extends RxLazyFragment {
         isStart=false;
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
-        if (flag.equals("1")) {
-            getAdapter3();
+        if (flag.equals("0")) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRecyclerView3.getLayoutParams();
+            layoutParams.leftMargin=50;
+            mRecyclerView3.setLayoutParams(layoutParams);
+            getAdapter3ForgetLdpt();
             RetrofitHelper.getWeatherMonitorAPI()
                     .getLdpt()
                     .compose(bindToLifecycle())
@@ -213,8 +259,8 @@ public class LdptRadarFragment extends RxLazyFragment {
                                 multiItemGdybTxNow.setContent(clickBeenNow);
                                 multitemList.set(now_postion, multiItemGdybTxStop);
                                 multitemList.set(position + 1, multiItemGdybTxNow);
-                                mAdapter.notifyItemChanged(now_postion);
-                                mAdapter.notifyItemChanged(position + 1);
+                                mAdapterForLdpt.notifyItemChanged(now_postion);
+                                mAdapterForLdpt.notifyItemChanged(position + 1);
                                 now_postion = position + 1;
                                 mRecyclerView3.smoothScrollToPosition(position + 1);
                                 recycle_skipto_position = position + 2;
@@ -244,7 +290,7 @@ public class LdptRadarFragment extends RxLazyFragment {
                             multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, clickBeen);
                             multitemList.add(multiItemGdybTx);
                         }
-                        getAdapter3().setNewData(multitemList);
+                        getAdapter3ForgetLdpt().setNewData(multitemList);
                         mViewPager.setCurrentItem(time.size() - 1);
                         //播放轮播
 

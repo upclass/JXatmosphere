@@ -2,25 +2,37 @@ package net.univr.pushi.jxatmosphere.feature;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
@@ -28,8 +40,11 @@ import com.esri.arcgisruntime.layers.WebTiledLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.github.abel533.echarts.axis.AxisLabel;
 import com.github.abel533.echarts.axis.CategoryAxis;
 import com.github.abel533.echarts.axis.SplitLine;
@@ -40,10 +55,13 @@ import com.github.abel533.echarts.series.Line;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.PiaoGeAdapter;
+import net.univr.pushi.jxatmosphere.adapter.SimpleAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
+import net.univr.pushi.jxatmosphere.beens.GdybSearchBeen;
 import net.univr.pushi.jxatmosphere.interfaces.MapCall;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.ViewUtil;
 import net.univr.pushi.jxatmosphere.widget.MapScreenClickListen;
 import net.univr.pushi.jxatmosphere.widget.TianDiTuMethodsClass;
 
@@ -51,7 +69,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -81,7 +101,9 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
     @BindView(R.id.twelve_hour)
     TextView twelve_hour;
     @BindView(R.id.gd_dizhi)
-    TextView sousuo_tv;
+    EditText sousuo_tv;
+    @BindView(R.id.search_info)
+    TextView search_info;
     @BindView(R.id.twentyfour_hour)
     TextView twentyfour_hour;
     @BindView(R.id.province)
@@ -113,6 +135,11 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
     Double y;
     int i = 0;
 
+    @BindView(R.id.recyclerView_search)
+    RecyclerView recyclerView_search;
+    SimpleAdapter simpleAdapter;
+    GraphicsOverlay mMissionGraphicLayer;
+//    Boolean isClickToLocation=true;
 
     @Override
     public int getLayoutId() {
@@ -132,6 +159,7 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
         twentyfour_hour.setOnClickListener(this);
         back.setOnClickListener(this);
         delete.setOnClickListener(this);
+        search_info.setOnClickListener(this);
         initArcgis();
     }
 
@@ -256,6 +284,53 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
         mWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 //        mWebView.setHorizontalScrollBarEnabled(false);//禁止水平滚动
 
+        sousuo_tv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String s1 = s.toString();
+                PoiSearch.Query query = new PoiSearch.Query(s1, "", "360000");
+                query.setPageSize(20);
+                PoiSearch poiSearch = new PoiSearch(context, query);
+                poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
+                    @Override
+                    public void onPoiSearched(PoiResult poiResult, int i) {
+                        List<GdybSearchBeen> data = new ArrayList<>();
+                        ArrayList<PoiItem> pois = poiResult.getPois();
+                        for (int j = 0; j < pois.size(); j++) {
+                            PoiItem poiItem = pois.get(j);
+                            LatLonPoint latLonPoint = poiItem.getLatLonPoint();
+                            double latitude = latLonPoint.getLatitude();
+                            double longitude = latLonPoint.getLongitude();
+                            String s = poiItem.toString();
+                            GdybSearchBeen gdybSearchBeen = new GdybSearchBeen();
+                            gdybSearchBeen.setTitle(s);
+                            gdybSearchBeen.setLat(latitude);
+                            gdybSearchBeen.setLon(longitude);
+                            data.add(gdybSearchBeen);
+                        }
+                        getRecycleAdapter();
+                        simpleAdapter.setNewData(data);
+                        recyclerView_search.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onPoiItemSearched(PoiItem poiItem, int i) {
+
+                    }
+                });
+                poiSearch.searchPOIAsyn();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
 
@@ -276,7 +351,12 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
                     province.setText(gdybBeen.getLocation().getProvince());
                     city.setText(gdybBeen.getLocation().getCity());
                     town.setText(gdybBeen.getLocation().getDistrict());
-                    sousuo_tv.setText(gdybBeen.getLocation().getDistrict());
+//                    if(isClickToLocation){
+//                        sousuo_tv.setText(gdybBeen.getLocation().getDistrict());
+//                        sousuo_tv.setSelection(sousuo_tv.getText().toString().length());
+//                    }
+
+//                    isClickToLocation=true;
                     getadapter().setNewData(data);
                     times = new Object[data.size()];
                     temps = new Object[data.size()];
@@ -308,9 +388,11 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
                     mWebView.loadUrl("file:///android_asset/jsWeb/echart.html");
                     dialog.dismiss();
                 }, throwable -> {
+                    dialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
+
     }
 
     private String initForecastTime() {
@@ -428,11 +510,91 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
                 weizhiRelative.setVisibility(View.GONE);
                 content.setVisibility(View.GONE);
                 break;
+            case R.id.search_info:
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(GdybActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                String key = sousuo_tv.getText().toString();
+                PoiSearch.Query query = new PoiSearch.Query(key, "", "360000");
+                query.setPageSize(20);
+                PoiSearch poiSearch = new PoiSearch(context, query);
+                poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
+                    @Override
+                    public void onPoiSearched(PoiResult poiResult, int i) {
+                        List<GdybSearchBeen> data = new ArrayList<>();
+                        ArrayList<PoiItem> pois = poiResult.getPois();
+                        for (int j = 0; j < pois.size(); j++) {
+                            PoiItem poiItem = pois.get(j);
+                            LatLonPoint latLonPoint = poiItem.getLatLonPoint();
+                            double latitude = latLonPoint.getLatitude();
+                            double longitude = latLonPoint.getLongitude();
+                            String s = poiItem.toString();
+                            GdybSearchBeen gdybSearchBeen = new GdybSearchBeen();
+                            gdybSearchBeen.setTitle(s);
+                            gdybSearchBeen.setLat(latitude);
+                            gdybSearchBeen.setLon(longitude);
+                            data.add(gdybSearchBeen);
+                        }
+                        getRecycleAdapter();
+                        simpleAdapter.setNewData(data);
+                        recyclerView_search.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onPoiItemSearched(PoiItem poiItem, int i) {
+
+                    }
+                });
+                poiSearch.searchPOIAsyn();
+
+                break;
         }
+    }
+
+    SimpleAdapter getRecycleAdapter() {
+        if (simpleAdapter == null) {
+            List<GdybSearchBeen> data = new ArrayList<>();
+            simpleAdapter = new SimpleAdapter(data);
+            simpleAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                    recyclerView_search.setVisibility(View.GONE);
+                    ViewUtil.hide_keyboard_from(context,sousuo_tv);
+                    sousuo_tv.clearFocus();
+                    GdybSearchBeen gdybSearchBeen = (GdybSearchBeen) adapter.getData().get(position);
+                    Double lat = gdybSearchBeen.getLat();
+                    Double lon = gdybSearchBeen.getLon();
+                    x = lon;
+                    y = lat;
+
+                    getMissionGraphicLayer().getGraphics().clear();
+
+                    Map<String, Object> stringObjectMap = new HashMap<>();
+                    stringObjectMap.put("location", lat + " " + lon);
+                    Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.location);
+                    PictureMarkerSymbol pictureMarkerSymbol = new PictureMarkerSymbol(new BitmapDrawable(bitmap));
+                    pictureMarkerSymbol.setWidth(30);
+                    pictureMarkerSymbol.setHeight(30);
+                    try {
+                        Graphic graphic = new Graphic(new Point(lon,
+                                lat,
+                                mapView.getSpatialReference()), stringObjectMap, pictureMarkerSymbol);
+                        getMissionGraphicLayer().getGraphics().add(graphic);
+                    } catch (NumberFormatException exepction) {
+                        exepction.printStackTrace();
+                    }
+                    getTestdata();
+                }
+            });
+            LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            recyclerView_search.setLayoutManager(manager);
+            recyclerView_search.setAdapter(simpleAdapter);
+        }
+        return simpleAdapter;
     }
 
     @Override
     public void getNewData(Point point) {
+        sousuo_tv.clearFocus();
+        ViewUtil.hide_keyboard_from(context,sousuo_tv);
         x = point.getX();
         y = point.getY();
         getTestdata();
@@ -510,6 +672,27 @@ public class GdybActivity extends BaseActivity implements View.OnClickListener, 
             recyclerView.setAdapter(adapter);
         }
         return adapter;
+    }
+
+
+    public GraphicsOverlay getMissionGraphicLayer() {
+        if (!mapView.getGraphicsOverlays().contains(mMissionGraphicLayer)) {
+            if (mMissionGraphicLayer == null) {
+                mMissionGraphicLayer = new GraphicsOverlay();
+            }
+            mapView.getGraphicsOverlays().add(mMissionGraphicLayer);
+        }
+        return mMissionGraphicLayer;
+    }
+
+    @Override
+    public void clearGra() {
+        getMissionGraphicLayer().getGraphics().clear();
+    }
+
+    @Override
+    public void addGra(Graphic graphic) {
+        getMissionGraphicLayer().getGraphics().add(graphic);
     }
 }
 

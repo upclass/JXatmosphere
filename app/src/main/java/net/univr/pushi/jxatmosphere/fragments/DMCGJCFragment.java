@@ -13,7 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
+import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapterForSwzd;
 import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapterForDmcgjc;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
@@ -33,6 +34,7 @@ import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
+import net.univr.pushi.jxatmosphere.utils.PicassoTransformation;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
     private Context mcontext;
 
-    private DmcgjcMenuAdapter mAdapter1;
+    private DmcgjcMenuAdapterForSwzd mAdapter1;
     private DmcgjcMenuAdapter menuAdapter;
 
     MyPagerAdapter viewPagerAdapter;
@@ -103,7 +105,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     //    @BindView(R.id.scrollview)
 //    HorizontalScrollView scrollview;
     @BindView(R.id.swzd_lay)
-    LinearLayout swzd_lay;
+    ScrollView swzd_lay;
     @BindView(R.id.content)
     TextView contentTv;
     @BindView(R.id.image)
@@ -184,7 +186,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     List<DmcgjcmenuBeen.DataBean> data = dmcgjcBeen.getData();
                     if (type.equals("rain")) {
                         DmcgjcmenuBeen.DataBean swzd = new DmcgjcmenuBeen.DataBean();
-                        swzd.setZnName("气象水文站点");
+                        swzd.setZnName("气象水文");
                         data.add(0, swzd);
                     }
                     for (int i = 0; i < data.size(); i++) {
@@ -198,6 +200,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                             data.set(i, temp);
                         }
                     }
+
                     getAdapter1().setNewData(data);
                 }, throwable -> {
                     LogUtils.e(throwable);
@@ -361,7 +364,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     String url = SWZDBeen.getData().getUrl();
                     contentTv.setText(context);
                     Picasso.with(getContext())
-                            .load(url).placeholder(R.drawable.ic_placeholder)
+                            .load(url).placeholder(R.drawable.ic_placeholder).transform(new PicassoTransformation(getContext()))
                             .into(image);
 //                    image.setOnClickListener(v -> {
 //                                Intent intent = new Intent(getActivity(), PicDealActivity.class);
@@ -379,12 +382,12 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     }
 
 
-    private DmcgjcMenuAdapter getAdapter1() {
+    private DmcgjcMenuAdapterForSwzd getAdapter1() {
         if (mAdapter1 == null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
             List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
 
-            mAdapter1 = new DmcgjcMenuAdapter(mData1);
+            mAdapter1 = new DmcgjcMenuAdapterForSwzd(mData1);
             mRecyclerView1.setLayoutManager(layoutManager);
             mRecyclerView1.setAdapter(mAdapter1);
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
@@ -394,64 +397,64 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     isStartPic.setImageResource(R.drawable.app_start);
                 TextView title = ((TextView) view);
                 String menu = title.getText().toString();
-                if (menu.equals("气象水文站点")) {
+                if (menu.equals("气象水文")) {
                     ctype = "swzd";
                     swzd_lay.setVisibility(View.VISIBLE);
                     mViewPager.setVisibility(View.GONE);
                     mRecyclerView3.setVisibility(View.GONE);
                     List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
-                    int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
+                    int lastclick = ((DmcgjcMenuAdapterForSwzd) adapter).getLastposition();
                     DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
                     DmcgjcmenuBeen.DataBean dataBean = data.get(position);
                     dataBeanlasted.setSelect(false);
                     dataBean.setSelect(true);
                     adapter.notifyItemChanged(lastclick);
                     adapter.notifyItemChanged(position);
-                    ((DmcgjcMenuAdapter) adapter).setLastposition(position);
+                    ((DmcgjcMenuAdapterForSwzd) adapter).setLastposition(position);
                     getTestdata();
                 } else {
                     List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
-                    int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
+                    int lastclick = ((DmcgjcMenuAdapterForSwzd) adapter).getLastposition();
                     DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
                     DmcgjcmenuBeen.DataBean dataBean = data.get(position);
                     dataBeanlasted.setSelect(false);
                     dataBean.setSelect(true);
                     adapter.notifyItemChanged(lastclick);
                     adapter.notifyItemChanged(position);
-                    ((DmcgjcMenuAdapter) adapter).setLastposition(position);
+                    ((DmcgjcMenuAdapterForSwzd) adapter).setLastposition(position);
 
-                    if (menu.equals("6分钟累计降水")) {
+                    if (menu.equals("6min")) {
                         ctype = "rain_sum_6";
                         swzd_lay.setVisibility(View.GONE);
                         mRecyclerView3.setVisibility(View.VISIBLE);
                         mViewPager.setVisibility(View.VISIBLE);
                     }
 
-                    if (menu.equals("1小时累计降水")) {
+                    if (menu.equals("1h")) {
                         ctype = "rain_sum1";
                         swzd_lay.setVisibility(View.GONE);
                         mRecyclerView3.setVisibility(View.VISIBLE);
                         mViewPager.setVisibility(View.VISIBLE);
                     }
-                    if (menu.equals("3小时累计降水")) {
+                    if (menu.equals("3h")) {
                         ctype = "rain_sum3";
                         swzd_lay.setVisibility(View.GONE);
                         mRecyclerView3.setVisibility(View.VISIBLE);
                         mViewPager.setVisibility(View.VISIBLE);
                     }
-                    if (menu.equals("6小时累计降水")) {
+                    if (menu.equals("6h")) {
                         ctype = "rain_sum6";
                         swzd_lay.setVisibility(View.GONE);
                         mRecyclerView3.setVisibility(View.VISIBLE);
                         mViewPager.setVisibility(View.VISIBLE);
                     }
-                    if (menu.equals("12小时累计降水")) {
+                    if (menu.equals("12h")) {
                         ctype = "rain_sum12";
                         swzd_lay.setVisibility(View.GONE);
                         mRecyclerView3.setVisibility(View.VISIBLE);
                         mViewPager.setVisibility(View.VISIBLE);
                     }
-                    if (menu.equals("24小时累计降水")) {
+                    if (menu.equals("24h")) {
                         ctype = "rain_sum";
                         swzd_lay.setVisibility(View.GONE);
                         mRecyclerView3.setVisibility(View.VISIBLE);

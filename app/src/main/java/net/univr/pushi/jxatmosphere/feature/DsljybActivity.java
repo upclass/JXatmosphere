@@ -28,6 +28,7 @@ import com.esri.arcgisruntime.layers.WebTiledLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.github.abel533.echarts.axis.CategoryAxis;
@@ -320,10 +321,15 @@ public class DsljybActivity extends BaseActivity implements MapCall {
 
     @Override
     public void getNewData(Point point) {
-        x = point.getX();
-        y = point.getY();
+        y = point.getX();
+        x = point.getY();
         if (select.equals("now")) getDsljyb();
         else getDsljybSum();
+    }
+
+    @Override
+    public void clearGra() {
+
     }
 
     /**
@@ -366,4 +372,8 @@ public class DsljybActivity extends BaseActivity implements MapCall {
         }
     }
 
+    @Override
+    public void addGra(Graphic graphic) {
+
+    }
 }
