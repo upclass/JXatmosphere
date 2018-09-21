@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--item布局，自定义View-->
+<net.univr.pushi.jxatmosphere.widget.LeftSlideView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginBottom="1dp"
+    android:background="@android:color/white">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_delete"-->
+        <!--android:layout_width="80dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_toRightOf="@+id/layout_content"-->
+        <!--android:background="@drawable/red_background"-->
+        <!--android:gravity="center"-->
+        <!--android:text="删 除"-->
+        <!--android:textColor="#DDFFFFFF"-->
+        <!--android:textSize="25dp" />-->
+
+
+        <ImageView
+            android:id="@+id/tv_delete"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/layout_content"
+            android:background="@drawable/red_background"
+            android:scaleType="center"
+            android:src="@drawable/mine_delete" />
+
+
+        <RelativeLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/picUrl"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/app_imageplacehold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginLeft="@dimen/spacing_8"
+                android:layout_marginTop="6dp"
+                android:layout_toRightOf="@id/picUrl"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="111111111"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/ctype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="111111111"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/collection_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_weight="1"
+
+                    android:gravity="center"
+                    android:text="111111111" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</net.univr.pushi.jxatmosphere.widget.LeftSlideView>

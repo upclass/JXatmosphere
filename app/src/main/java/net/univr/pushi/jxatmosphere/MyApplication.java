@@ -29,7 +29,7 @@ import java.util.List;
 public class MyApplication extends Application {
     private static MyApplication instance;
     List<Activity> activityList = new ArrayList<Activity>();
-    public static Integer auto_time;
+    public Integer auto_time;
 
     @Override
     public void onCreate() {
@@ -38,7 +38,7 @@ public class MyApplication extends Application {
         MobSDK.init(this);
         //工具类初始化
         Utils.init(this);
-        auto_time= SPUtils.getInstance().getInt("auto_time",1000);
+        auto_time = SPUtils.getInstance().getInt("auto_time", 1000);
         //初始化XUtils
         x.Ext.init(this);
         //设置debug模式
@@ -83,7 +83,7 @@ public class MyApplication extends Application {
      * 销毁所有的Activity
      */
     public void removeALLActivity_() {
-        for (int i = activityList.size()-1; i>=0 ; i--) {
+        for (int i = activityList.size() - 1; i >= 0; i--) {
             activityList.get(i).finish();
         }
     }

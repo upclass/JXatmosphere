@@ -1,7 +1,9 @@
 package net.univr.pushi.jxatmosphere.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.WindowManager;
 
 /**
@@ -41,4 +43,18 @@ public class ShipeiUtils {
         int screenHeight = (int) (height / density);// 屏幕高度(dp)
         return  width;
     }
+
+    public static void backgroundAlpha (Context context,float bgAlpha)
+    {
+        WindowManager.LayoutParams lp = ((Activity)context).getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        ((Activity)context).getWindow().setAttributes(lp);
+    }
+
+    public static int dp2px(Context context, float dp)
+    {
+        return (int ) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+
+
 }

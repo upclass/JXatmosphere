@@ -8,6 +8,9 @@
         <item name="android:popupMenuStyle">@style/MenuTextStyle</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@color/toolbar_color</item>
+        <!--屏蔽多点触控，否则左滑时可以同时左滑多条item。-->
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
 
     </style>
 
@@ -24,8 +27,7 @@
     </style>
 
 
-    <style name="AppTheme.NoActionBar">
-    </style>
+    <style name="AppTheme.NoActionBar"></style>
 
     <style name="home_png_text">
         <item name="android:layout_centerHorizontal">true</item>

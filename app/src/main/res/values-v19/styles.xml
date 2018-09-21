@@ -7,6 +7,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:popupMenuStyle">@style/MenuTextStyle</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <!--屏蔽多点触控，否则左滑时可以同时左滑多条item。-->
+        <item name="android:windowEnableSplitTouch" >false </item>
+        <item name="android:splitMotionEvents" >false </item>
     </style>
 
     <style name="TranslucentTheme">

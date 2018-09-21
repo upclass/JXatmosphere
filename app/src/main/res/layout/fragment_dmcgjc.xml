@@ -5,36 +5,6 @@
     android:orientation="vertical"
     tools:context="net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment">
 
-    <ScrollView
-        android:id="@+id/swzd_lay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:visibility="gone">
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="数据加载中" />
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </ScrollView>
-
-
     <net.univr.pushi.jxatmosphere.widget.CustomViewPager
         android:id="@+id/viepager"
         android:layout_width="match_parent"
@@ -63,46 +33,6 @@
             android:layout_marginLeft="6dp"
             android:background="@color/white"></android.support.v7.widget.RecyclerView>
 
-
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/tine_black" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler1"
-            android:layout_width="match_parent"
-            android:layout_height="35dp">
-
-        </android.support.v7.widget.RecyclerView>
-
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/tine_black" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/menu_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
-
-    </LinearLayout>
-
 
 </LinearLayout>

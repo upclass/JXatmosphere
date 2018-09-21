@@ -1,6 +1,7 @@
 package net.univr.pushi.jxatmosphere.remote.api;
 
 import net.univr.pushi.jxatmosphere.beens.DmcgjcBeen;
+import net.univr.pushi.jxatmosphere.beens.DmcgjcCustomMenu;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmgcBeen;
@@ -34,6 +35,9 @@ public interface WeatherMonitorService {
     //地面监测数据
     @POST("dmcgjc!getUrl.do")
     Observable<DmcgjcBeen> getDmcgjc(@Query("type")String type,@Query("ctype")String ctype,@Query("interval")String interval);
+    //用户自定义菜单
+    @POST("dmcgjc!getCustomMenu.do")
+    Observable<DmcgjcCustomMenu> getDmcgjcCustomMenu();
     //卫星云图
     @POST("wxyt.do")
     Observable<WxytBeen> getWxyt();

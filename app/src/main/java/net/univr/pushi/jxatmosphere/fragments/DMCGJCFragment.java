@@ -2,39 +2,29 @@ package net.univr.pushi.jxatmosphere.fragments;
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.squareup.picasso.Picasso;
 
 import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapter;
-import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapterForSwzd;
 import net.univr.pushi.jxatmosphere.adapter.MultiGdybTxAdapterForDmcgjc;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
-import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.beens.MultiItemGdybTx;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
-import net.univr.pushi.jxatmosphere.utils.PicassoTransformation;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
 import java.util.ArrayList;
@@ -48,20 +38,12 @@ import rx.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListener {
-    @BindView(R.id.recycler1)
-    RecyclerView mRecyclerView1;
+
     @BindView(R.id.viepager)
     CustomViewPager mViewPager;
     @BindView(R.id.recycler3)
     RecyclerView mRecyclerView3;
-    @BindView(R.id.menu_fragment)
-    RecyclerView menu_recycle;
 
-
-    private Context mcontext;
-
-    private DmcgjcMenuAdapterForSwzd mAdapter1;
-    private DmcgjcMenuAdapter menuAdapter;
 
     MyPagerAdapter viewPagerAdapter;
     List<Fragment> fragmentList = new ArrayList<>();
@@ -81,52 +63,21 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
 
     ProgressDialog progressDialog;
-
     private MultiGdybTxAdapterForDmcgjc mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
-
     ImageView isStartPic;
 
-    @BindView(R.id.swzd_view)
-    View view_didver;
-//    @BindView(R.id.linear2)
-//    LinearLayout tv2;
-//    @BindView(R.id.linear3)
-//    LinearLayout tv3;
-//    @BindView(R.id.linear4)
-//    LinearLayout tv4;
-//    @BindView(R.id.linear5)
-//    LinearLayout tv5;
-//    @BindView(R.id.linear6)
-//    LinearLayout tv6;
-//    @BindView(R.id.linear7)
-//    LinearLayout tv7;
-
-    //    @BindView(R.id.scrollview)
-//    HorizontalScrollView scrollview;
-    @BindView(R.id.swzd_lay)
-    ScrollView swzd_lay;
-    @BindView(R.id.content)
-    TextView contentTv;
-    @BindView(R.id.image)
-    ImageView image;
 
 
-    ViewPager viewPager;
     List<Fragment> list;
-    Handler handler = new Handler();
-    int position;
     public String interval = "5";
 
-    public static DMCGJCFragment newInstance(String type, String ctype, ViewPager viewPager, List<Fragment> list, int position) {
+    public static DMCGJCFragment newInstance(String type, String ctype) {
         DMCGJCFragment dmcgjcFragment = new DMCGJCFragment();
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
         bundle.putString("ctype", ctype);
         dmcgjcFragment.setArguments(bundle);
-        dmcgjcFragment.viewPager = viewPager;
-        dmcgjcFragment.list = list;
-        dmcgjcFragment.position = position;
         return dmcgjcFragment;
     }
 
@@ -154,570 +105,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @Override
     public void finishCreateView(Bundle state) {
 
-        mcontext = getActivity();
 
         if (getArguments() != null) {
             //取出保存的值
             type = getArguments().getString("type");
             ctype = getArguments().getString("ctype");
         }
-        getAdapter1();
-        getMenu();
         getTestdata();
-//        tv2.setOnClickListener(this);
-//        tv3.setOnClickListener(this);
-//        tv4.setOnClickListener(this);
-//        tv5.setOnClickListener(this);
-//        tv6.setOnClickListener(this);
-//        tv7.setOnClickListener(this);
-
-//        initOneMenu();
-        getMenuAdapter(position);
-//        initScrollView();
-    }
-
-    public void getMenu() {
-        RetrofitHelper.getWeatherMonitorAPI()
-                .getDmcgjcMenu(type)
-                .compose(bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(dmcgjcBeen -> {
-                    List<DmcgjcmenuBeen.DataBean> data = dmcgjcBeen.getData();
-                    if (type.equals("rain")) {
-                        DmcgjcmenuBeen.DataBean swzd = new DmcgjcmenuBeen.DataBean();
-                        swzd.setZnName("气象水文");
-                        data.add(0, swzd);
-                    }
-                    for (int i = 0; i < data.size(); i++) {
-                        if (i == 0) {
-                            DmcgjcmenuBeen.DataBean temp = data.get(i);
-                            temp.setSelect(true);
-                            data.set(i, temp);
-                        } else {
-                            DmcgjcmenuBeen.DataBean temp = data.get(i);
-                            temp.setSelect(false);
-                            data.set(i, temp);
-                        }
-                    }
-
-                    getAdapter1().setNewData(data);
-                }, throwable -> {
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
-    }
-
-//    private void initOneMenu() {
-//        if (type.equals("rain")) {
-//            TextView childAt = (TextView) tv2.getChildAt(0);
-//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-//        }
-//        if (type.equals("temp")) {
-//            TextView childAt = (TextView) tv3.getChildAt(0);
-//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-//        }
-//        if (type.equals("wind")) {
-//            TextView childAt = (TextView) tv4.getChildAt(0);
-//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-//        }
-//        if (type.equals("humidity")) {
-//            TextView childAt = (TextView) tv5.getChildAt(0);
-//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-//        }
-//        if (type.equals("pressure")) {
-//            TextView childAt = (TextView) tv6.getChildAt(0);
-//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-//        }
-//        if (type.equals("vis")) {
-//            TextView childAt = (TextView) tv7.getChildAt(0);
-//            childAt.setTextColor(getResources().getColor(R.color.toolbar_color));
-//        }
-//        initScrollView();
-//    }
-
-
-    public void initScrollView(int position) {
-        if (position == 0) {
-            handler.postAtTime(new Runnable() {
-                @Override
-                public void run() {
-//                    scrollview.scrollTo(0, 0);
-                    menu_recycle.smoothScrollToPosition(0);
-                }
-            }, 1000);
-        }
-        if (position == 1) {
-            handler.postAtTime(new Runnable() {
-                @Override
-                public void run() {
-//                    scrollview.scrollTo(320, 0);
-                    menu_recycle.smoothScrollToPosition(1);
-                }
-            }, 1000);
-        }
-        if (position == 2) {
-            handler.postAtTime(new Runnable() {
-                @Override
-                public void run() {
-//                    scrollview.scrollTo(460, 0);
-                    menu_recycle.smoothScrollToPosition(2);
-                }
-            }, 1000);
-        }
-        if (position == 3) {
-            handler.postAtTime(new Runnable() {
-                @Override
-                public void run() {
-//                    scrollview.scrollTo(710, 0);
-                    menu_recycle.smoothScrollToPosition(3);
-                }
-            }, 2000);
-        }
-        if (position == 4) {
-            handler.postAtTime(new Runnable() {
-                @Override
-                public void run() {
-//                    scrollview.scrollTo(1200, 0);
-                    menu_recycle.smoothScrollToPosition(4);
-                }
-            }, 1000);
-        }
-        if (position == 5) {
-            handler.postAtTime(new Runnable() {
-                @Override
-                public void run() {
-//                    scrollview.scrollTo(1400, 0);
-                    menu_recycle.smoothScrollToPosition(5);
-                }
-            }, 1000);
-        }
-//        if (type.equals("rain")) {
-//            handler.postAtTime(new Runnable() {
-//                @Override
-//                public void run() {
-////                    scrollview.scrollTo(0, 0);
-//                    menu_recycle.smoothScrollToPosition(0);
-//                }
-//            }, 1000);
-//        }
-//        if (type.equals("temp")) {
-//            handler.postAtTime(new Runnable() {
-//                @Override
-//                public void run() {
-////                    scrollview.scrollTo(320, 0);
-//                    menu_recycle.smoothScrollToPosition(1);
-//                }
-//            }, 1000);
-//        }
-//        if (type.equals("wind")) {
-//            handler.postAtTime(new Runnable() {
-//                @Override
-//                public void run() {
-////                    scrollview.scrollTo(460, 0);
-//                    menu_recycle.smoothScrollToPosition(2);
-//                }
-//            }, 1000);
-//        }
-//        if (type.equals("humidity")) {
-//            handler.postAtTime(new Runnable() {
-//                @Override
-//                public void run() {
-////                    scrollview.scrollTo(710, 0);
-//                    menu_recycle.smoothScrollToPosition(3);
-//                }
-//            }, 2000);
-//        }
-//        if (type.equals("pressure")) {
-//            handler.postAtTime(new Runnable() {
-//                @Override
-//                public void run() {
-////                    scrollview.scrollTo(1200, 0);
-//                    menu_recycle.smoothScrollToPosition(4);
-//                }
-//            }, 1000);
-//        }
-//        if (type.equals("vis")) {
-//            handler.postAtTime(new Runnable() {
-//                @Override
-//                public void run() {
-////                    scrollview.scrollTo(1400, 0);
-//                    menu_recycle.smoothScrollToPosition(5);
-//                }
-//            }, 1000);
-//        }
-
-    }
-
-    private void swzdInfo() {
-        view_didver.setVisibility(View.GONE);
-        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
-        RetrofitHelper.getWeatherMonitorAPI()
-                .getSWZD()
-                .compose(bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(SWZDBeen -> {
-                    progressDialog.dismiss();
-                    String context = SWZDBeen.getData().getTextStr();
-                    String url = SWZDBeen.getData().getUrl();
-                    contentTv.setText(context);
-                    Picasso.with(getContext())
-                            .load(url).placeholder(R.drawable.ic_placeholder).transform(new PicassoTransformation(getContext()))
-                            .into(image);
-//                    image.setOnClickListener(v -> {
-//                                Intent intent = new Intent(getActivity(), PicDealActivity.class);
-//                                intent.putExtra("url", url);
-//                                intent.putExtra("pack", "swzd'");
-//                                startActivity(intent);
-//                            }
-//                    );
-
-                }, throwable -> {
-                    progressDialog.dismiss();
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
-    }
-
-
-    private DmcgjcMenuAdapterForSwzd getAdapter1() {
-        if (mAdapter1 == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false);
-            List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
-
-            mAdapter1 = new DmcgjcMenuAdapterForSwzd(mData1);
-            mRecyclerView1.setLayoutManager(layoutManager);
-            mRecyclerView1.setAdapter(mAdapter1);
-            mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
-                isStart = false;
-                mViewPager.setScanScroll(true);
-                if (isStartPic != null)
-                    isStartPic.setImageResource(R.drawable.app_start);
-                TextView title = ((TextView) view);
-                String menu = title.getText().toString();
-                if (menu.equals("气象水文")) {
-                    ctype = "swzd";
-                    swzd_lay.setVisibility(View.VISIBLE);
-                    mViewPager.setVisibility(View.GONE);
-                    mRecyclerView3.setVisibility(View.GONE);
-                    List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
-                    int lastclick = ((DmcgjcMenuAdapterForSwzd) adapter).getLastposition();
-                    DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
-                    DmcgjcmenuBeen.DataBean dataBean = data.get(position);
-                    dataBeanlasted.setSelect(false);
-                    dataBean.setSelect(true);
-                    adapter.notifyItemChanged(lastclick);
-                    adapter.notifyItemChanged(position);
-                    ((DmcgjcMenuAdapterForSwzd) adapter).setLastposition(position);
-                    getTestdata();
-                } else {
-                    List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
-                    int lastclick = ((DmcgjcMenuAdapterForSwzd) adapter).getLastposition();
-                    DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
-                    DmcgjcmenuBeen.DataBean dataBean = data.get(position);
-                    dataBeanlasted.setSelect(false);
-                    dataBean.setSelect(true);
-                    adapter.notifyItemChanged(lastclick);
-                    adapter.notifyItemChanged(position);
-                    ((DmcgjcMenuAdapterForSwzd) adapter).setLastposition(position);
-
-                    if (menu.equals("6min")) {
-                        ctype = "rain_sum_6";
-                        swzd_lay.setVisibility(View.GONE);
-                        mRecyclerView3.setVisibility(View.VISIBLE);
-                        mViewPager.setVisibility(View.VISIBLE);
-                    }
-
-                    if (menu.equals("1h")) {
-                        ctype = "rain_sum1";
-                        swzd_lay.setVisibility(View.GONE);
-                        mRecyclerView3.setVisibility(View.VISIBLE);
-                        mViewPager.setVisibility(View.VISIBLE);
-                    }
-                    if (menu.equals("3h")) {
-                        ctype = "rain_sum3";
-                        swzd_lay.setVisibility(View.GONE);
-                        mRecyclerView3.setVisibility(View.VISIBLE);
-                        mViewPager.setVisibility(View.VISIBLE);
-                    }
-                    if (menu.equals("6h")) {
-                        ctype = "rain_sum6";
-                        swzd_lay.setVisibility(View.GONE);
-                        mRecyclerView3.setVisibility(View.VISIBLE);
-                        mViewPager.setVisibility(View.VISIBLE);
-                    }
-                    if (menu.equals("12h")) {
-                        ctype = "rain_sum12";
-                        swzd_lay.setVisibility(View.GONE);
-                        mRecyclerView3.setVisibility(View.VISIBLE);
-                        mViewPager.setVisibility(View.VISIBLE);
-                    }
-                    if (menu.equals("24h")) {
-                        ctype = "rain_sum";
-                        swzd_lay.setVisibility(View.GONE);
-                        mRecyclerView3.setVisibility(View.VISIBLE);
-                        mViewPager.setVisibility(View.VISIBLE);
-                    }
-
-                    if (menu.equals("气温")) {
-                        ctype = "temp";
-                    }
-                    if (menu.equals("平均气温（20时-20时）")) {
-                        ctype = "temp_avg_20";   //日期型
-                    }
-                    if (menu.equals("最高气温")) {
-                        ctype = "temp_max";
-                    }
-                    if (menu.equals("最高气温（20时-20时）")) {
-                        ctype = "temp_max_20";//日期型
-                    }
-                    if (menu.equals("最低气温")) {
-                        ctype = "temp_min";
-                    }
-                    if (menu.equals("最低气温（20时-20时）")) {
-                        ctype = "temp_min_20";//日期型
-                    }
-                    if (menu.equals("24小时变温")) {
-                        ctype = "temp_deta24";
-                    }
-                    if (menu.equals("1小时变温")) {
-                        ctype = "temp_deta1";
-                    }
-                    if (menu.equals("体感温度")) {
-                        ctype = "body_feeling_temp";
-                    }
-                    if (menu.equals("地面温度")) {
-                        ctype = "surface_temp";
-                    }
-
-                    if (menu.equals("二分钟平均风速")) {
-                        ctype = "wind_2minute_avg";
-                    }
-                    if (menu.equals("十分钟平均风速")) {
-                        ctype = "wind_10minute_avg";
-                    }
-                    if (menu.equals("一小时内极大风速")) {
-                        ctype = "wind_great";
-                    }
-                    if (menu.equals("极大风速（20时-20时）")) {
-                        ctype = "wind_great_20";//日期型
-                    }
-                    if (menu.equals("一小时内最大风速")) {
-                        ctype = "wind_max";
-                    }
-                    if (menu.equals("瞬时风速")) {
-                        ctype = "wind_inst";
-                    }
-                    if (menu.equals("极大风速")) {
-                        ctype = "wind_inst_max";
-                    }
-                    if (menu.equals("最大风速")) {
-                        ctype = "wind_max_5";
-                    }
-                    if (menu.equals("一分钟平均风速")) {
-                        ctype = "wind_1minute_avg";
-                    }
-
-
-                    if (menu.equals("相对湿度")) {
-                        ctype = "humidity";
-                    }
-                    if (menu.equals("最小相对湿度")) {
-                        ctype = "humidity_min";
-                    }
-
-                    if (menu.equals("本站气压")) {
-                        ctype = "pressure";
-                    }
-                    if (menu.equals("3小时变压")) {
-                        ctype = "pressure_deta3";
-                    }
-                    if (menu.equals("24小时变压")) {
-                        ctype = "pressure_deta24";
-                    }
-                    if (menu.equals("1小时内最高气压")) {
-                        ctype = "pressure_max";
-                    }
-                    if (menu.equals("1小时内最低气压")) {
-                        ctype = "pressure_min";
-                    }
-                    if (menu.equals("海平面气压")) {
-                        ctype = "sea_level_pressure";
-                    }
-                    if (menu.equals("最小水平能见度")) {
-                        ctype = "sea_level_pressure";
-                    }
-
-                    getTestdata();
-                }
-            });
-        }
-        return mAdapter1;
-    }
-
-
-    private DmcgjcMenuAdapter getMenuAdapter(int position) {
-        if (menuAdapter == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.HORIZONTAL, false) {
-                @Override
-                public boolean canScrollHorizontally() {
-                    return false;
-                }
-            };
-            List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
-            initMenuData(mData1, position);
-            menuAdapter = new DmcgjcMenuAdapter(mData1);
-            menu_recycle.setLayoutManager(layoutManager);
-            menu_recycle.setAdapter(menuAdapter);
-            menuAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                    TextView title = ((TextView) view);
-                    String menu = title.getText().toString();
-                    if (menu.equals("降水")) {
-                        ((DMCGJCFragment) list.get(0)).initScrollView(0);
-                        viewPager.setCurrentItem(0);
-                        DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(0);
-                        dmcgjcFragment1.setIsPalyInit(0);
-                    }
-                    if (menu.equals("气温")) {
-                        ((DMCGJCFragment) list.get(1)).initScrollView(1);
-                        viewPager.setCurrentItem(1);
-                        DMCGJCFragment dmcgjcFragment2 = (DMCGJCFragment) list.get(1);
-                        dmcgjcFragment2.setIsPalyInit(1);
-                    }
-                    if (menu.equals("风")) {
-                        ((DMCGJCFragment) list.get(2)).initScrollView(2);
-                        viewPager.setCurrentItem(2);
-                        DMCGJCFragment dmcgjcFragment3 = (DMCGJCFragment) list.get(2);
-                        dmcgjcFragment3.setIsPalyInit(2);
-                    }
-                    if (menu.equals("湿度")) {
-                        ((DMCGJCFragment) list.get(3)).initScrollView(3);
-                        viewPager.setCurrentItem(3);
-                        DMCGJCFragment dmcgjcFragment4 = (DMCGJCFragment) list.get(3);
-                        dmcgjcFragment4.setIsPalyInit(3);
-
-                    }
-                    if (menu.equals("气压")) {
-                        ((DMCGJCFragment) list.get(4)).initScrollView(4);
-                        viewPager.setCurrentItem(4);
-                        DMCGJCFragment dmcgjcFragment5 = (DMCGJCFragment) list.get(4);
-                        dmcgjcFragment5.setIsPalyInit(4);
-                    }
-                    if (menu.equals("能见度")) {
-                        ((DMCGJCFragment) list.get(5)).initScrollView(5);
-                        viewPager.setCurrentItem(5);
-                        DMCGJCFragment dmcgjcFragment6 = (DMCGJCFragment) list.get(5);
-                        dmcgjcFragment6.setIsPalyInit(5);
-                    }
-                }
-            });
-        }
-        return menuAdapter;
-    }
-
-    private void initMenuData(List<DmcgjcmenuBeen.DataBean> mData1, int position) {
-        DmcgjcmenuBeen.DataBean dataBean = new DmcgjcmenuBeen.DataBean();
-        DmcgjcmenuBeen.DataBean dataBean1 = new DmcgjcmenuBeen.DataBean();
-        DmcgjcmenuBeen.DataBean dataBean2 = new DmcgjcmenuBeen.DataBean();
-        DmcgjcmenuBeen.DataBean dataBean3 = new DmcgjcmenuBeen.DataBean();
-        DmcgjcmenuBeen.DataBean dataBean4 = new DmcgjcmenuBeen.DataBean();
-        DmcgjcmenuBeen.DataBean dataBean5 = new DmcgjcmenuBeen.DataBean();
-        if (position == 0) {
-            dataBean.setZnName("降水");
-            dataBean.setSelect(true);
-            dataBean1.setZnName("气温");
-            dataBean1.setSelect(false);
-            dataBean2.setZnName("风");
-            dataBean2.setSelect(false);
-            dataBean3.setZnName("湿度");
-            dataBean3.setSelect(false);
-            dataBean4.setZnName("气压");
-            dataBean4.setSelect(false);
-            dataBean5.setZnName("能见度");
-            dataBean5.setSelect(false);
-        }
-        if (position == 1) {
-            dataBean.setZnName("降水");
-            dataBean.setSelect(false);
-            dataBean1.setZnName("气温");
-            dataBean1.setSelect(true);
-            dataBean2.setZnName("风");
-            dataBean2.setSelect(false);
-            dataBean3.setZnName("湿度");
-            dataBean3.setSelect(false);
-            dataBean4.setZnName("气压");
-            dataBean4.setSelect(false);
-            dataBean5.setZnName("能见度");
-            dataBean5.setSelect(false);
-        }
-        if (position == 2) {
-            dataBean.setZnName("降水");
-            dataBean.setSelect(false);
-            dataBean1.setZnName("气温");
-            dataBean1.setSelect(false);
-            dataBean2.setZnName("风");
-            dataBean2.setSelect(true);
-            dataBean3.setZnName("湿度");
-            dataBean3.setSelect(false);
-            dataBean4.setZnName("气压");
-            dataBean4.setSelect(false);
-            dataBean5.setZnName("能见度");
-            dataBean5.setSelect(false);
-        }
-        if (position == 3) {
-            dataBean.setZnName("降水");
-            dataBean.setSelect(false);
-            dataBean1.setZnName("气温");
-            dataBean1.setSelect(false);
-            dataBean2.setZnName("风");
-            dataBean2.setSelect(false);
-            dataBean3.setZnName("湿度");
-            dataBean3.setSelect(true);
-            dataBean4.setZnName("气压");
-            dataBean4.setSelect(false);
-            dataBean5.setZnName("能见度");
-            dataBean5.setSelect(false);
-        }
-        if (position == 4) {
-            dataBean.setZnName("降水");
-            dataBean.setSelect(false);
-            dataBean1.setZnName("气温");
-            dataBean1.setSelect(false);
-            dataBean2.setZnName("风");
-            dataBean2.setSelect(false);
-            dataBean3.setZnName("湿度");
-            dataBean3.setSelect(false);
-            dataBean4.setZnName("气压");
-            dataBean4.setSelect(true);
-            dataBean5.setZnName("能见度");
-            dataBean5.setSelect(false);
-        }
-        if (position == 5) {
-            dataBean.setZnName("降水");
-            dataBean.setSelect(false);
-            dataBean1.setZnName("气温");
-            dataBean1.setSelect(false);
-            dataBean2.setZnName("风");
-            dataBean2.setSelect(false);
-            dataBean3.setZnName("湿度");
-            dataBean3.setSelect(false);
-            dataBean4.setZnName("气压");
-            dataBean4.setSelect(false);
-            dataBean5.setZnName("能见度");
-            dataBean5.setSelect(true);
-        }
-        mData1.add(dataBean);
-        mData1.add(dataBean1);
-        mData1.add(dataBean2);
-        mData1.add(dataBean3);
-        mData1.add(dataBean4);
-        mData1.add(dataBean5);
-
-
     }
 
 
@@ -767,14 +161,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     public void getTestdata() {
         progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
-        if (ctype.equals("swzd")) {
-            progressDialog.dismiss();
-            swzdInfo();
-            swzd_lay.setVisibility(View.VISIBLE);
-            mRecyclerView3.setVisibility(View.GONE);
-            mViewPager.setVisibility(View.GONE);
-            return;
-        }
         getAdapter3();
         RetrofitHelper.getWeatherMonitorAPI()
                 .getDmcgjc(type, ctype, interval)
@@ -799,7 +185,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                             || ctype.equals("surface_temp")) {
                         vis = 1;
                     }
-                    view_didver.setVisibility(View.VISIBLE);
                     recycle_skipto_position = 1;
                     now_postion = DmcgjcDeen.getData().getUrls().size();
                     isStart = false;
@@ -820,23 +205,6 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                         DmcgjcPicFragment fragment = DmcgjcPicFragment.newInstance(urls.get(i), urls, this, vis, interval, "dmcgjc/" + type + "/" + ctype);
                         fragmentList.add(fragment);
                     }
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            for (int i = 0; i < urls.size(); i++) {
-//                                PicUtils.decodeUriAsBitmapFromNet(urls.get(i), "dmcgjc/"+type+"/"+ctype);
-//                            }
-//                        }
-//                    }).start();
-//                    for (int i = 0; i < urls.size(); i++) {
-//                        int finalI = i;
-//                        new Thread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                PicUtils.decodeUriAsBitmapFromNet(urls.get(finalI),"dmcgjc/"+type+"/"+ctype);
-//                            }
-//                        }).start();
-//                    }
                     viewPagerAdapter = new MyPagerAdapter(
                             getChildFragmentManager(), fragmentList, HuancunfragmentList);
                     // 绑定适配器
@@ -952,42 +320,11 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.linear2:
-//                viewPager.setCurrentItem(0);
-//                DMCGJCFragment dmcgjcFragment1 = (DMCGJCFragment) list.get(0);
-//                dmcgjcFragment1.setIsPalyInit(0);
-//                break;
-//
-//            case R.id.linear3:
-//                viewPager.setCurrentItem(1);
-//                DMCGJCFragment dmcgjcFragment2 = (DMCGJCFragment) list.get(1);
-//                dmcgjcFragment2.setIsPalyInit(1);
-//                break;
-//            case R.id.linear4:
-//                viewPager.setCurrentItem(2);
-//                DMCGJCFragment dmcgjcFragment3 = (DMCGJCFragment) list.get(2);
-//                dmcgjcFragment3.setIsPalyInit(2);
-//                break;
-//            case R.id.linear5:
-//                viewPager.setCurrentItem(3);
-//                DMCGJCFragment dmcgjcFragment4 = (DMCGJCFragment) list.get(3);
-//                dmcgjcFragment4.setIsPalyInit(3);
-//
-//                break;
-//            case R.id.linear6:
-//                viewPager.setCurrentItem(4);
-//                DMCGJCFragment dmcgjcFragment5 = (DMCGJCFragment) list.get(4);
-//                dmcgjcFragment5.setIsPalyInit(4);
-//                break;
-//            case R.id.linear7:
-//                viewPager.setCurrentItem(5);
-//                DMCGJCFragment dmcgjcFragment6 = (DMCGJCFragment) list.get(5);
-//                dmcgjcFragment6.setIsPalyInit(5);
-//                break;
         }
 
-
     }
+
+
 
 
     public void setIsPalyInit(int current) {

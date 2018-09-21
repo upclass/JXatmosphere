@@ -6,9 +6,9 @@
             android:icon="@drawable/mine_help"
             app:showAsAction="ifRoom"
             android:title="@string/mine_help" />
-        <item android:id="@+id/nav_scale"
+        <item android:id="@+id/nav_collection"
             android:icon="@drawable/mine_scale"
-            android:title="@string/mine_scale"
+            android:title="我的收藏"
             app:showAsAction="ifRoom"/>
         <item android:id="@+id/nav_feedback"
             android:icon="@drawable/mine_feedback"

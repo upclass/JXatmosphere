@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +27,8 @@ import net.univr.pushi.jxatmosphere.MyApplication;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.utils.CacheUtils;
+
+import java.io.File;
 
 import butterknife.BindView;
 
@@ -97,6 +100,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.clean_cache:
                 CacheUtils.clearAllCache(context);
+                CacheUtils.deleteDir(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/images" ));
                 tvCacheSize.setText(CacheUtils.getTotalCacheSize(context));
                 break;
             case R.id.get_location:
@@ -105,6 +109,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.login_out:
                 SPUtils.getInstance().remove("isFirstLogin");
+                SPUtils.getInstance().remove("userId");
                 removeALLActivity();
                 break;
             case R.id.auto_play_time:

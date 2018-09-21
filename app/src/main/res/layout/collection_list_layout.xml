@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_marginTop="6dp"
+        android:id="@+id/picUrl"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/app_imageplacehold" />
+
+    <LinearLayout
+        android:layout_marginTop="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginLeft="@dimen/spacing_8"
+        android:layout_toRightOf="@id/picUrl"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="111111111" />
+
+        <TextView
+            android:id="@+id/ctype"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="111111111" />
+
+        <TextView
+            android:id="@+id/collection_time"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="111111111" />
+    </LinearLayout>
+
+    <View
+        android:layout_below="@+id/picUrl"
+        android:id="@+id/swzd_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/tine_black" />
+
+
+</RelativeLayout>

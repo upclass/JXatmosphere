@@ -12,7 +12,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="@drawable/popup_setting"
-        android:text="设置时间间隔"
+        android:text="请选择类型"
         android:textColor="@color/tine_black1"
         android:textSize="16sp" />
 
@@ -24,14 +24,14 @@
         android:background="@color/gray_holo_light" />
 
     <Button
-        android:id="@+id/second1"
+        android:id="@+id/send_to_friend"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="@drawable/popup_setting1"
-        android:text="1s"
+        android:text="发送给朋友"
         android:textColor="@color/lightbule"
         android:textSize="16sp" />
 
@@ -43,14 +43,14 @@
         android:background="@color/gray_holo_light" />
 
     <Button
-        android:id="@+id/second2"
+        android:id="@+id/collection"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="@drawable/popup_setting1"
-        android:text="2s"
+        android:text="收藏"
         android:textColor="@color/lightbule"
         android:textSize="16sp" />
 
@@ -62,58 +62,20 @@
         android:background="@color/gray_holo_light" />
 
     <Button
-        android:id="@+id/second3"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/popup_setting1"
-        android:text="3s"
-        android:textColor="@color/lightbule"
-        android:textSize="16sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/gray_holo_light" />
-
-    <Button
-        android:id="@+id/second4"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/popup_setting1"
-        android:text="4s"
-        android:textColor="@color/lightbule"
-        android:textSize="16sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/gray_holo_light" />
-
-    <Button
-        android:id="@+id/second5"
+        android:id="@+id/save_pic"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="@drawable/popup_setting2"
-        android:text="5s"
+        android:text="保存图片"
         android:textColor="@color/lightbule"
         android:textSize="16sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="6dp"
+        android:layout_height="3dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp" />
 
@@ -127,5 +89,6 @@
         android:layout_marginRight="8dp"
         android:background="@drawable/popup_setting3"
         android:text="取消"
-        android:textColor="@color/lightbule" />
+        android:textColor="@color/lightbule"
+        android:textSize="16sp" />
 </LinearLayout>

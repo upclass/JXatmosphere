@@ -1,13 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="6dp"
+    android:id="@+id/image1"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:adjustViewBounds="true"
+    android:src="@drawable/app_imageplacehold" />
 
-    <ImageView
-        android:id="@+id/image1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_15"
-        android:src="@drawable/app_imageplacehold" />
-</LinearLayout>

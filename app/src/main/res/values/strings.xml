@@ -125,4 +125,6 @@
     <string name="title_activity_pic_deal">PicDealActivity</string>
     <string name="title_activity_zytqyb">ZytqybActivity</string>
     <string name="title_activity_dsljyb">DsljybActivity</string>
+    <string name="title_activity_collection">CollectionActivity</string>
+    <string name="title_activity_collection_detail">CollectionDetailActivity</string>
 </resources>

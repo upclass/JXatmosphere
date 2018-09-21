@@ -3,9 +3,11 @@ package net.univr.pushi.jxatmosphere.feature;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.Picture;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -18,14 +20,12 @@ import java.util.Map;
 
 import butterknife.BindView;
 
-import static net.univr.pushi.jxatmosphere.remote.ApiConstants.API_BASE_URL;
-
 public class HelpActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.webview)
     WebView webView;
     @BindView(R.id.back)
     ImageView back;
-//    @BindView(R.id.share_to)
+    //    @BindView(R.id.share_to)
 //    ImageView share_to;
     ProgressDialog progressDialog = null;
 //    @BindView(R.id.loadImg)
@@ -47,6 +47,21 @@ public class HelpActivity extends BaseActivity implements View.OnClickListener {
         back.setOnClickListener(this);
 //        share_to.setOnClickListener(this);
         webView.getSettings().setJavaScriptEnabled(true);
+        WebSettings settings = webView.getSettings();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+        }
+        //      自适应屏幕
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+
+//              设置可以支持缩放
+//        settings.setSupportZoom(true);
+        settings.setDefaultFontSize(40);
+//        webView.setInitialScale(200);
+//      设置出现缩放工具
+//        settings.setBuiltInZoomControls(true);
+
         Map<String, String> map = new HashMap<String, String>();
         map.put("User-Agent", "Android");
         webView.setWebViewClient(new WebViewClient() {
@@ -94,7 +109,9 @@ public class HelpActivity extends BaseActivity implements View.OnClickListener {
         //加载assets文件夹下的html
 //        webView.loadUrl("file:///android_asset/html/index.html");
         //加载网络请求的html
-        webView.loadUrl(API_BASE_URL + "page/help.html", map);
+//        webView.loadUrl(API_BASE_URL + "page/help.html", map);
+        webView.loadUrl("http://192.168.0.140:8088/upload/37_农气气象/问题讨论列表.html", map);
+//        webView.loadUrl("http://111.75.199.107:8080/upload/37_农气气象/问题讨论列表.html", map);
     }
 
     @Override

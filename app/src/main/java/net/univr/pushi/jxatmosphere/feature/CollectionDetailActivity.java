@@ -1,6 +1,6 @@
-package net.univr.pushi.jxatmosphere.fragments;
+package net.univr.pushi.jxatmosphere.feature;
 
-
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,16 +9,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -26,16 +26,14 @@ import com.blankj.utilcode.util.ToastUtils;
 import net.univr.pushi.jxatmosphere.LoginActivity;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
-import net.univr.pushi.jxatmosphere.base.RxLazyFragment;
-import net.univr.pushi.jxatmosphere.feature.PicDealActivity;
+import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
+import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.FileUtils;
 import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import cn.sharesdk.framework.Platform;
@@ -48,142 +46,134 @@ import cn.sharesdk.wechat.moments.WechatMoments;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class DmcgjcPicFragment extends RxLazyFragment {
-
-
-    @BindView(R.id.pic)
+public class CollectionDetailActivity extends BaseActivity {
+    @BindView(R.id.collection_detail_pic)
     ImageView pic;
-    @BindView(R.id.five_m)
-    TextView five_m;
-    @BindView(R.id.one_hour)
-    TextView one_hour;
-    ArrayList<String> temp;
-    DMCGJCFragment dmcgjcFragment;
-    @BindView(R.id.sjjg)
-    LinearLayout sjjg_lay;
-    int visibility;
-    String interval;
-    String pack;
-    private Bitmap bitmap;
+    @BindView(R.id.back)
+    ImageView back;
     private String url;
+    private Bitmap bitmap;
+    private String pack;
+    private String finalUrl;
+    private int collectId;
 
-    public static DmcgjcPicFragment newInstance(String url, List<String> urls, DMCGJCFragment dmcgjcFragment, int visibility, String interval, String pack) {
-        DmcgjcPicFragment picLoadFragment = new DmcgjcPicFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("url", url);
-        bundle.putString("pack", pack);
-        ArrayList<String> temp = new ArrayList<>();
-        for (int i = 0; i < urls.size(); i++) {
-            temp.add(urls.get(i));
-        }
-        bundle.putStringArrayList("urls", temp);
-        picLoadFragment.setArguments(bundle);
-        picLoadFragment.dmcgjcFragment = dmcgjcFragment;
-        picLoadFragment.visibility = visibility;
-        picLoadFragment.interval = interval;
-        return picLoadFragment;
-    }
 
-    public DmcgjcPicFragment() {
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_collection_detail;
     }
 
     @Override
-    public int getLayoutResId() {
-        return R.layout.fragment_dmcgjc_pic;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getIntentData();
+        InitViews();
     }
 
-    @Override
-    public void finishCreateView(Bundle state) {
-
-
-        if (getArguments() != null) {
-            //取出保存的值
-            url = getArguments().getString("url");
-            pack = getArguments().getString("pack");
-            temp = getArguments().getStringArrayList("urls");
-        }
-//        Picasso.with(getActivity()).load(url).placeholder(R.drawable.app_imageplacehold).into(pic);
-        String finalUrl = url;
-        pic.setOnClickListener(v -> {
-            if (bitmap == null) ;
-            else {
-                try {
-                    Intent intent = new Intent(getActivity(), PicDealActivity.class);
-                    intent.putExtra("url", finalUrl);
-                    intent.putExtra("pack", pack);
-                    intent.putStringArrayListExtra("urls", temp);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
+    private void InitViews() {
+        bitmap = PicUtils.readLocalImageWithouChange(url, pack);
+        if (bitmap == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    PicUtils.decodeUriAsBitmapFromNet(url, pack);
+                    uiHandler.sendEmptyMessage(0);
                 }
-            }
-        });
+            }).start();
+        } else {
+            pic.setImageBitmap(bitmap);
+        }
+
         pic.setOnLongClickListener(v -> {
             if (bitmap == null) {
                 ;
             } else {
-                show(getContext());
-                ShipeiUtils.backgroundAlpha(getContext(), 0.5f);
+                show(context);
+                ShipeiUtils.backgroundAlpha(context, 0.5f);
             }
             return true;
         });
-        if (interval.equals("5")) {
-            ;
-        } else {
-            five_m.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
-            five_m.setTextColor(getResources().getColor(R.color.toolbar_color));
-            one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3_select));
-            one_hour.setTextColor(getResources().getColor(R.color.white));
-        }
-        if (visibility == 1) sjjg_lay.setVisibility(View.VISIBLE);
-        five_m.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dmcgjcFragment.interval = "5";
-                dmcgjcFragment.getTestdata();
-            }
-        });
-        one_hour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dmcgjcFragment.interval = "1";
-                dmcgjcFragment.getTestdata();
+        pic.setOnClickListener(v -> {
+            try {
+                if (bitmap == null) {
+                    ;
+                } else {
+                    Intent intent = new Intent(CollectionDetailActivity.this, PicDealActivity.class);
+                    intent.putExtra("url", finalUrl);
+                    intent.putExtra("pack", pack);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putStringArrayListExtra("urls", null);
+                    startActivity(intent);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        new Thread(new Runnable() {
+        CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override
-            public void run() {
-                PicUtils.decodeUriAsBitmapFromNet(url, pack);
-                uiHandler.sendEmptyMessage(0);
+            public void onDispatchDarken() {
+                final Window window = getWindow();
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.5f);
+                valueAnimator.setDuration(500);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        WindowManager.LayoutParams params = window.getAttributes();
+                        params.alpha = (Float) animation.getAnimatedValue();
+                        window.setAttributes(params);
+                    }
+                });
+                valueAnimator.start();
             }
-        }).start();
 
+            @Override
+            public void onDispatchLight() {
+                final Window window = getWindow();
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.5f, 1.0f);
+                valueAnimator.setDuration(500);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        WindowManager.LayoutParams params = window.getAttributes();
+                        params.alpha = (Float) animation.getAnimatedValue();
+                        window.setAttributes(params);
+                    }
+                });
+
+                valueAnimator.start();
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        bitmap = PicUtils.readLocalImageWithouChange(url, pack);
-        if(bitmap!=null)
-        pic.setImageBitmap(bitmap);
+    private void getIntentData() {
+        url = getIntent().getStringExtra("url");
+        pack = getIntent().getStringExtra("pack");
+        collectId = getIntent().getIntExtra("collectId", -1);
+        finalUrl = url;
     }
 
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    protected void onDestroy() {
+        super.onDestroy();
         uiHandler.removeCallbacksAndMessages(null);
         if (bitmap != null) {
             bitmap.recycle();
             System.gc();
         }
-
     }
 
+
     private Handler uiHandler = new Handler() {
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -197,14 +187,13 @@ public class DmcgjcPicFragment extends RxLazyFragment {
     };
 
     private void show(Context context) {
-        View popLayout = LayoutInflater.from(context).inflate(R.layout.application_pic_share, null);
+        View popLayout = LayoutInflater.from(context).inflate(R.layout.application_pic_share1, null);
         PopupWindow popupWindow = new PopupWindow(popLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
 //                setting_main.setBackgroundColor(getResources().getColor(R.color.light_white));
-                ShipeiUtils.backgroundAlpha(getContext(), 1f);
-
+                ShipeiUtils.backgroundAlpha(context, 1f);
             }
         });
         popupWindow.setTouchable(true);
@@ -213,7 +202,7 @@ public class DmcgjcPicFragment extends RxLazyFragment {
         popupWindow.setAnimationStyle(R.style.pop_anim);
         popupWindow.showAtLocation(pic, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         Button send_to_friend = popLayout.findViewById(R.id.send_to_friend);
-        Button collection = popLayout.findViewById(R.id.collection);
+        Button deleteCollection = popLayout.findViewById(R.id.delete_collection);
         Button save_pic = popLayout.findViewById(R.id.save_pic);
         Button cancle = popLayout.findViewById(R.id.cancle);
         send_to_friend.setOnClickListener(new View.OnClickListener() {
@@ -224,35 +213,40 @@ public class DmcgjcPicFragment extends RxLazyFragment {
                 int i = url.lastIndexOf("/");
                 tempFileName = url.substring(i + 1, url.length());
                 File tempFile = new File(PHOTO_DIR, tempFileName);
-                showShare(getContext(),url, tempFile.getAbsolutePath());
+                showShare(context, url, tempFile.getAbsolutePath());
                 popupWindow.dismiss();
             }
         });
-        collection.setOnClickListener(new View.OnClickListener() {
+        deleteCollection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
                 String currentUser = SPUtils.getInstance().getString("userId");
-                int i = pack.lastIndexOf("/");
-                String substring = pack.substring(i + 1, pack.length());
                 if (currentUser == null || currentUser.equals("")) {
-                    ((BaseActivity) getContext()).removeALLActivity();
-                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    (CollectionDetailActivity.this).removeALLActivity();
+                    Intent intent = new Intent(CollectionDetailActivity.this, LoginActivity.class);
                     startActivity(intent);
                 } else {
-                    RetrofitHelper.getUserAPI()
-                            .addCollection(currentUser, url, substring)
-                            .compose(bindToLifecycle())
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(collectionRet -> {
-                                String errcode = collectionRet.getErrcode();
-                                if (errcode.equals("0"))
-                                    showShortToast("收藏成功");
-                                else
-                                    showShortToast("网络异常");
-                            }, throwable -> {
-                            });
+                    if (collectId != -1) {
+                        RetrofitHelper.getUserAPI()
+                                .deleteCollection(collectId)
+                                .compose(bindToLifecycle())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(collectionRet -> {
+                                    String errcode = collectionRet.getErrcode();
+                                    if (errcode.equals("0")) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra("refresh", true); //将计算的值回传回去
+                                        setResult(1, intent);
+                                        finish(); //结束当前的activity的生命周期
+                                        showShortToast("删除成功");
+                                    } else
+                                        showShortToast("服务异常");
+                                }, throwable -> {
+                                });
+                    }
+
                 }
             }
         });
@@ -282,6 +276,7 @@ public class DmcgjcPicFragment extends RxLazyFragment {
         ToastUtils.setMsgColor(getResources().getColor(R.color.yujin_black));
     }
 
+
     private void showShare(Context context, String path, String localPath) {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
@@ -301,7 +296,7 @@ public class DmcgjcPicFragment extends RxLazyFragment {
         // 启动分享GUI
         oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
             @Override
-            public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
+            public void onShare(Platform platform, Platform.ShareParams paramsToShare) {
                 if (Wechat.NAME.equals(platform.getName()) ||
                         WechatMoments.NAME.equals(platform.getName())) {
                     paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
@@ -327,4 +322,25 @@ public class DmcgjcPicFragment extends RxLazyFragment {
         oks.show(context);
     }
 
+    String getModuleName(String pack) {
+        String ret = null;
+        if (pack.equals("ldptRadar/" + 0)) ret = "雷达拼图";
+        else if (pack.equals("ldptRadar/" + 1)) ret = "卫星云图";
+        else if (pack.equals("gkdm/000")) ret = "地面填图";
+        else if (pack.equals("gkdm/500")) ret = "500百帕高空观测";
+        else if (pack.equals("gkdm/700")) ret = "700帕高空观测";
+        else if (pack.equals("gkdm/850")) ret = "850帕高空观测";
+        else if (pack.equals("gkdm/925")) ret = "925帕高空观测";
+        else if (pack.equals("radarForecast/ref")) ret = "回波反射率预报";
+        else if (pack.equals("radarForecast/rain")) ret = "降水预报";
+        else if (pack.equals("weathWarn/dz")) ret = "地质灾害";
+        else if (pack.equals("weathWarn/sh")) ret = "山洪灾害";
+        else if (pack.equals("weathWarn/hl")) ret = "中小河流洪水";
+        else {
+            int i = pack.lastIndexOf("/");
+            String substring = pack.substring(i + 1, pack.length());
+            ret = substring;
+        }
+        return ret;
+    }
 }

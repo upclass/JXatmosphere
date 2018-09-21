@@ -268,17 +268,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 Intent intent = new Intent(context, AboutOursActivity.class);
                 startActivity(intent);
             }
+            if (itemId == R.id.nav_collection) {
+                Intent intent = new Intent(context, CollectionActivity.class);
+                startActivity(intent);
+            }
             drawerLayout.closeDrawer(navigationView);
             return true;
         });
 
         View nav_header = navigationView.inflateHeaderView(R.layout.head_slip_layout);
         LinearLayout user_linear = nav_header.findViewById(R.id.user_linear);
-        user_linear.setOnClickListener(v -> {
-            Intent intent = new Intent(context, PersonalInfoActivity.class);
-            startActivity(intent);
-            drawerLayout.closeDrawer(navigationView);
-        });
+//        user_linear.setOnClickListener(v -> {
+//            Intent intent = new Intent(context, PersonalInfoActivity.class);
+//            startActivity(intent);
+//            drawerLayout.closeDrawer(navigationView);
+//        });
 
 
         List<String> permissionList = new ArrayList<>();

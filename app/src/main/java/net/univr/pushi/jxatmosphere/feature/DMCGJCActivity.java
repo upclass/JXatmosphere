@@ -1,19 +1,32 @@
 package net.univr.pushi.jxatmosphere.feature;
 
 import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.ComPagerAdapter;
+import net.univr.pushi.jxatmosphere.adapter.DmcgjcCustomMenuAdapter;
+import net.univr.pushi.jxatmosphere.adapter.DmcgjcMenuAdapterForSwzd;
+import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
+import net.univr.pushi.jxatmosphere.beens.DmcgjcCustomMenu;
+import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.fragments.DMCGJCFragment;
+import net.univr.pushi.jxatmosphere.fragments.SWZDYLFragment;
 import net.univr.pushi.jxatmosphere.interfaces.BrightnessActivity;
 import net.univr.pushi.jxatmosphere.interfaces.CallBackUtil;
+import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
@@ -21,26 +34,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DMCGJCActivity extends BaseActivity implements View.OnClickListener {
 
-
-    @BindView(R.id.viewpager)
-    CustomViewPager viewPager;
 
     @BindView(R.id.back)
     ImageView leave;
     @BindView(R.id.reload)
     ImageView reload;
 
+    @BindView(R.id.viepager)
+    CustomViewPager mViewPager;
 
-    private List<Fragment> list;
-    DMCGJCFragment fragment1;
-    DMCGJCFragment fragment2;
-    DMCGJCFragment fragment3;
-    DMCGJCFragment fragment4;
-    DMCGJCFragment fragment5;
-    DMCGJCFragment fragment6;
+    //一级菜单
+    @BindView(R.id.menu_fragment)
+    RecyclerView menu_recycle;
+
+    //二级菜单
+    @BindView(R.id.recycler1)
+    RecyclerView mRecyclerView1;
+
+
+    private DmcgjcCustomMenuAdapter menuAdapter;
+    private DmcgjcMenuAdapterForSwzd mAdapter1;
+
+
+    ProgressDialog progressDialog;
+
+    List<Fragment> fragmentlist = new ArrayList<>();
+
+
+    List<DmcgjcmenuBeen.DataBean> oneMenuList = new ArrayList<>();
+    List<DmcgjcmenuBeen.DataBean> twoMenuList = new ArrayList<>();
+
+    MyPagerAdapter viewPagerAdapter;
+
+    List<DmcgjcCustomMenu.DataBean> menuData;
 
 
     @Override
@@ -55,44 +86,213 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
 
     }
 
+    private void getCustomMenuData() {
+        RetrofitHelper.getWeatherMonitorAPI()
+                .getDmcgjcCustomMenu()
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(DmcgjcCustomMenu -> {
+                            menuData = DmcgjcCustomMenu.getData();
+
+                            DmcgjcmenuBeen.DataBean twoMenuItemSW = new DmcgjcmenuBeen.DataBean();
+                            twoMenuItemSW.setSelect(true);
+                            twoMenuItemSW.setType("rain");
+                            twoMenuItemSW.setPaname("降水");
+                            twoMenuItemSW.setName("SW");
+                            twoMenuItemSW.setZnName("气象水文");
+                            twoMenuList.add(twoMenuItemSW);
+                            //一级菜单
+                            for (int i = 0; i < menuData.size(); i++) {
+                                List<DmcgjcCustomMenu.DataBean.TwoMenuBean> twoMenu = menuData.get(i).getTwoMenu();
+                                DmcgjcmenuBeen.DataBean dataBean = new DmcgjcmenuBeen.DataBean();
+                                if (i == 0)
+                                    dataBean.setSelect(true);
+                                else dataBean.setSelect(false);
+                                dataBean.setZnName(twoMenu.get(0).getZnName());
+                                dataBean.setId(twoMenu.get(0).getId());
+                                dataBean.setName(twoMenu.get(0).getName());
+                                dataBean.setPaname(twoMenu.get(0).getPaname());
+                                dataBean.setType(twoMenu.get(0).getType());
+                                oneMenuList.add(dataBean);
+                            }
+                            //二级菜单
+                            List<DmcgjcCustomMenu.DataBean.TwoMenuBean> twoMenu = menuData.get(0).getTwoMenu();
+                            for (int i = 0; i < twoMenu.size(); i++) {
+                                DmcgjcmenuBeen.DataBean dataBean = new DmcgjcmenuBeen.DataBean();
+                                dataBean.setZnName(twoMenu.get(i).getZnName());
+                                dataBean.setId(twoMenu.get(i).getId());
+                                dataBean.setName(twoMenu.get(i).getName());
+                                dataBean.setPaname(twoMenu.get(i).getPaname());
+                                dataBean.setType(twoMenu.get(i).getType());
+                                twoMenuList.add(dataBean);
+                            }
+                            getMenuAdapter().setNewData(oneMenuList);
+                            getAdapter1().setNewData(twoMenuList);
+
+                            for (int i = 0; i < twoMenuList.size(); i++) {
+                                if (twoMenuList.get(i).getZnName().equals("气象水文")) {
+                                    fragmentlist.add(new SWZDYLFragment());
+                                } else {
+                                    fragmentlist.add(DMCGJCFragment.newInstance(twoMenuList.get(i).getType(), twoMenuList.get(i).getName()));
+                                }
+                            }
+                            viewPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentlist, null);
+                            // 绑定适配器
+                            mViewPager.setAdapter(viewPagerAdapter);
+                        }
+                        , throwable -> {
+                            LogUtils.e(throwable);
+                            ToastUtils.showShort("请求菜单数据异常");
+                        });
+    }
+
+
+    private DmcgjcCustomMenuAdapter getMenuAdapter() {
+        if (menuAdapter == null) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
+            menuAdapter = new DmcgjcCustomMenuAdapter(mData1);
+            menu_recycle.setLayoutManager(layoutManager);
+            menu_recycle.setAdapter(menuAdapter);
+            menuAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                    getAdapter1().setLastposition(0);
+                    DmcgjcCustomMenuAdapter adapter1 = (DmcgjcCustomMenuAdapter) adapter;
+                    int lastposition = adapter1.getLastposition();
+                    DmcgjcmenuBeen.DataBean dataBean = adapter1.getData().get(position);
+                    DmcgjcmenuBeen.DataBean dataBeanLast = adapter1.getData().get(lastposition);
+                    dataBeanLast.setSelect(false);
+                    dataBean.setSelect(true);
+                    adapter.notifyItemChanged(lastposition);
+                    adapter.notifyItemChanged(position);
+                    adapter1.setLastposition(position);
+                    if (position == 0) {
+                        twoMenuList.clear();
+                        //二级菜单
+                        List<DmcgjcCustomMenu.DataBean.TwoMenuBean> twoMenu = menuData.get(0).getTwoMenu();
+
+                        DmcgjcmenuBeen.DataBean twoMenuItemSW = new DmcgjcmenuBeen.DataBean();
+                        twoMenuItemSW.setSelect(true);
+                        twoMenuItemSW.setType("rain");
+                        twoMenuItemSW.setPaname("降水");
+                        twoMenuItemSW.setName("SW");
+                        twoMenuItemSW.setZnName("气象水文");
+                        twoMenuList.add(twoMenuItemSW);
+
+                        for (int i = 0; i < twoMenu.size(); i++) {
+                            DmcgjcmenuBeen.DataBean dataBean1 = new DmcgjcmenuBeen.DataBean();
+                            dataBean1.setZnName(twoMenu.get(i).getZnName());
+                            dataBean1.setId(twoMenu.get(i).getId());
+                            dataBean1.setName(twoMenu.get(i).getName());
+                            dataBean1.setPaname(twoMenu.get(i).getPaname());
+                            dataBean1.setType(twoMenu.get(i).getType());
+                            twoMenuList.add(dataBean1);
+                        }
+                        getAdapter1().setNewData(twoMenuList);
+                        List<Fragment> fragmentHuancun = new ArrayList<>();
+                        for (int i = 0; i < fragmentlist.size(); i++) {
+                            fragmentHuancun.add(fragmentlist.get(i));
+                        }
+                        fragmentlist.clear();
+
+                        for (int i = 0; i < twoMenuList.size(); i++) {
+                            if (twoMenuList.get(i).getZnName().equals("气象水文")) {
+                                fragmentlist.add(new SWZDYLFragment());
+                            } else {
+                                fragmentlist.add(DMCGJCFragment.newInstance(twoMenuList.get(i).getType(), twoMenuList.get(i).getName()));
+                            }
+                        }
+
+                        viewPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentlist, fragmentHuancun);
+                        // 绑定适配器
+                        mViewPager.setAdapter(viewPagerAdapter);
+                        for (Fragment fragment : fragmentlist) {
+                            fragmentHuancun.add(fragment);
+                        }
+                    } else {
+                        twoMenuList.clear();
+                        List<DmcgjcCustomMenu.DataBean.TwoMenuBean> twoMenu = menuData.get(position).getTwoMenu();
+                        for (int i = 0; i < twoMenu.size(); i++) {
+                            DmcgjcmenuBeen.DataBean dataBean1 = new DmcgjcmenuBeen.DataBean();
+                            if (i == 0) dataBean1.setSelect(true);
+                            else dataBean1.setSelect(false);
+                            dataBean1.setZnName(twoMenu.get(i).getZnName());
+                            dataBean1.setId(twoMenu.get(i).getId());
+                            dataBean1.setName(twoMenu.get(i).getName());
+                            dataBean1.setPaname(twoMenu.get(i).getPaname());
+                            dataBean1.setType(twoMenu.get(i).getType());
+                            twoMenuList.add(dataBean1);
+                        }
+                        getAdapter1().setNewData(twoMenuList);
+
+                        List<Fragment> fragmentHuancun = new ArrayList<>();
+                        for (int i = 0; i < fragmentlist.size(); i++) {
+                            fragmentHuancun.add(fragmentlist.get(i));
+                        }
+                        fragmentlist.clear();
+                        for (int i = 0; i < twoMenu.size(); i++) {
+                            fragmentlist.add(DMCGJCFragment.newInstance(twoMenu.get(i).getType(), twoMenu.get(i).getName()));
+                        }
+                        viewPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentlist, fragmentHuancun);
+                        // 绑定适配器
+                        mViewPager.setAdapter(viewPagerAdapter);
+                        for (Fragment fragment : fragmentlist) {
+                            fragmentHuancun.add(fragment);
+                        }
+                    }
+                }
+            });
+        }
+        return menuAdapter;
+    }
+
+
+    private DmcgjcMenuAdapterForSwzd getAdapter1() {
+        if (mAdapter1 == null) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            List<DmcgjcmenuBeen.DataBean> mData1 = new ArrayList<>();
+
+            mAdapter1 = new DmcgjcMenuAdapterForSwzd(mData1);
+            mRecyclerView1.setLayoutManager(layoutManager);
+            mRecyclerView1.setAdapter(mAdapter1);
+            mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
+
+                List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
+                int lastclick = ((DmcgjcMenuAdapterForSwzd) adapter).getLastposition();
+                DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
+                DmcgjcmenuBeen.DataBean dataBean = data.get(position);
+                dataBeanlasted.setSelect(false);
+                dataBean.setSelect(true);
+                adapter.notifyItemChanged(lastclick);
+                adapter.notifyItemChanged(position);
+                ((DmcgjcMenuAdapterForSwzd) adapter).setLastposition(position);
+                if (twoMenuList.get(0).getZnName().equals("气象水文")) {
+                    if (lastclick == 0) ;
+                    else {
+                        DMCGJCFragment dmcgjcFragment = ((DMCGJCFragment) fragmentlist.get(lastclick));
+                        dmcgjcFragment.setStart(false);
+                        dmcgjcFragment.setImage();
+                    }
+
+                } else {
+                    DMCGJCFragment dmcgjcFragment = ((DMCGJCFragment) fragmentlist.get(lastclick));
+                    dmcgjcFragment.setStart(false);
+                    dmcgjcFragment.setImage();
+                }
+                mViewPager.setCurrentItem(position);
+            });
+        }
+        return mAdapter1;
+    }
+
 
     private void initView() {
-        viewPager.setScanScroll(false);
-        list = new ArrayList<>();
+        mViewPager.setScanScroll(false);
+        getCustomMenuData();
         leave.setOnClickListener(this);
         reload.setOnClickListener(this);
-        String type1 = "rain";
-        String ctype1 = "swzd";
-        fragment1 = DMCGJCFragment.newInstance(type1, ctype1, viewPager, list, 0);
-        String type2 = "temp";
-        String ctype2 = "temp";
-        fragment2 = DMCGJCFragment.newInstance(type2, ctype2, viewPager, list, 1);
-        String type3 = "wind";
-        String ctype3 = "wind_2minute_avg";
-        fragment3 = DMCGJCFragment.newInstance(type3, ctype3, viewPager, list, 2);
-        String type4 = "humidity";
-        String ctype4 = "humidity";
-        fragment4 = DMCGJCFragment.newInstance(type4, ctype4, viewPager, list, 3);
-        String type5 = "pressure";
-        String ctype5 = "pressure";
-        fragment5 = DMCGJCFragment.newInstance(type5, ctype5, viewPager, list, 4);
-        String type6 = "vis";
-        String ctype6 = "vis_min";
-        fragment6 = DMCGJCFragment.newInstance(type6, ctype6, viewPager, list, 5);
-
-
-        list.add(fragment1);
-        list.add(fragment2);
-        list.add(fragment3);
-        list.add(fragment4);
-        list.add(fragment5);
-        list.add(fragment6);
-
-
-        ComPagerAdapter adapter = new ComPagerAdapter(
-                getSupportFragmentManager(), list);
-        viewPager.setAdapter(adapter);
-
         CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override
             public void onDispatchDarken() {
@@ -107,7 +307,6 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
                         window.setAttributes(params);
                     }
                 });
-
                 valueAnimator.start();
             }
 
@@ -131,21 +330,31 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
 
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
                 finish();
             case R.id.reload:
-                int currentItem = viewPager.getCurrentItem();
-                DMCGJCFragment fragment = (DMCGJCFragment) list.get(currentItem);
-                PicUtils.deleteDir("dmcgjc/" + fragment.type + "/" +fragment. ctype);
-                fragment.getTestdata();
+                int currentItem = mViewPager.getCurrentItem();
+                if (twoMenuList.get(0).getZnName().equals("气象水文")) {
+                    if (currentItem == 0) ((SWZDYLFragment) fragmentlist.get(0)).getTestdata();
+                    else {
+                        DMCGJCFragment fragment = (DMCGJCFragment) fragmentlist.get(currentItem);
+                        PicUtils.deleteDir("dmcgjc/" + fragment.type + "/" + fragment.ctype);
+                        fragment.getTestdata();
+                    }
+
+                } else {
+                    DMCGJCFragment fragment = (DMCGJCFragment) fragmentlist.get(currentItem);
+                    PicUtils.deleteDir("dmcgjc/" + fragment.type + "/" + fragment.ctype);
+                    fragment.getTestdata();
+                }
                 break;
         }
 
     }
-
 
 }
 
