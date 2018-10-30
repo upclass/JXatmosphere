@@ -181,9 +181,6 @@
             android:name=".feature.DsljybGaodeActivity"
             android:label="@string/title_activity_dsljyb_gaode" />
         <activity
-            android:name=".feature.testActivity"
-            android:label="@string/title_activity_test" />
-        <activity
             android:name=".feature.ZytqybGaoDeActivity"
             android:label="@string/title_activity_zytqyb_gao_de" />
         <activity
