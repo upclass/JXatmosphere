@@ -127,4 +127,9 @@
     <string name="title_activity_dsljyb">DsljybActivity</string>
     <string name="title_activity_collection">CollectionActivity</string>
     <string name="title_activity_collection_detail">CollectionDetailActivity</string>
+    <string name="title_activity_dsljyb_gaode">DsljybGaodeActivity</string>
+    <string name="title_activity_test">testActivity</string>
+    <string name="title_activity_zytqyb_gao_de">ZytqybGaoDeActivity</string>
+    <string name="title_activity_yu_jing_gao_de">YuJingGaoDeActivity</string>
+    <string name="title_activity_gdyb_gao_de">GdybGaoDeActivity</string>
 </resources>

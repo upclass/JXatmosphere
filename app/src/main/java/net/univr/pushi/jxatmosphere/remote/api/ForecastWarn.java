@@ -75,7 +75,7 @@ public interface ForecastWarn {
 //    Observable<DsljybBeen> getRainGird(@Query("type")String type,@Query("lat")String lattitude, @Query("lon")String lontitude);
     //短时临近预报
     @GET("rainForecastGirdFrom20Action!getDataList.do")
-    Observable<DsljybBeen> getRainGird(@Query("lat") String lattitude, @Query("lon") String lontitude);
+    Observable<DsljybBeen>  getRainGird(@Query("lat") String lattitude, @Query("lon") String lontitude);
 
     @GET("rainForecastGirdFrom20Action!getDataListSum.do")
         //短时临近预报读所有数据

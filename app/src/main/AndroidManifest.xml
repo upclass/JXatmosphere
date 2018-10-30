@@ -176,7 +176,23 @@
             android:label="@string/title_activity_collection" />
         <activity
             android:name=".feature.CollectionDetailActivity"
-            android:label="@string/title_activity_collection_detail"></activity>
+            android:label="@string/title_activity_collection_detail" />
+        <activity
+            android:name=".feature.DsljybGaodeActivity"
+            android:label="@string/title_activity_dsljyb_gaode" />
+        <activity
+            android:name=".feature.testActivity"
+            android:label="@string/title_activity_test" />
+        <activity
+            android:name=".feature.ZytqybGaoDeActivity"
+            android:label="@string/title_activity_zytqyb_gao_de" />
+        <activity
+            android:name=".feature.YuJingGaoDeActivity"
+            android:label="@string/title_activity_yu_jing_gao_de" />
+        <activity
+            android:name=".feature.GdybGaoDeActivity"
+            android:label="@string/title_activity_gdyb_gao_de"
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
     </application>
 
 </manifest>

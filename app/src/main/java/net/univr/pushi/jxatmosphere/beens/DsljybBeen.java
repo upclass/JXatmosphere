@@ -24,6 +24,15 @@ public class DsljybBeen {
     private String forecast_time;
     private int errcode;
     private List<String> data;
+    private List<String> picList;
+
+    public List<String> getPicList() {
+        return picList;
+    }
+
+    public void setPicList(List<String> picList) {
+        this.picList = picList;
+    }
 
     public String getErrmsg() {
         return errmsg;

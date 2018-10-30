@@ -54,6 +54,12 @@ android {
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
 
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
@@ -154,6 +160,8 @@ dependencies {
     implementation 'com.esri.arcgisruntime:arcgis-android:100.2.1'
     // ECharts - Java类库 http://git.oschina.net/free/ECharts
     compile 'com.github.abel533:ECharts:2.2.7'
+//    compile 'com.google.code.gson:gson:2.7'
+//    compile 'com.github.abel533:ECharts:3.0.0'
     compile 'com.google.code.gson:gson:2.7'
     //日历控件
     compile 'com.github.applikeysolutions:cosmocalendar:1.0.4'
@@ -168,5 +176,10 @@ dependencies {
     compile 'com.lzy.net:okgo:3.0.4'
     //Glide gif加载
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    //高德地图3d地图
+    compile 'com.amap.api:3dmap:latest.integration'
+    //高德定位
+    compile 'com.amap.api:location:latest.integration'
+
 
 }

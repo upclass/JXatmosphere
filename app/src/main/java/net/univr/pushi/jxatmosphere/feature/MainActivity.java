@@ -676,7 +676,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(intent11);
                 break;
             case R.id.main_content_item2_4:
-                Intent intent24 = new Intent(context, GdybActivity.class);
+//                Intent intent24 = new Intent(context, GdybActivity.class);
+                Intent intent24 = new Intent(context, GdybGaoDeActivity.class);
                 startActivity(intent24);
                 break;
             case R.id.main_content_item0_1:
@@ -707,7 +708,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(intentMoreWeath);
                 break;
             case R.id.main_content_item2_2:
-                Intent zytqyb = new Intent(context, ZytqybActivity.class);
+//                Intent zytqyb = new Intent(context, ZytqybActivity.class);
+                Intent zytqyb = new Intent(context, ZytqybGaoDeActivity.class);
                 startActivity(zytqyb);
                 break;
             case R.id.main_content_item2_3:
@@ -715,11 +717,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(radarForecast);
                 break;
             case R.id.main_content_item2_1:
-                Intent yujinXinhao = new Intent(context, YujingActivity.class);
+//                Intent yujinXinhao = new Intent(context, YujingActivity.class);
+                Intent yujinXinhao = new Intent(context, YuJingGaoDeActivity.class);
                 startActivity(yujinXinhao);
                 break;
             case R.id.main_content_item3_4:
-                Intent dsljyb = new Intent(context, DsljybActivity.class);
+//                Intent dsljyb = new Intent(context, DsljybActivity.class);
+                Intent dsljyb = new Intent(context, DsljybGaodeActivity.class);
+//                Intent dsljyb = new Intent(context, testActivity.class);
+
                 startActivity(dsljyb);
                 break;
         }

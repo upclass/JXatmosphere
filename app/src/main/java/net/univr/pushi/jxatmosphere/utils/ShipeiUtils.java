@@ -16,7 +16,7 @@ import android.view.WindowManager;
 
 
 public class ShipeiUtils {
-    public  static  int  getHeight(Context context){
+    public static int getHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
@@ -27,10 +27,10 @@ public class ShipeiUtils {
 // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
         int screenWidth = (int) (width / density);  // 屏幕宽度(dp)
         int screenHeight = (int) (height / density);// 屏幕高度(dp)
-        return  height;
+        return height;
     }
 
-    public  static  int  getWidth(Context context){
+    public static int getWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
@@ -41,19 +41,23 @@ public class ShipeiUtils {
 // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
         int screenWidth = (int) (width / density);  // 屏幕宽度(dp)
         int screenHeight = (int) (height / density);// 屏幕高度(dp)
-        return  width;
+        return width;
     }
 
-    public static void backgroundAlpha (Context context,float bgAlpha)
-    {
-        WindowManager.LayoutParams lp = ((Activity)context).getWindow().getAttributes();
+    public static void backgroundAlpha(Context context, float bgAlpha) {
+        WindowManager.LayoutParams lp = ((Activity) context).getWindow().getAttributes();
         lp.alpha = bgAlpha; //0.0-1.0
-        ((Activity)context).getWindow().setAttributes(lp);
+        ((Activity) context).getWindow().setAttributes(lp);
     }
 
-    public static int dp2px(Context context, float dp)
-    {
-        return (int ) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    public static int dp2px(Context context, float dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+
+
+    public static int px2dp(Context context, int px) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
     }
 
 
