@@ -43,8 +43,8 @@ public class LdptWxAdapter extends BaseQuickAdapter<GkdmClickBeen, BaseViewHolde
         if (item.getOnclick() == true) {
 //            TextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 //            TextView.setTextColor(Color.parseColor("#537ed7"));
-                        TextView.setBackgroundColor(Color.parseColor("#0081e7"));
-//            TextView.setTextColor(Color.parseColor("#537ed7"));
+//                        TextView.setBackgroundColor(Color.parseColor("#0081e7"));
+            TextView.setTextColor(Color.parseColor("#0081e7"));
         } else {
 //            TextView.setBackgroundColor(Color.parseColor("#537ed7"));
 //            TextView.setTextColor(Color.parseColor("#FFFFFF"));

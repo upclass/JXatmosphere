@@ -64,7 +64,10 @@ import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.utils.ThreadUtil;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -94,6 +97,9 @@ public class DsljybGaodeActivity extends BaseActivity implements
     TextView didian;
     @BindView(R.id.forecast_time)
     TextView forecast_time;
+    @BindView(R.id. forecast_time1)
+    TextView forecast_time1;
+
     @BindView(R.id.back)
     ImageView back;
 
@@ -198,7 +204,10 @@ public class DsljybGaodeActivity extends BaseActivity implements
                     for (int i = 0; i < data.size(); i++) {
                         barData[i] = data.get(i);
                     }
-                    forecast_time.setText("预报时间:" + dsljybBeen.getForecast_time());
+                    String timeAfter8Hour = getTimeAddHour(dsljybBeen.getForecast_time(), 8);
+                    String timeAfter10Hour = getTimeAddHour(dsljybBeen.getForecast_time(), 10);
+                    forecast_time.setText("起报时间:" +timeAfter8Hour );
+                    forecast_time1.setText("预报时段:" + getHour(timeAfter8Hour)+"-"+getHour(timeAfter10Hour));
                     mWebView.loadUrl("file:///android_asset/jsWeb/ZhuZhuangechart.html");
 
                     List<String> picList = dsljybBeen.getPicList();
@@ -216,6 +225,35 @@ public class DsljybGaodeActivity extends BaseActivity implements
                 });
     }
 
+    private String getTimeAddHour(String forecast_time,int hour) {
+        String ret = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            Date parse = format.parse(forecast_time);
+            long l = parse.getTime() + 3600 * 1000 * hour;
+            Date date = new Date(l);
+            ret = format.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    private String getHour(String forecast_time) {
+        String ret = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            Date parse = format.parse(forecast_time);
+            String hours = String.valueOf(parse.getHours());
+            String minutes = String.valueOf(parse.getMinutes());
+            if(Integer.valueOf(hours)>=0&&Integer.valueOf(hours)<10)hours="0"+hours;
+            if(Integer.valueOf(minutes)>=0&&Integer.valueOf(minutes)<10)hours="0"+minutes;
+            ret = hours+":"+minutes;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
     private void getDsljybSum() {
         ProgressDialog progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
@@ -582,8 +620,8 @@ public class DsljybGaodeActivity extends BaseActivity implements
                 if (groundOverlay != null) groundOverlay.remove();
                 //高德在加入覆盖物范围
                 LatLngBounds bounds = new LatLngBounds.Builder()
-                        .include(new LatLng(24.43704147338867, 118.68101043701172))
-                        .include(new LatLng(30.1299808502, 113.52340240478516)).build();
+                        .include(new LatLng(24.2270355, 118.661049))
+                        .include(new LatLng(30.1999836, 113.323349)).build();
                 Bundle data = msg.getData();
                 String pic = data.getString("pic");
                 Bitmap bitmap = PicUtils.readLocalImage(pic, "dsljyb", context);
