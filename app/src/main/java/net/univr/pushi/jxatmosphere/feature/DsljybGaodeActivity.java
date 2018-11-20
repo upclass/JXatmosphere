@@ -97,7 +97,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
     TextView didian;
     @BindView(R.id.forecast_time)
     TextView forecast_time;
-    @BindView(R.id. forecast_time1)
+    @BindView(R.id.forecast_time1)
     TextView forecast_time1;
 
     @BindView(R.id.back)
@@ -106,6 +106,9 @@ public class DsljybGaodeActivity extends BaseActivity implements
     @BindView(R.id.mapview)
     MapView mMapView;
     AMap mAMap;
+
+    @BindView(R.id.rainfallkd)
+    ImageView rainfallkd;
 
     @BindView(R.id.pic_recycle)
     RecyclerView picRecycleview;
@@ -206,8 +209,8 @@ public class DsljybGaodeActivity extends BaseActivity implements
                     }
                     String timeAfter8Hour = getTimeAddHour(dsljybBeen.getForecast_time(), 8);
                     String timeAfter10Hour = getTimeAddHour(dsljybBeen.getForecast_time(), 10);
-                    forecast_time.setText("起报时间:" +timeAfter8Hour );
-                    forecast_time1.setText("预报时段:" + getHour(timeAfter8Hour)+"-"+getHour(timeAfter10Hour));
+                    forecast_time.setText("起报时间:" + timeAfter8Hour);
+                    forecast_time1.setText("预报时段:" + getHour(timeAfter8Hour) + "-" + getHour(timeAfter10Hour));
                     mWebView.loadUrl("file:///android_asset/jsWeb/ZhuZhuangechart.html");
 
                     List<String> picList = dsljybBeen.getPicList();
@@ -225,7 +228,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
                 });
     }
 
-    private String getTimeAddHour(String forecast_time,int hour) {
+    private String getTimeAddHour(String forecast_time, int hour) {
         String ret = null;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
@@ -246,14 +249,16 @@ public class DsljybGaodeActivity extends BaseActivity implements
             Date parse = format.parse(forecast_time);
             String hours = String.valueOf(parse.getHours());
             String minutes = String.valueOf(parse.getMinutes());
-            if(Integer.valueOf(hours)>=0&&Integer.valueOf(hours)<10)hours="0"+hours;
-            if(Integer.valueOf(minutes)>=0&&Integer.valueOf(minutes)<10)hours="0"+minutes;
-            ret = hours+":"+minutes;
+            if (Integer.valueOf(hours) >= 0 && Integer.valueOf(hours) < 10) hours = "0" + hours;
+            if (Integer.valueOf(minutes) >= 0 && Integer.valueOf(minutes) < 10)
+                minutes = "0" + minutes;
+            ret = hours + ":" + minutes;
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return ret;
     }
+
     private void getDsljybSum() {
         ProgressDialog progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
         progressDialog.setCancelable(true);
@@ -351,6 +356,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
         now_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rainfallkd.setImageDrawable(context.getResources().getDrawable(R.drawable.dsljybkd));
                 now_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg_select));
                 now_time.setTextColor(getResources().getColor(R.color.black));
                 sum_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg1));
@@ -363,6 +369,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
         sum_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rainfallkd.setImageDrawable(context.getResources().getDrawable(R.drawable.dsljybsum));
                 now_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg));
                 now_time.setTextColor(getResources().getColor(R.color.white));
                 sum_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg1_select));

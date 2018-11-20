@@ -33,6 +33,7 @@ import net.univr.pushi.jxatmosphere.utils.GetResourceInt;
 import net.univr.pushi.jxatmosphere.utils.YujinWeiZhi;
 import net.univr.pushi.jxatmosphere.widget.FullyLinearLayoutManager;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -54,10 +55,12 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     TextView jslData;
     @BindView(R.id.xdsd_data)
     TextView xdsdData;
-    @BindView(R.id.fsfx_data)
-    TextView fsfxData;
-    @BindView(R.id.fsfx_data1)
-    TextView fsfxData1;
+//    @BindView(R.id.fsfx_data)
+//    TextView fsfxData;
+//    @BindView(R.id.fsfx_data1)
+//    TextView fsfxData1;
+    @BindView(R.id.fs)
+    TextView fsData;
     @BindView(R.id.temper)
     TextView temper;
     @BindView(R.id.titleBar_title)
@@ -109,7 +112,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         lon = intent.getStringExtra("lon");
         adress = intent.getStringExtra("address");
         initDate();
-        if (lat == null);
+        if (lat == null) ;
 //            Toast.makeText(context, "没有定位权限", Toast.LENGTH_SHORT).show();
         else {
             getAddress(new LatLonPoint(Double.valueOf(lat), Double.valueOf(lon)));
@@ -158,21 +161,21 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 getTestData1();
                 getTestData2();
                 getTestData3();
-                Handler handler=new Handler();
+                Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                    progressDialog.dismiss();
+                        progressDialog.dismiss();
                     }
-                },1000);
+                }, 1000);
                 break;
             case R.id.work_schedule_leave:
                 finish();
                 break;
             case R.id.yujin_info:
-                Intent intent=new Intent(context,YujinInfoActivity.class);
+                Intent intent = new Intent(context, YujinInfoActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("data",data.get(0));
+                bundle.putParcelable("data", data.get(0));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
@@ -188,12 +191,23 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bdskBeen -> {
                     BdskBeen.DataBean data = bdskBeen.getData().get(0);
-                    jslData.setText(data.getPRE());
+                    if (data.getPRE().equals("0") || data.getPRE().equals("0.0"))
+                        jslData.setText("N/A");
+                    else
+                        jslData.setText(data.getPRE());
+
                     loc.setText(adress);
-                    temper.setText(data.getTEM() + "℃");
-                    xdsdData.setText(data.getRHU());
-                    fsfxData.setText(data.getWIN_D_INST());
-                    fsfxData1.setText(data.getWIN_S_INST());
+                    temper.setText(double2zhen(Double.valueOf(data.getTEM())) + "℃");
+
+                    if (data.getRHU().equals("0") || data.getRHU().equals("0.0"))
+                        xdsdData.setText("N/A");
+                    else
+                        xdsdData.setText(data.getRHU());
+
+                    if (data.getPRE().equals("0") || data.getPRE().equals("0.0"))
+                        fsData.setText("N/A");
+                    else
+                        fsData.setText(data.getWIN_S_INST());
 
                 }, throwable -> {
                     LogUtils.e(throwable);
@@ -371,5 +385,10 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500,
                 GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
+    }
+
+    public int double2zhen(double num_d) {
+        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_UP);
+        return bg.intValue();
     }
 }

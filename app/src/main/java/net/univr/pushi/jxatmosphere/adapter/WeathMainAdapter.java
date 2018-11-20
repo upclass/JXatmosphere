@@ -14,6 +14,7 @@ import com.google.gson.JsonParser;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -122,7 +123,7 @@ public class WeathMainAdapter extends BaseQuickAdapter<GdybBeen.DataBean, BaseVi
         String imageName = picBiaoJi;
         helper.setImageResource(R.id.forecast_image, getResource(imageName));
         helper.setText(R.id.forecast_weath, tqxx);
-        helper.setText(R.id.forecast_temp, item.getTemper()+"℃");
+        helper.setText(R.id.forecast_temp, double2zhen(Double.valueOf(item.getTemper())) + "℃");
 
     }
 
@@ -217,5 +218,10 @@ public class WeathMainAdapter extends BaseQuickAdapter<GdybBeen.DataBean, BaseVi
         int resId = mContext.getResources().getIdentifier(imageName, "drawable", ctx.getPackageName());
         //如果没有在"mipmap"下找到imageName,将会返回0
         return resId;
+    }
+
+    public int double2zhen(double num_d) {
+        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_UP);
+        return bg.intValue();
     }
 }

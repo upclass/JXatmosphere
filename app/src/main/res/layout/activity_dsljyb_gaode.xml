@@ -204,6 +204,7 @@
             android:layout_height="match_parent"></com.amap.api.maps.MapView>
 
         <ImageView
+            android:id="@+id/rainfallkd"
             android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
