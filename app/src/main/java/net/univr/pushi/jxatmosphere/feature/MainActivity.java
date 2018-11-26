@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.percent.PercentRelativeLayout;
@@ -49,6 +50,7 @@ import net.univr.pushi.jxatmosphere.utils.CProgressDialogUtils;
 import net.univr.pushi.jxatmosphere.utils.HProgressDialogUtils;
 import net.univr.pushi.jxatmosphere.utils.OkGoUpdateHttpUtil;
 import net.univr.pushi.jxatmosphere.utils.RandomNum;
+import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -290,7 +292,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //判断是否已经获取相应权限                                                              对应权限
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //相应操作
-            initLocation();
+//            initLocation();
         }
 // 若没有获得相应权限，则弹出对话框获取
         else {
@@ -702,9 +704,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.more_weath:
                 Intent intentMoreWeath = new Intent(context, WeathMainActivity.class);
-                intentMoreWeath.putExtra("address", address);
-                intentMoreWeath.putExtra("lat", lat);
-                intentMoreWeath.putExtra("lon", lon);
+//                intentMoreWeath.putExtra("address", address);
+//                intentMoreWeath.putExtra("lat", lat);
+//                intentMoreWeath.putExtra("lon", lon);
                 startActivity(intentMoreWeath);
                 break;
             case R.id.main_content_item2_2:
@@ -768,48 +770,74 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+
     private void initLocation() {
-        mlocationClient = new AMapLocationClient(this);
+        if (ShipeiUtils.isLocationEnabled(context)) {
+            mlocationClient = new AMapLocationClient(this);
 //初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
-        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
 //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(1000);
-        mLocationOption.setOnceLocation(true);
-        mlocationClient.setLocationOption(mLocationOption);
-        mlocationClient.startLocation();
+//        mLocationOption.setInterval(2000);
+            mLocationOption.setOnceLocation(true);
+            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.startLocation();
 //设置定位监听
-        mlocationClient.setLocationListener(new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                if (aMapLocation != null) {
-                    if (aMapLocation.getErrorCode() == 0) {
-                        //解析定位结果
+            mlocationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    if (aMapLocation != null) {
+                        if (aMapLocation.getErrorCode() == 0) {
+                            //解析定位结果
 //                        aMapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
 //                        aMapLocation.getLatitude();//获取纬度
 //                        aMapLocation.getLongitude();//获取经度
 //                        aMapLocation.getAccuracy();//获取精度信息
 
 //                        address = aMapLocation.getProvince() + aMapLocation.getCity();
-                        address = aMapLocation.getAoiName();
-                        lat = String.valueOf(aMapLocation.getLatitude());//获取纬度
-                        lon = String.valueOf(aMapLocation.getLongitude());//获取经度
-                        location.setText(address);
-                        getTemp();
+                            address = aMapLocation.getAoiName();
+                            lat = String.valueOf(aMapLocation.getLatitude());//获取纬度
+                            lon = String.valueOf(aMapLocation.getLongitude());//获取经度
+                            location.setText(address);
+                            getTemp();
 //                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //                        Date date = new Date(aMapLocation.getTime());
 //                        df.format(date);//定位时间
-                    } else {
-                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Log.e("AmapError", "location Error, ErrCode:"
-                                + aMapLocation.getErrorCode() + ", errInfo:"
-                                + aMapLocation.getErrorInfo());
-                        location.setText("定位失败||请检查定位权限和位置信息");
+                        } else {
+                            //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                            Log.e("AmapError", "location Error, ErrCode:"
+                                    + aMapLocation.getErrorCode() + ", errInfo:"
+                                    + aMapLocation.getErrorInfo());
+//                        location.setText("定位失败||请检查定位权限和位置信息");
+                        }
                     }
                 }
-            }
-        });
+            });
+
+        } else {
+            temp.setText("℃");
+            location.setText("没有开启位置信息");
+            AlertDialog alertDialog2 = new AlertDialog.Builder(this)
+                    .setMessage("是否开启位置信息")
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+
+                    .setNegativeButton("否", new DialogInterface.OnClickListener() {//添加取消
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .create();
+            alertDialog2.show();
+
+        }
 
 
     }
@@ -824,7 +852,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bdskBeen -> {
                     BdskBeen.DataBean data = bdskBeen.getData().get(0);
-                    temp.setText(data.getTEM() + "℃");
+                    String tempStr = data.getTEM();
+                    Double aDouble = Double.valueOf(tempStr);
+                    BigDecimal decimal = new BigDecimal(aDouble);
+                    int tempInt = decimal.setScale(0, BigDecimal.ROUND_UP).intValue();
+                    temp.setText(tempInt + "℃");
 
                 }, throwable -> {
                     LogUtils.e(throwable);

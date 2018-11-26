@@ -1,18 +1,25 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
@@ -30,6 +37,7 @@ import net.univr.pushi.jxatmosphere.beens.GdybBeen;
 import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.GetResourceInt;
+import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 import net.univr.pushi.jxatmosphere.utils.YujinWeiZhi;
 import net.univr.pushi.jxatmosphere.widget.FullyLinearLayoutManager;
 
@@ -55,10 +63,6 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     TextView jslData;
     @BindView(R.id.xdsd_data)
     TextView xdsdData;
-//    @BindView(R.id.fsfx_data)
-//    TextView fsfxData;
-//    @BindView(R.id.fsfx_data1)
-//    TextView fsfxData1;
     @BindView(R.id.fs)
     TextView fsData;
     @BindView(R.id.temper)
@@ -88,10 +92,13 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     private int mDay;
     private String lat;
     private String lon;
-    String adress;
     GeocodeSearch geocoderSearch;
     String city;
     private ProgressDialog progressDialog;
+    //声明mlocationClient对象
+    public AMapLocationClient mlocationClient;
+    //声明mLocationOption对象
+    public AMapLocationClientOption mLocationOption;
 
 
     @Override
@@ -107,19 +114,8 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         workScheduleLeave.setOnClickListener(this);
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
-        Intent intent = getIntent();
-        lat = intent.getStringExtra("lat");
-        lon = intent.getStringExtra("lon");
-        adress = intent.getStringExtra("address");
         initDate();
-        if (lat == null) ;
-//            Toast.makeText(context, "没有定位权限", Toast.LENGTH_SHORT).show();
-        else {
-            getAddress(new LatLonPoint(Double.valueOf(lat), Double.valueOf(lon)));
-            getTestData();
-            getTestData1();
-            getTestData2();
-        }
+        initLocation();
 
     }
 
@@ -133,6 +129,62 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
 //        }
 //      return mAdapter;
 //    }
+
+    private void initLocation() {
+        if (ShipeiUtils.isLocationEnabled(context)) {
+            mlocationClient = new AMapLocationClient(this);
+//初始化定位参数
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+//设置定位间隔,单位毫秒,默认为2000ms
+//        mLocationOption.setInterval(2000);
+            mLocationOption.setOnceLocation(true);
+            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.startLocation();
+//设置定位监听
+            mlocationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    if (aMapLocation != null) {
+                        if (aMapLocation.getErrorCode() == 0) {
+                            lat = String.valueOf(aMapLocation.getLatitude());//获取纬度
+                            lon = String.valueOf(aMapLocation.getLongitude());//获取经度
+                            getAddress(new LatLonPoint(Double.valueOf(lat), Double.valueOf(lon)));
+                            getTestData();
+                            getTestData1();
+                            getTestData2();
+                            getAddress(new LatLonPoint(Double.valueOf(lat), Double.valueOf(lon)));
+                        } else {
+                            Log.e("AmapError", "location Error, ErrCode:"
+                                    + aMapLocation.getErrorCode() + ", errInfo:"
+                                    + aMapLocation.getErrorInfo());
+                        }
+                    }
+                }
+            });
+        } else {
+            AlertDialog alertDialog2 = new AlertDialog.Builder(this)
+                    .setMessage("是否开启位置信息")
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+
+                    .setNegativeButton("否", new DialogInterface.OnClickListener() {//添加取消
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .create();
+            alertDialog2.show();
+        }
+
+    }
+
     private void initDate() {
         String weekdayStr = "";
         Calendar c = Calendar.getInstance();
@@ -155,19 +207,35 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.reload:
-                progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
-                progressDialog.setCancelable(true);
-                getTestData();
-                getTestData1();
-                getTestData2();
-                getTestData3();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
+                jslData.setText("N/A");
+                xdsdData.setText("N/A");
+                fsData.setText("");
+                loc.setText("");
+                temper.setText("");
+
+                if (mAdapter != null) {
+                    mAdapter.getData().clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+
+
+                if (mbdybAdapter != null) {
+                    mbdybAdapter.getData().clear();
+                    mbdybAdapter.notifyDataSetChanged();
+                }
+
+                tqms.setText("");
+                fbdw.setText("");
+                bd_tqtp.setImageBitmap(null);
+
+                initLocation();
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        progressDialog.dismiss();
+//                    }
+//                }, 1000);
                 break;
             case R.id.work_schedule_leave:
                 finish();
@@ -196,7 +264,6 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                     else
                         jslData.setText(data.getPRE());
 
-                    loc.setText(adress);
                     temper.setText(double2zhen(Double.valueOf(data.getTEM())) + "℃");
 
                     if (data.getRHU().equals("0") || data.getRHU().equals("0.0"))
@@ -204,14 +271,36 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                     else
                         xdsdData.setText(data.getRHU());
 
-                    if (data.getPRE().equals("0") || data.getPRE().equals("0.0"))
-                        fsData.setText("N/A");
-                    else
-                        fsData.setText(data.getWIN_S_INST());
+                    String win_s_inst = data.getWIN_S_INST();
+                    Double win_s_inst_D = Double.valueOf(win_s_inst);
+                    String windDesc = "无风";
+                    if (win_s_inst_D >= 0 && win_s_inst_D < 0.3) {
+                        windDesc = "无风";
+                    } else if (win_s_inst_D >= 0.3 && win_s_inst_D < 3.4) {
+                        windDesc = "微风";
+                    } else if (win_s_inst_D >= 3.4 && win_s_inst_D < 5.5) {
+                        windDesc = "软风";
+                    } else if (win_s_inst_D >= 5.5 && win_s_inst_D < 8.0) {
+                        windDesc = "和风";
+                    } else if (win_s_inst_D >= 8.0 && win_s_inst_D < 10.8) {
+                        windDesc = "青劲风";
+                    } else if (win_s_inst_D >= 10.8 && win_s_inst_D < 13.9) {
+                        windDesc = "强风";
+                    } else if (win_s_inst_D >= 13.9 && win_s_inst_D < 17.2) {
+                        windDesc = "疾风";
+                    } else if (win_s_inst_D >= 17.2 && win_s_inst_D < 20.8) {
+                        windDesc = "大风";
+                    } else if (win_s_inst_D >= 20.8 && win_s_inst_D < 24.5) {
+                        windDesc = "烈风";
+                    } else if (win_s_inst_D >= 24.5 && win_s_inst_D < 28.5) {
+                        windDesc = "狂风";
+                    } else {
+                        windDesc = "飓风";
+                    }
+                    fsData.setText(windDesc);
 
                 }, throwable -> {
                     LogUtils.e(throwable);
-//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
 
@@ -273,6 +362,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
 //    }
 
     public void getTestData1() {
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = df.format(System.currentTimeMillis());
         RetrofitHelper.getWeatherMonitorAPI()
@@ -284,37 +374,19 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                     List<GdybBeen.DataBean> data = gdybBeen.getData();
                     LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                     mAdapter = new WeathMainAdapter(context, data);
-
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(mAdapter);
 
-
                 }, throwable -> {
                     LogUtils.e(throwable);
-//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
 
-
-//        FullyLinearLayoutManager layoutManagerVertical = new FullyLinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-//
-//        List<BdybBeen.DataBean.YbListBean>  mData2 = new ArrayList<>();
-//
-//        for (int i = 0; i < mData1.size(); i++) {
-//            int foretime = mData1.get(i).getForetime();
-//            if(foretime%24==0){
-//                mData2.add(mData1.get(i));
-//            }
-//        }
-//
-//        bdybRecycle.setLayoutManager(layoutManagerVertical);
-//  mbdybAdapter = new WeathMainBdybAdapter(context,,mData2);
-//        bdybRecycle.setAdapter(mbdybAdapter);
-//        bdybRecycle.setHasFixedSize(true);
-//        bdybRecycle.setNestedScrollingEnabled(false);
     }
 
 
     public void getTestData2() {
+        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = df.format(System.currentTimeMillis());
         RetrofitHelper.getWeatherMonitorAPI()
@@ -331,8 +403,10 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                     bdybRecycle.setAdapter(mbdybAdapter);
                     bdybRecycle.setHasFixedSize(true);
                     bdybRecycle.setNestedScrollingEnabled(false);
+                    progressDialog.dismiss();
 
                 }, throwable -> {
+                    progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort("没查询到数据");
                 });
@@ -362,15 +436,16 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                             bd_tqtp.setImageBitmap(bitmap);
                         }
                     }
+
                 }, throwable -> {
                     LogUtils.e(throwable);
-//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
 
     }
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+        loc.setText(regeocodeResult.getRegeocodeAddress().getAois().get(0).getAoiName());
         city = regeocodeResult.getRegeocodeAddress().getCity();
         getTestData3();
     }

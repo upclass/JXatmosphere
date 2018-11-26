@@ -36,7 +36,7 @@ public class GdybBeen {
         return errcode;
     }
 
-    public void setErrcode(String errcode) {
+    public void setErrcode(String errsssssssssscode) {
         this.errcode = errcode;
     }
 

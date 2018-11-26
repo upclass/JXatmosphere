@@ -1,12 +1,16 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -35,6 +39,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
@@ -62,6 +67,7 @@ import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.GkdmClickBeen;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.PicUtils;
+import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 import net.univr.pushi.jxatmosphere.utils.ThreadUtil;
 
 import java.text.ParseException;
@@ -125,6 +131,9 @@ public class DsljybGaodeActivity extends BaseActivity implements
     List<String> overLayerUrls;
     GroundOverlay groundOverlay;
     private GeocodeSearch geocoderSearch;
+    @BindView(R.id.now_position)
+    ImageView now_position;
+    MyLocationStyle myLocationStyle;
 
     @Override
     public int getLayoutId() {
@@ -137,8 +146,8 @@ public class DsljybGaodeActivity extends BaseActivity implements
         mMapView.onCreate(savedInstanceState);
         mAMap = mMapView.getMap();
         getProvinceFanWei();
-        initLocation();
         initView();
+        initLocation();
     }
 
 
@@ -296,15 +305,20 @@ public class DsljybGaodeActivity extends BaseActivity implements
 
 
     private void initLocation() {
-        mlocationClient = new AMapLocationClient(this);
-        mLocationOption = new AMapLocationClientOption();
-        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(1000);
-        mLocationOption.setOnceLocation(true);
-        mlocationClient.setLocationOption(mLocationOption);
-        mlocationClient.startLocation();
+        if (ShipeiUtils.isLocationEnabled(context)) {
+            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_location));
+            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE));
+            if (marker != null)
+                marker.destroy();
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位间隔,单位毫秒,默认为2000ms
+            mLocationOption.setInterval(1000);
+            mLocationOption.setOnceLocation(true);
+            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.startLocation();
 
 //        MyLocationStyle myLocationStyle;
 //        myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
@@ -312,34 +326,60 @@ public class DsljybGaodeActivity extends BaseActivity implements
 //        mAMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //        mAMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
-        //设置定位监听
-        mlocationClient.setLocationListener(new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                if (aMapLocation != null) {
-                    if (aMapLocation.getErrorCode() == 0) {
-                        city.setText(aMapLocation.getCity());
-                        town.setText(aMapLocation.getDistrict());
-                        didian.setText(aMapLocation.getAoiName());
-                        x = aMapLocation.getLatitude();//获取纬度
-                        y = aMapLocation.getLongitude();//获取经度
-                        LatLng latLng = new LatLng(x, y);
-                        addMarkersToMap(latLng);
-                        getDsljyb();
+            //设置定位监听
+            mlocationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    if (aMapLocation != null) {
+                        if (aMapLocation.getErrorCode() == 0) {
+                            city.setText(aMapLocation.getCity());
+                            town.setText(aMapLocation.getDistrict());
+                            didian.setText(aMapLocation.getAoiName());
+                            x = aMapLocation.getLatitude();//获取纬度
+                            y = aMapLocation.getLongitude();//获取经度
+                            LatLng latLng = new LatLng(x, y);
+//                        addMarkersToMap(latLng);
+                            //启用定位蓝点
+                            mAMap.setMyLocationEnabled(true);
+                            getDsljyb();
 
-                    } else {
-                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Log.e("AmapError", "location Error, ErrCode:"
-                                + aMapLocation.getErrorCode() + ", errInfo:"
-                                + aMapLocation.getErrorInfo());
+                        } else {
+                            //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                            Log.e("AmapError", "location Error, ErrCode:"
+                                    + aMapLocation.getErrorCode() + ", errInfo:"
+                                    + aMapLocation.getErrorInfo());
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            //取消定位蓝点
+            mAMap.setMyLocationEnabled(false);
+            AlertDialog alertDialog2 = new AlertDialog.Builder(this)
+                    .setMessage("是否开启位置信息")
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+
+                    .setNegativeButton("否", new DialogInterface.OnClickListener() {//添加取消
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .create();
+            alertDialog2.show();
+        }
+
 
     }
 
     private void initView() {
+
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
         mAMap.setOnMapClickListener(this);
@@ -377,6 +417,14 @@ public class DsljybGaodeActivity extends BaseActivity implements
                 getDsljybSum();
                 initRecycleView();
                 select = "sum";
+            }
+        });
+        myLocationStyle = new MyLocationStyle();
+        now_position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                initLocation();
             }
         });
         WebSettings webSettings = mWebView.getSettings();
@@ -479,6 +527,8 @@ public class DsljybGaodeActivity extends BaseActivity implements
         y = point.longitude;
         if (select.equals("now")) getDsljyb();
         else if (select.equals("sum")) getDsljybSum();
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+        mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE));
     }
 
     @Override

@@ -1,27 +1,25 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -36,6 +34,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
@@ -53,27 +52,26 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.github.abel533.echarts.axis.AxisLabel;
-import com.github.abel533.echarts.axis.CategoryAxis;
-import com.github.abel533.echarts.axis.SplitLine;
-import com.github.abel533.echarts.axis.ValueAxis;
-import com.github.abel533.echarts.code.Trigger;
-import com.github.abel533.echarts.json.GsonOption;
-import com.github.abel533.echarts.series.Line;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.PiaoGeAdapter;
 import net.univr.pushi.jxatmosphere.adapter.SimpleAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybSearchBeen;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 import net.univr.pushi.jxatmosphere.utils.ThreadUtil;
 import net.univr.pushi.jxatmosphere.utils.ViewUtil;
+import net.univr.pushi.jxatmosphere.widget.FutureDaysChart;
+import net.univr.pushi.jxatmosphere.widget.ScrollFutureDaysWeatherView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -81,22 +79,14 @@ import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static net.univr.pushi.jxatmosphere.adapter.WeathMainAdapter.initWeathTuPianJson;
+
 public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListener, DistrictSearch.OnDistrictSearchListener, AMap.OnMapClickListener, GeocodeSearch.OnGeocodeSearchListener {
 
-    @BindView(R.id.webView)
-    WebView mWebView;
-    @BindView(R.id.tuxin_tv)
-    TextView tuxin_tv;
-    @BindView(R.id.biaoge_tv)
-    TextView biaoge_tv;
-    @BindView(R.id.scroll)
-    HorizontalScrollView scrollView;
-    @BindView(R.id.recycle)
-    RecyclerView recyclerView;
-    PiaoGeAdapter adapter;
+
     ProgressDialog dialog = null;
-    @BindView(R.id.start_forecast_time)
-    TextView start_forecast_time;
+    @BindView(R.id.forecast_time)
+    TextView forecast_time;
     @BindView(R.id.one_hour)
     TextView one_hour;
     @BindView(R.id.three_hour)
@@ -105,12 +95,13 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     TextView six_hour;
     @BindView(R.id.twelve_hour)
     TextView twelve_hour;
+    @BindView(R.id.twentyfour_hour)
+    TextView twentyfour_hour;
     @BindView(R.id.gd_dizhi)
     EditText sousuo_tv;
     @BindView(R.id.search_info)
     TextView search_info;
-    @BindView(R.id.twentyfour_hour)
-    TextView twentyfour_hour;
+
     @BindView(R.id.province)
     TextView province;
     @BindView(R.id.city)
@@ -121,22 +112,14 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     ImageView back;
     @BindView(R.id.mapview)
     MapView mapView;
-    @BindView(R.id.weizhi_relative)
-    RelativeLayout weizhiRelative;
-    @BindView(R.id.content)
-    LinearLayout content;
     @BindView(R.id.delete)
     ImageView delete;
     public AMapLocationClient mlocationClient;
     public AMapLocationClientOption mLocationOption;
     private GeocodeSearch geocoderSearch;
+    private MyLocationStyle myLocationStyle;
 
     String interval = "1";
-    private Object times[];
-    private Object temps[];
-    private Object rains[];
-    private Object winds[];
-    private Object humiditys[];
     private List<GdybBeen.DataBean> data = new ArrayList<>();
     Double x;
     Double y;
@@ -148,7 +131,23 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
 
     AMap mAMap;
     Marker marker;
-    Boolean selectItem=false;
+    //poi搜索的条目是否点击了，点击文字覆盖在搜索框，不调用文字变化
+    Boolean selectItem = false;
+    //是否点击了地图
+    Boolean clickMap = false;
+
+
+    ScrollFutureDaysWeatherView scrollFutureDaysWeatherView;
+    private FutureDaysChart futureDaysChart;
+    @BindView(R.id.content)
+    LinearLayout content;
+    @BindView(R.id.myScrollView)
+    HorizontalScrollView horizontalScrollView;
+    @BindView(R.id.now_position)
+    ImageView nowPosition;
+
+
+
 
     @Override
     public int getLayoutId() {
@@ -161,8 +160,6 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
         initView(savedInstanceState);
         getJiangxiFanwei();
         initLocation();
-        tuxin_tv.setOnClickListener(this);
-        biaoge_tv.setOnClickListener(this);
         one_hour.setOnClickListener(this);
         three_hour.setOnClickListener(this);
         six_hour.setOnClickListener(this);
@@ -171,55 +168,28 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
         back.setOnClickListener(this);
         delete.setOnClickListener(this);
         search_info.setOnClickListener(this);
+        nowPosition.setOnClickListener(this);
 
     }
 
 
     private void initView(Bundle savedInstanceState) {
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
         mapView.onCreate(savedInstanceState);
         mAMap = mapView.getMap();
+        myLocationStyle = new MyLocationStyle();
         mAMap.getUiSettings().setRotateGesturesEnabled(false);
         mAMap.getUiSettings().setZoomControlsEnabled(false);
         mAMap.setOnMapClickListener(this);
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
-//        mWebView.getSettings().setBuiltInZoomControls(false);
-//        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-//        webSettings.setSupportZoom(false);
-//        webSettings.setDisplayZoomControls(false);
-//        webSettings.setBlockNetworkLoads(false);
-//        webSettings.setAllowFileAccess(true);
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int mDensity = metrics.densityDpi;
-        if (mDensity == 120) {
-            webSettings.setDefaultZoom(WebSettings.ZoomDensity.CLOSE);
-        } else if (mDensity == 160) {
-            webSettings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
-        } else if (mDensity == 240) {
-            webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
-        }
-        //自适应屏幕
-//        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-//        webSettings.setUseWideViewPort(true);
-//        webSettings.setLoadWithOverviewMode(true);
-//        mWebView.setInitialScale(200);
-        mWebView.setVerticalScrollBarEnabled(false);//允许垂直滚动
-        mWebView.addJavascriptInterface(new GdybGaoDeActivity.WebAppInterface(this), "Android");
-//        mWebView.setHorizontalScrollBarEnabled(false);//禁止水平滚动
-
         sousuo_tv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!selectItem){
+                if (!selectItem) {
                     String s1 = s.toString();
                     PoiSearch.Query query = new PoiSearch.Query(s1, "", "360000");
                     query.setPageSize(20);
@@ -264,57 +234,137 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getTestdata() {
-        weizhiRelative.setVisibility(View.VISIBLE);
-        content.setVisibility(View.VISIBLE);
         dialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
         dialog.setCancelable(true);
-        start_forecast_time.setText(initForecastTime());
+        content.setVisibility(View.VISIBLE);
+        if (ShipeiUtils.isLocationEnabled(context)) {
+            ;
+        } else {
+            //取消定位蓝点
+            mAMap.setMyLocationEnabled(false);
+        }
         RetrofitHelper.getWeatherMonitorAPI()
-//                .getGdyb("114.25781250000001", "27.800209937418252", interval, "bd09ll", initForecastTime())
                 .getGdyb(String.valueOf(x), String.valueOf(y), interval, "bd09ll", initForecastTime())
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybBeen -> {
                     data = gdybBeen.getData();
+                    forecast_time.setText(initForecastTime());
                     province.setText(gdybBeen.getLocation().getProvince());
                     city.setText(gdybBeen.getLocation().getCity());
                     town.setText(gdybBeen.getLocation().getDistrict());
-//                    if(isClickToLocation){
-//                        sousuo_tv.setText(gdybBeen.getLocation().getDistrict());
-//                        sousuo_tv.setSelection(sousuo_tv.getText().toString().length());
-//                    }
+                    //移除之前的天气控件
+                    horizontalScrollView.removeAllViews();
 
-//                    isClickToLocation=true;
-                    getadapter().setNewData(data);
-                    times = new Object[data.size()];
-                    temps = new Object[data.size()];
-                    rains = new Object[data.size()];
-                    winds = new Object[data.size()];
-                    humiditys = new Object[data.size()];
-                    for (int i = 0; i < data.size(); i++) {
-                        GdybBeen.DataBean dataBean = data.get(i);
-                        String forecastTime = dataBean.getForecastTime();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    //点击地图位置设置在搜索框，切不触发文字监听
+                    if (clickMap) {
+                        LatLonPoint latLonPoint = new LatLonPoint(y, x);
+                        getAddress(latLonPoint);
+                    }
+                    clickMap = false;
+
+                    if (data.size() == 0) {
+                        dialog.dismiss();
+                        return;
+                    }
+                    scrollFutureDaysWeatherView = new ScrollFutureDaysWeatherView(context, null, 0, data.size());
+                    futureDaysChart = scrollFutureDaysWeatherView.getSevenDaysChart();
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) horizontalScrollView.getLayoutParams();
+                    params.width = HorizontalScrollView.LayoutParams.MATCH_PARENT;
+                    params.height = HorizontalScrollView.LayoutParams.MATCH_PARENT;
+                    horizontalScrollView.addView(scrollFutureDaysWeatherView, params);
+
+                    futureDaysChart.setDatas(data);
+                    List<View> viewList = scrollFutureDaysWeatherView.getAllViews();
+                    for (int i = 0; i < viewList.size(); i++) {
+                        View view = viewList.get(i);
+                        TextView day = view.findViewById(R.id.day);
+                        TextView hour = view.findViewById(R.id.hour);
+                        TextView weather_desc = view.findViewById(R.id.weather_desc);
+                        ImageView weather_img = view.findViewById(R.id.weather_img);
+                        TextView rainfall = view.findViewById(R.id.rainfall);
+                        TextView wind = view.findViewById(R.id.wind);
+                        TextView xdsd = view.findViewById(R.id.xdsd);
+                        //设置日期
+                        String forecastTime = data.get(i).getForecastTime();
+
+                        if (forecastTime.length() <= 18) {
+                            StringBuilder builder = new StringBuilder(forecastTime);
+                            builder.insert(11, 0);
+                            forecastTime = builder.toString();
+                        }
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                        Calendar calendar = Calendar.getInstance();
                         try {
-                            Date date = format.parse(forecastTime);
-                            String shijian = date.getDate() + "日" + date.getHours() + "时";
-                            times[i] = shijian;
+                            Date forecastDate = simpleDateFormat.parse(forecastTime);
+                            calendar.setTime(forecastDate);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+                        day.setText(calendar.get(Calendar.MONTH) + 1 + "/" + calendar.get(Calendar.DAY_OF_MONTH));
+                        //设置小时
+                        if (interval.equals("24")) {
+                            hour.setVisibility(View.INVISIBLE);
+                        } else if (interval.equals("12")) {
+                            if (hour.getVisibility() == View.INVISIBLE)
+                                hour.setVisibility(View.VISIBLE);
+                            if (calendar.get(Calendar.HOUR_OF_DAY) <= 12)
+                                hour.setText("上午");
+                            else hour.setText("下午");
+                        } else {
+                            if (hour.getVisibility() == View.INVISIBLE)
+                                hour.setVisibility(View.VISIBLE);
+                            hour.setText(calendar.get(Calendar.HOUR_OF_DAY) + "时");
+                        }
+                        weather_desc.setText(data.get(i).getWeatherDesc());
+                        //得到天气图片
+                        String tqxx = data.get(i).getWeatherDesc();
+                        String picBiaoJi = "";
+                        JsonArray jsonElements = initWeathTuPianJson();
+                        for (int j = 0; j < jsonElements.size(); j++) {
+                            JsonObject jsonObject = jsonElements.get(j).getAsJsonObject();
+                            JsonElement picInfo = jsonObject.get("name");
+                            if (picInfo.getAsString().equals(tqxx)) {
+                                picBiaoJi = jsonObject.get("image").getAsString();
+                                break;
+                            } else continue;
+                        }
+                        String imageName = picBiaoJi;
+                        weather_img.setImageResource(getResource(imageName));
+                        //设置降雨量
+                        rainfall.setText(data.get(i).getRain());
+                        //设置风速
+                        Double windSpeed = Double.valueOf(data.get(i).getWindSpeed());
+                        String windSpeedStr = "";
+                        if (windSpeed >= 0 && windSpeed < 0.3) {
+                            windSpeedStr = "无风";
+                        } else if (windSpeed >= 0.3 && windSpeed < 3.4) {
+                            windSpeedStr = "微风";
+                        } else if (windSpeed >= 3.4 && windSpeed < 5.5) {
+                            windSpeedStr = "软风";
+                        } else if (windSpeed >= 5.5 && windSpeed < 8.0) {
+                            windSpeedStr = "和风";
+                        } else if (windSpeed >= 8.0 && windSpeed < 10.8) {
+                            windSpeedStr = "青劲风";
+                        } else if (windSpeed >= 10.8 && windSpeed < 13.9) {
+                            windSpeedStr = "强风";
+                        } else if (windSpeed >= 13.9 && windSpeed < 17.2) {
+                            windSpeedStr = "疾风";
+                        } else if (windSpeed >= 17.2 && windSpeed < 20.8) {
+                            windSpeedStr = "大风";
+                        } else if (windSpeed >= 20.8 && windSpeed < 24.5) {
+                            windSpeedStr = "烈风";
+                        } else if (windSpeed >= 24.5 && windSpeed < 28.5) {
+                            windSpeedStr = "狂风";
+                        } else {
+                            windSpeedStr = "飓风";
+                        }
+                        wind.setText(windSpeedStr);
+                        //设置相对湿度
+                        xdsd.setText(data.get(i).getHumidity());
+                    }
 
-                        temps[i] = dataBean.getTemper();
-                        rains[i] = dataBean.getRain();
-                        winds[i] = dataBean.getWindSpeed();
-                        humiditys[i] = dataBean.getHumidity();
-                    }
-                    if (scrollView.getVisibility() == View.VISIBLE) {
-                        int width = 250 * (data.size());
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.MATCH_PARENT);
-                        mWebView.setLayoutParams(lp);
-                    }
-                    mWebView.loadUrl("file:///android_asset/jsWeb/echart.html");
                     dialog.dismiss();
                 }, throwable -> {
                     dialog.dismiss();
@@ -323,6 +373,14 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
                 });
 
     }
+
+    public int getResource(String imageName) {
+        Context ctx = ((Activity) context).getBaseContext();
+        int resId = context.getResources().getIdentifier(imageName, "drawable", ctx.getPackageName());
+        //如果没有在"mipmap"下找到imageName,将会返回0
+        return resId;
+    }
+
 
     private String initForecastTime() {
         String destTimeString;
@@ -348,20 +406,6 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tuxin_tv:
-                scrollView.setVisibility(View.VISIBLE);
-                tuxin_tv.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1_select));
-                tuxin_tv.setTextColor(getResources().getColor(R.color.white));
-                biaoge_tv.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
-                biaoge_tv.setTextColor(getResources().getColor(R.color.toolbar_color));
-                break;
-            case R.id.biaoge_tv:
-                scrollView.setVisibility(View.GONE);
-                tuxin_tv.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
-                tuxin_tv.setTextColor(getResources().getColor(R.color.toolbar_color));
-                biaoge_tv.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3_select));
-                biaoge_tv.setTextColor(getResources().getColor(R.color.white));
-                break;
             case R.id.one_hour:
                 interval = "1";
                 one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1_select));
@@ -436,8 +480,13 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.delete:
-                weizhiRelative.setVisibility(View.GONE);
                 content.setVisibility(View.GONE);
+                break;
+            case R.id.now_position:
+                if (marker != null)
+                    marker.destroy();
+
+                initLocation();
                 break;
             case R.id.search_info:
                 ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(GdybGaoDeActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -485,7 +534,7 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
             simpleAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
                 @Override
                 public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                    selectItem=true;
+                    selectItem = true;
                     GdybSearchBeen gdybSearchBeen = (GdybSearchBeen) adapter.getData().get(position);
                     sousuo_tv.setText(gdybSearchBeen.getTitle());
                     recyclerView_search.setVisibility(View.GONE);
@@ -495,11 +544,13 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
                     Double lon = gdybSearchBeen.getLon();
                     x = lon;
                     y = lat;
-                    if(marker!=null)marker.destroy();
-                    addMarkersToMap(new LatLng(y,x));
-                    getAddress(new LatLonPoint(y,x));
+                    if (marker != null) marker.destroy();
+                    addMarkersToMap(new LatLng(y, x));
+//                    getAddress(new LatLonPoint(y, x));
                     getTestdata();
-                    selectItem=false;
+                    selectItem = false;
+                    myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+                    mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE));
                 }
             });
             LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -574,12 +625,16 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
         if (rCode == AMapException.CODE_AMAP_SUCCESS) {
             if (result != null && result.getRegeocodeAddress() != null
                     && result.getRegeocodeAddress().getFormatAddress() != null) {
-                city.setText(result.getRegeocodeAddress().getCity());
-                town.setText(result.getRegeocodeAddress().getDistrict());
-                province.setText(result.getRegeocodeAddress().getTownship());
+//                city.setText(result.getRegeocodeAddress().getCity());
+//                town.setText(result.getRegeocodeAddress().getDistrict());
+//                province.setText(result.getRegeocodeAddress().getTownship());
+                selectItem = true;
+                sousuo_tv.setText(result.getRegeocodeAddress().getTownship());
+                selectItem = false;
             } else {
                 ToastUtils.showShort("没查询到位置");
             }
+
         } else {
             ToastUtils.showShort(rCode);
         }
@@ -590,79 +645,6 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
 
     }
 
-
-    /**
-     * 注入到JS里的对象接口
-     */
-    class WebAppInterface {
-        Context mContext;
-
-        public WebAppInterface(Context c) {
-            mContext = c;
-        }
-
-        /**
-         * 获取
-         *
-         * @return
-         */
-        @JavascriptInterface
-        public String getLineChartOptions() {
-            GsonOption option = markLineChartOptions();
-            return option.toString();
-        }
-
-
-        @JavascriptInterface
-        public GsonOption markLineChartOptions() {
-            GsonOption option = new GsonOption();
-            option.calculable(false);
-            option.tooltip().trigger(Trigger.axis).formatter("气温:{c}℃ <br/> 降雨量:{c1}cm <br/>风速:{c2}m/s<br/>相对湿度:{c3}%");
-            //设置位置左上右下边距
-            option.grid().x(34);
-            option.grid().y(20);
-            ValueAxis valueAxis = new ValueAxis();
-            valueAxis.setSplitNumber(4);
-            option.yAxis(valueAxis);
-
-
-            CategoryAxis categoryAxis = new CategoryAxis();
-            categoryAxis.axisLine().onZero(false);
-            categoryAxis.boundaryGap(false);
-
-            //每个数据点都绘制
-            AxisLabel axisLabel = categoryAxis.axisLabel();
-            axisLabel.setInterval(0);
-            categoryAxis.data(times);
-            SplitLine splitLine1 = categoryAxis.splitLine();
-            //分个坐标轴的线是否有
-            splitLine1.show(false);
-            option.xAxis(categoryAxis);
-            Line line1 = new Line();
-            line1.smooth(true).data(temps).itemStyle().normal().lineStyle().shadowColor("rgba(6,7,2,9.4)");
-            Line line2 = new Line();
-            line2.smooth(true).data(rains).itemStyle().normal().lineStyle().shadowColor("rgba(3,2,2,2.7)");
-            Line line3 = new Line();
-            line3.smooth(true).data(winds).itemStyle().normal().lineStyle().shadowColor("rgba(4,3,8,2.7)");
-            Line line4 = new Line();
-            line4.smooth(true).data(humiditys).itemStyle().normal().lineStyle().shadowColor("rgba(5,1,2,4.7)");
-            option.series(line1, line2, line3, line4);
-            return option;
-        }
-    }
-
-    PiaoGeAdapter getadapter() {
-        if (adapter == null) {
-            LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(manager);
-            adapter = new PiaoGeAdapter(data);
-            LayoutInflater inflater = getLayoutInflater();
-            View inflate = inflater.inflate(R.layout.gdyb_recycle_header, (ViewGroup) recyclerView.getParent(), false);
-            adapter.addHeaderView(inflate, 0, LinearLayout.HORIZONTAL);
-            recyclerView.setAdapter(adapter);
-        }
-        return adapter;
-    }
 
     //得到江西省范围
     private void getJiangxiFanwei() {
@@ -714,39 +696,82 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initLocation() {
-        mlocationClient = new AMapLocationClient(this);
-        mLocationOption = new AMapLocationClientOption();
-        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(1000);
-        mLocationOption.setOnceLocation(true);
-        mlocationClient.setLocationOption(mLocationOption);
-        mlocationClient.startLocation();
-        //设置定位监听
-        mlocationClient.setLocationListener(new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                if (aMapLocation != null) {
-                    if (aMapLocation.getErrorCode() == 0) {
-                        city.setText(aMapLocation.getCity());
-                        town.setText(aMapLocation.getDistrict());
-                        province.setText(aMapLocation.getProvince());
-                        x =aMapLocation.getLongitude() ;//获取经度
-                        y = aMapLocation.getLatitude();//获取纬度
-                        LatLng latLng = new LatLng(y, x);
-                        addMarkersToMap(latLng);
-                        getTestdata();
+        if (ShipeiUtils.isLocationEnabled(context)) {
+            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_location));
+            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE));
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位间隔,单位毫秒,默认为2000ms
+            mLocationOption.setInterval(1000);
+            mLocationOption.setOnceLocation(true);
+            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.startLocation();
 
-                    } else {
-                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Log.e("AmapError", "location Error, ErrCode:"
-                                + aMapLocation.getErrorCode() + ", errInfo:"
-                                + aMapLocation.getErrorInfo());
+            //设置定位监听
+            mlocationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    if (aMapLocation != null) {
+                        if (aMapLocation.getErrorCode() == 0) {
+                            //启用定位蓝点
+                            mAMap.setMyLocationEnabled(true);
+//                        city.setText(aMapLocation.getCity());
+//                        town.setText(aMapLocation.getDistrict());
+//                        province.setText(aMapLocation.getProvince());
+                            x = aMapLocation.getLongitude();//获取经度
+                            y = aMapLocation.getLatitude();//获取纬度
+//                        LatLng latLng = new LatLng(y, x);
+//                        addMarkersToMap(latLng);
+                            getTestdata();
+                            selectItem = true;
+                            sousuo_tv.setText(aMapLocation.getAoiName());
+//                        Log.i("location",aMapLocation.toString());
+                            selectItem = false;
+                        } else {
+
+                            //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                            Log.e("AmapError", "location Error, ErrCode:"
+                                    + aMapLocation.getErrorCode() + ", errInfo:"
+                                    + aMapLocation.getErrorInfo());
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            //取消定位蓝点
+            mAMap.setMyLocationEnabled(false);
+            //移除之前的数据
+            forecast_time.setText("                                   ");
+            province.setText("");
+            city.setText("");
+            town.setText("");
+            selectItem = true;
+            sousuo_tv.setText("");
+            selectItem = false;
+            horizontalScrollView.removeAllViews();
+
+            AlertDialog alertDialog2 = new AlertDialog.Builder(this)
+                    .setMessage("是否开启位置信息")
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+
+                    .setNegativeButton("否", new DialogInterface.OnClickListener() {//添加取消
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .create();
+            alertDialog2.show();
+        }
+
 
     }
 
@@ -759,14 +784,17 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onMapClick(LatLng point) {
-        LatLonPoint latLonPoint = new LatLonPoint(point.latitude, point.longitude);
-        getAddress(latLonPoint);
+//        LatLonPoint latLonPoint = new LatLonPoint(point.latitude, point.longitude);
+//        getAddress(latLonPoint);
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+        mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE));
         if (marker != null)
             marker.destroy();
         addMarkersToMap(point);
         x = point.longitude;
         y = point.latitude;
-       getTestdata();
+        clickMap = true;
+        getTestdata();
     }
 
 
@@ -780,7 +808,7 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     }
 
     //江西省居中显示
-    private void centerJiangxi(){
+    private void centerJiangxi() {
         LatLngBounds bounds = new LatLngBounds.Builder()
                 .include(new LatLng(24.43704147338867, 118.68101043701172))
                 .include(new LatLng(30.1299808502, 113.52340240478516)).build();
