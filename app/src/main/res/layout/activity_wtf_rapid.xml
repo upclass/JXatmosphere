@@ -85,7 +85,7 @@
                     style="@style/two_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="快速循环同化"
+                    android:text="中尺度72小时预报"
                     android:textColor="@color/white" />
             </LinearLayout>
 

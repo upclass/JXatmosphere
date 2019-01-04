@@ -45,7 +45,10 @@ import net.univr.pushi.jxatmosphere.utils.ExStaggeredGridLayoutManager;
 import net.univr.pushi.jxatmosphere.utils.PicUtils;
 import net.univr.pushi.jxatmosphere.widget.CustomViewPager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -235,9 +238,11 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 ctype = "Precipitation_1h";
                 uiHandler.removeCallbacksAndMessages(null);
                 getTwoMenu();
-                if (selectTime.equals("")) getTestdata();
-                else getTestDataBytime(selectTime);
+//                if (selectTime.equals("")) getTestdata();
+//                else getTestDataBytime(selectTime);
+                getTestdata();//取最新的数据
                 getAdapter1().setLastposition(0);
+                getOneTime();
 //                fragment1.isStart = false;
 //                MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
 //                fragment1.multitemList.set(0, multiItemGdybTx);
@@ -253,9 +258,11 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 ctype = "Precipitation_3h";
                 uiHandler.removeCallbacksAndMessages(null);
                 getTwoMenu();
-                if (selectTime.equals("")) getTestdata();
-                else getTestDataBytime(selectTime);
+//                if (selectTime.equals("")) getTestdata();
+//                else getTestDataBytime(selectTime);
+                getTestdata();
                 getAdapter1().setLastposition(0);
+                getOneTime();
 
 //                fragment.isStart = false;
 //                MultiItemGdybTx multiItemGdybTx1 = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
@@ -267,7 +274,8 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.reload:
                 PicUtils.deleteDir(type + "/" + ctype);
-                getTestDataBytime(selectTime);
+                //selectTime减8小时，之前显示加了8小时
+                getTestDataBytime(timeMinusHour(-8,selectTime));
                 break;
         }
 
@@ -308,7 +316,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                     isStart = false;
                     uiHandler.removeCallbacksAndMessages(null);
                     popupWindow.dismiss();
-                    getTestDataBytime(menuTime.get(position));
+                    getTestDataBytime( timeMinusHour(-8,menuTime.get(position)));
                     selectTime = menuTime.get(position);
                     time.setText(menuTime.get(position));
                     oneMenu = true;
@@ -350,6 +358,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 });
     }
 
+    //默认选中二级时间
     private void getTwoTime(String param) {
         RetrofitHelper.getDataForecastAPI()
                 .getDataForecastContentBytime1(type, param)
@@ -357,7 +366,13 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timeTwoMenu -> {
-                    twoTime = timeTwoMenu.getData();
+                    //把返回时间设置为世界时间
+                    List<String> data = timeTwoMenu.getData();
+                    for (int i = 0; i < data.size(); i++) {
+                        String worldTimeStr= timeMinusHour(8, data.get(i));
+                        data.set(i,worldTimeStr);
+                    }
+                    twoTime = data;
                     if (twoTime == null || twoTime.size() == 0) {
 //                        ToastUtils.showShort("没查询到二级时间菜单");
                     } else {
@@ -369,7 +384,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 });
     }
 
-
+    //供ListPopowindows使用
     private void getTwoTime1(String param) {
         RetrofitHelper.getDataForecastAPI()
                 .getDataForecastContentBytime1(type, param)
@@ -377,7 +392,12 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timeTwoMenu -> {
-                    twoTime = timeTwoMenu.getData();
+                    List<String> data = timeTwoMenu.getData();
+                    for (int i = 0; i < data.size(); i++) {
+                        String worldTimeStr= timeMinusHour(8, data.get(i));
+                        data.set(i,worldTimeStr);
+                    }
+                    twoTime = data;
                     menuTime.clear();
                     for (int i = 0; i < twoTime.size(); i++) {
                         menuTime.add(twoTime.get(i));
@@ -468,7 +488,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 }
                 if (selectTime.equals(""))
                     getTestdata();
-                else getTestDataBytime(selectTime);
+                else getTestDataBytime(timeMinusHour(-8,selectTime));
             });
         }
         return mAdapter1;
@@ -761,6 +781,21 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
     public void onDestroy() {
         super.onDestroy();
         uiHandler.removeCallbacksAndMessages(null);
+    }
+
+
+    public String timeMinusHour(int hour,String timeStr){
+        String worldTimeStr = null;
+        SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHH");
+        try {
+            Date parse = format.parse(timeStr);
+            long l = parse.getTime() + hour* 3600 * 1000;
+            Date worldTime=new Date(l);
+            worldTimeStr= format.format(worldTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return worldTimeStr;
     }
 
 }
