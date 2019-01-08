@@ -5,6 +5,7 @@ import net.univr.pushi.jxatmosphere.beens.BdybBeen;
 import net.univr.pushi.jxatmosphere.beens.DsljybBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybtxMenuBeen;
+import net.univr.pushi.jxatmosphere.beens.GdyutxTagBeen;
 import net.univr.pushi.jxatmosphere.beens.GeneforeBeen;
 import net.univr.pushi.jxatmosphere.beens.QxfxBeen;
 import net.univr.pushi.jxatmosphere.beens.RadarForecastBeen;
@@ -45,6 +46,14 @@ public interface ForecastWarn {
 
     @GET("gdyutxAction!getTwoMenu.do")
     Observable<GdybtxMenuBeen> getGdybtTwoMenu(@Query("type") String type);
+
+    //格点预报图形 早上、中午、下午、晚上 标签
+    @GET("gdyutxTagAction.do")
+    Observable<GdyutxTagBeen> getGdyutxTag(@Query("type") String type);
+
+    //格点预报图形根据type和tag获取材料
+    @GET("gdyutxTagDataAction.do")
+    Observable<GdybtxBeen> getGdyutxTagData(@Query("type") String type,@Query("tag")String tag);
 
 
     //本地实况

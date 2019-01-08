@@ -53,15 +53,13 @@
         android:id="@+id/viepager"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_weight="1"
-     ></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
+        android:layout_weight="1"></net.univr.pushi.jxatmosphere.widget.CustomViewPager>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/tine_black"
-        android:layout_marginBottom="4dp"/>
-
+        android:layout_marginBottom="4dp"
+        android:background="@color/tine_black" />
 
 
     <LinearLayout
@@ -74,11 +72,12 @@
             android:id="@+id/recycler3"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="16dp"
-            android:background="@color/white"
-            android:layout_marginBottom="4dp"></android.support.v7.widget.RecyclerView>
+            android:background="@color/white"></android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -96,16 +95,36 @@
 
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/tine_black" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/menu"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/time"
+            style="@style/two_title"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+            android:text="请选择时段"
+            android:textColor="@color/black" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/menu"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"></android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
 
 
 </LinearLayout>

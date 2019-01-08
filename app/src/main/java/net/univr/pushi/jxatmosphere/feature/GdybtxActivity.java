@@ -2,6 +2,7 @@ package net.univr.pushi.jxatmosphere.feature;
 
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,11 +11,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -65,6 +72,8 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
     RecyclerView mRecyclerView3;
     @BindView(R.id.menu)
     RecyclerView menuRecycleview;
+    @BindView(R.id.time)
+    TextView timeTag;
 
 //    private ArrayAdapter<String> spinAdapter;
 //    private List<String> oneMenu=new ArrayList<>();
@@ -91,6 +100,9 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
     List<Fragment> list = new ArrayList<>();
     MyPagerAdapter  viewPagerAdapter;
 
+    ListPopupWindow popupWindow;
+    private ArrayAdapter timeAdapter;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_gdybtx;
@@ -111,7 +123,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         type = "rain";
         testType = "rain12";
         getTwoMenu();
-
+        getTag(testType);
         CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override
             public void onDispatchDarken() {
@@ -147,7 +159,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 valueAnimator.start();
             }
         });
-
+        timeTag.setOnClickListener(this);
 
     }
 
@@ -200,8 +212,80 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 PicUtils.deleteDir("gdybtx/" + testType);
                 getTestdata();
                 break;
+            case R.id.time:
+                if(popupWindow!=null){
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }else {
+                        popupWindow.show();
+                    }
+                }else {
+                    Toast.makeText(context, "没查询到时段", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
 
+    }
+
+    //获得早上、中午、下午、晚上标签
+    public void getTag(String type){
+        RetrofitHelper.getForecastWarn()
+                .getGdyutxTag(type)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(gdybtxTag -> {
+                    List<String> data = gdybtxTag.getData();
+                    initSpinner(data);
+                    //选择第一个tag为初始值
+                    timeTag.setText(data.get(0));
+                },throwable -> {
+                    throwable.printStackTrace();
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
+    //根据tag和type去获取数据
+    public void getTagData(String type,String tag){
+        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
+        RetrofitHelper.getForecastWarn()
+                .getGdyutxTagData(type,tag)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(gdybtxBeen -> {
+                    progressDialog.dismiss();
+                    DisplayGdyutxData(gdybtxBeen);
+                },throwable -> {
+                    progressDialog.dismiss();
+                    throwable.printStackTrace();
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
+    private void initSpinner(List<String> data) {
+        popupWindow=new ListPopupWindow(context);
+        timeAdapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, data);
+        popupWindow.setAdapter(timeAdapter);
+        popupWindow.setAnchorView(timeTag);
+        popupWindow.setModal(true);
+        popupWindow.setWidth(220);   //WRAP_CONTENT会出错
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            popupWindow.setDropDownGravity(Gravity.END);
+        }
+        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayAdapter adapter = (ArrayAdapter) parent.getAdapter();
+                String item = (String) adapter.getItem(position);
+                getTagData(testType,item);
+                timeTag.setText(item);
+                popupWindow.dismiss();
+            }
+        });
     }
 
     public void getOneMenu() {
@@ -212,6 +296,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxOneMenu -> {
+                    progressDialog.dismiss();
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxOneMenu.getData().getMenu();
                     List<DmcgjcmenuBeen.DataBean> destmenu = new ArrayList<>();
                     for (int i = 0; i < menu.size(); i++) {
@@ -226,6 +311,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                     menuAdapter.setNewData(destmenu);
 
                 }, throwable -> {
+                    progressDialog.dismiss();
                     throwable.printStackTrace();
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
@@ -397,7 +483,9 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 if (type.equals("tcc") && menu.equals("逐24小时")) {
                     testType = "tcc24";
                 }
+                if(timeTag.equals("请选择时段"))
                 getTestdata();
+                else getTagData(testType,timeTag.getText().toString());
             });
         }
         return mAdapter1;
@@ -477,39 +565,48 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtx -> {
-                    GdybtxBeen.DataBean data = gdybtx.getData();
-                    List<String> timeList = new ArrayList<>();
-                    List<String> picListtemp = new ArrayList<>();
-
-                    for (int i = 0; i < gdybtx.getData().getTimeList().size(); i++) {
-                        timeList.add(gdybtx.getData().getTimeList().get(i));
-                        picListtemp.add(gdybtx.getData().getPicList().get(i));
-                    }
-                    data.setPicList(picListtemp);
-                    data.setTimeList(timeList);
-                    gdybtx.setData(data);
+                    DisplayGdyutxData(gdybtx);
+                }, throwable -> {
                     progressDialog.dismiss();
-                    recycle_skipto_position = 2;
-                    now_postion = 1;
-                    isStart = false;
-                    uiHandler.removeCallbacksAndMessages(null);
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+    }
+
+    private void DisplayGdyutxData(GdybtxBeen gdybtx) {
+        GdybtxBeen.DataBean data = gdybtx.getData();
+        List<String> timeList = new ArrayList<>();
+        List<String> picListtemp = new ArrayList<>();
+
+        for (int i = 0; i < gdybtx.getData().getTimeList().size(); i++) {
+            timeList.add(gdybtx.getData().getTimeList().get(i));
+            picListtemp.add(gdybtx.getData().getPicList().get(i));
+        }
+        data.setPicList(picListtemp);
+        data.setTimeList(timeList);
+        gdybtx.setData(data);
+        progressDialog.dismiss();
+        recycle_skipto_position = 2;
+        now_postion = 1;
+        isStart = false;
+        uiHandler.removeCallbacksAndMessages(null);
 //                    if (isStartPic != null) {
 //                        isStartPic.setImageResource(R.drawable.app_start);
 //                        mViewPager.setScanScroll(true);
 //                    }
-                    mViewPager.setScanScroll(true);
+        mViewPager.setScanScroll(true);
 
 //                    list = new ArrayList<>();
-                    List<String> picList = gdybtx.getData().getPicList();
-                    List<Fragment> fragmentHuancun = new ArrayList<>();
-                    for (int i = 0; i < list.size(); i++) {
-                        fragmentHuancun.add(list.get(i));
-                    }
-                    list.clear();
-                    for (int i = 0; i < picList.size(); i++) {
-                        PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(picList.get(i), picList, "gdybtx/" + testType);
-                        list.add(picLoadFragment);
-                    }
+        List<String> picList = gdybtx.getData().getPicList();
+        List<Fragment> fragmentHuancun = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            fragmentHuancun.add(list.get(i));
+        }
+        list.clear();
+        for (int i = 0; i < picList.size(); i++) {
+            PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(picList.get(i), picList, "gdybtx/" + testType);
+            list.add(picLoadFragment);
+        }
 //                    ArrayList<String> picTemp = new ArrayList<>();
 //                    for (int i = 0; i < picList.size(); i++) {
 //                        picTemp.add(picList.get(i));
@@ -527,70 +624,64 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 //                        });
 //                        list.add(imageView);
 //                    }
-                    viewPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), list, fragmentHuancun);
-                    // 绑定适配器
-                    mViewPager.setAdapter(viewPagerAdapter);
-                    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        viewPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), list, fragmentHuancun);
+        // 绑定适配器
+        mViewPager.setAdapter(viewPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                        }
+            }
 
-                        @Override
-                        public void onPageSelected(int position) {
-                            if (CallBackUtil.picdispath != null) {
-                                CallBackUtil.doDispathPic(position);
-                            }
-                            MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
-                            GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
-                            clickBeenStop.setOnclick(false);
-                            multiItemGdybTxStop.setContent(clickBeenStop);
-                            MultiItemGdybTx multiItemGdybTxNow = multitemList.get(position + 1);
-                            GkdmClickBeen clickBeenNow = multiItemGdybTxNow.getContent();
-                            clickBeenNow.setOnclick(true);
-                            multiItemGdybTxNow.setContent(clickBeenNow);
-                            multitemList.set(now_postion, multiItemGdybTxStop);
-                            multitemList.set(position + 1, multiItemGdybTxNow);
-                            mAdapter3.notifyItemChanged(now_postion);
-                            mAdapter3.notifyItemChanged(position + 1);
-                            now_postion = position + 1;
-                            mRecyclerView3.smoothScrollToPosition(position + 1);
-                            recycle_skipto_position = position + 2;
-                            if (recycle_skipto_position > multitemList.size() - 1)
-                                recycle_skipto_position = 1;
-                        }
+            @Override
+            public void onPageSelected(int position) {
+                if (CallBackUtil.picdispath != null) {
+                    CallBackUtil.doDispathPic(position);
+                }
+                MultiItemGdybTx multiItemGdybTxStop = multitemList.get(now_postion);
+                GkdmClickBeen clickBeenStop = multiItemGdybTxStop.getContent();
+                clickBeenStop.setOnclick(false);
+                multiItemGdybTxStop.setContent(clickBeenStop);
+                MultiItemGdybTx multiItemGdybTxNow = multitemList.get(position + 1);
+                GkdmClickBeen clickBeenNow = multiItemGdybTxNow.getContent();
+                clickBeenNow.setOnclick(true);
+                multiItemGdybTxNow.setContent(clickBeenNow);
+                multitemList.set(now_postion, multiItemGdybTxStop);
+                multitemList.set(position + 1, multiItemGdybTxNow);
+                mAdapter3.notifyItemChanged(now_postion);
+                mAdapter3.notifyItemChanged(position + 1);
+                now_postion = position + 1;
+                mRecyclerView3.smoothScrollToPosition(position + 1);
+                recycle_skipto_position = position + 2;
+                if (recycle_skipto_position > multitemList.size() - 1)
+                    recycle_skipto_position = 1;
+            }
 
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-                        }
-                    });
+            }
+        });
 
 
-                    List<String> time = gdybtx.getData().getTimeList();
-                    multitemList.clear();
-                    MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
-                    multitemList.add(multiItemGdybTx);
-                    for (int i = 0; i < time.size(); i++) {
+        List<String> time = gdybtx.getData().getTimeList();
+        multitemList.clear();
+        MultiItemGdybTx multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.IMG, R.drawable.app_start);
+        multitemList.add(multiItemGdybTx);
+        for (int i = 0; i < time.size(); i++) {
 
-                        GkdmClickBeen clickBeen = new GkdmClickBeen();
-                        if (i == 0)
-                            clickBeen.setOnclick(true);
-                        else clickBeen.setOnclick(false);
-                        clickBeen.setText(time.get(i));
+            GkdmClickBeen clickBeen = new GkdmClickBeen();
+            if (i == 0)
+                clickBeen.setOnclick(true);
+            else clickBeen.setOnclick(false);
+            clickBeen.setText(time.get(i));
 //                        mData3.add(clickBeen);
 
-                        multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, clickBeen);
-                        multitemList.add(multiItemGdybTx);
-                    }
-                    getAdapter3().setNewData(multitemList);
-                    //播放轮播
-
-                }, throwable -> {
-                    progressDialog.dismiss();
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
+            multiItemGdybTx = new MultiItemGdybTx(MultiItemGdybTx.TIME_TEXT, clickBeen);
+            multitemList.add(multiItemGdybTx);
+        }
+        getAdapter3().setNewData(multitemList);
+        //播放轮播
     }
 
     private MultiGdybTxAdapterForGdybtx getAdapter3() {
