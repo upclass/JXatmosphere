@@ -12,7 +12,7 @@
     <!-- 必选 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序录制音频 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
-
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 可选 -->
     <uses-permission android:name="android.permission.READ_LOGS" /> <!-- 获取logcat日志 -->
 
@@ -189,7 +189,17 @@
         <activity
             android:name=".feature.GdybGaoDeActivity"
             android:label="@string/title_activity_gdyb_gao_de"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".feature.LocationChangeActivity"
+            android:label="@string/title_activity_location_change" />
+        <activity android:name=".feature.GeneforeActivity1" />
+        <activity android:name=".feature.ForecasterScoreActivity1" />
+        <activity
+            android:name=".feature.GdybGaoDeActivity1"
+            android:label="@string/title_activity_gdyb_gao_de1"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".feature.GdybGaoDeActivity2"></activity>
     </application>
 
 </manifest>

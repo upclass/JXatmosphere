@@ -180,7 +180,7 @@
 
             <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="63dp"
                 android:layout_marginLeft="6dp"
                 android:background="@color/white">
 
@@ -196,14 +196,14 @@
                         style="@style/main_image_style"
                         android:layout_gravity="center"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:src="@drawable/form" />
 
                     <ImageView
                         android:id="@+id/image_duty1"
                         style="@style/main_image_style"
                         android:layout_gravity="center"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:src="@drawable/form" />
 
                 </LinearLayout>
@@ -221,7 +221,7 @@
                         style="@style/main_text_style"
                         android:layout_gravity="center"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:gravity="center"
                         android:text="徐彬(带班领导)" />
 
@@ -230,7 +230,7 @@
                         style="@style/main_text_style"
                         android:layout_gravity="center"
                         android:layout_marginBottom="3dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:gravity="center"
                         android:text="徐彬(带班领导)" />
 
@@ -250,7 +250,7 @@
                         style="@style/main_text_style"
                         android:layout_gravity="center"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:layout_toRightOf="@id/duty_name"
                         android:gravity="center"
                         android:text="白班"
@@ -260,7 +260,7 @@
                         android:id="@+id/duty_time1"
                         style="@style/main_text_style"
                         android:layout_gravity="center"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:layout_toRightOf="@id/duty_name"
                         android:gravity="center"
                         android:text="白班"
@@ -281,13 +281,13 @@
                         android:id="@+id/duty_date"
                         style="@style/main_text_style"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:text="2018-03-26" />
 
                     <TextView
                         android:id="@+id/duty_date1"
                         style="@style/main_text_style"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="6dp"
                         android:text="2018-03-26" />
                 </LinearLayout>
             </android.support.percent.PercentRelativeLayout>
@@ -714,7 +714,7 @@
                     <ImageView
                         android:id="@+id/fc_warn_7"
                         style="@style/main_pic_style"
-                        android:src="@drawable/wt_monitor_3"
+                        android:src="@drawable/fc_warn_7"
                         app:layout_marginTopPercent="25%" />
 
                     <TextView
@@ -732,7 +732,7 @@
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_toRightOf="@id/main_content_item3_3"
-                    android:background="@color/white"
+                    android:background="@color/useless"
                     android:orientation="vertical"
                     app:layout_heightPercent="100%"
                     app:layout_marginLeftPercent="1%"
@@ -742,6 +742,7 @@
                         android:id="@+id/fc_warn_8"
                         style="@style/main_pic_style"
                         android:src="@drawable/fc_warn_8"
+
                         app:layout_marginTopPercent="25%" />
 
                     <TextView
@@ -834,7 +835,7 @@
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_toRightOf="@id/main_content_item0_1"
-                    android:background="@color/white"
+                    android:background="@color/useless"
                     android:orientation="vertical"
                     app:layout_heightPercent="100%"
                     app:layout_marginLeftPercent="1%"
@@ -861,7 +862,7 @@
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_toRightOf="@id/main_content_item0_2"
-                    android:background="@color/white"
+                    android:background="@color/useless"
                     android:orientation="vertical"
                     app:layout_heightPercent="100%"
                     app:layout_marginLeftPercent="1%"

@@ -332,6 +332,12 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                 getTestdata();
                 else getTestDataBytime(selectTime);
 
+                layoutManager.scrollToPositionWithOffset(position,0);
+                layoutManager.setStackFromEnd(false);
+                LinearLayoutManager layoutManager1 = (LinearLayoutManager) mRecyclerView1.getLayoutManager();
+                layoutManager1.scrollToPositionWithOffset(0,0);
+                layoutManager1.setStackFromEnd(false);
+
             });
         }
         return madapter;
@@ -545,6 +551,9 @@ public class EcxwgActivity extends BaseActivity implements View.OnClickListener 
                 if(selectTime.equals(""))
                 getTestdata();
                 else getTestDataBytime(selectTime);
+
+                layoutManager.scrollToPositionWithOffset(position,0);
+                layoutManager.setStackFromEnd(false);
             });
         }
         return mAdapter1;

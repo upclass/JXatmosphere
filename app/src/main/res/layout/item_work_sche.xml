@@ -1,35 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/date_time"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/spacing_35"
-        android:gravity="center"
-        android:layout_weight="1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/date_time"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/spacing_35"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <ImageView
+            android:layout_marginLeft="18dp"
+            android:id="@+id/phone"
+            android:src="@drawable/app_phone"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/watchkeeper"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/spacing_30"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center_vertical|left" />
 
 
-    <TextView
-        android:id="@+id/watchkeeper"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/spacing_30"
-        android:gravity="center"
-        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/on_duty_time"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/spacing_30"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/post"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/spacing_30"
-        android:gravity="center"
-        android:layout_weight="1" />
+        <ImageView
+            android:id="@+id/telePhone"
+            android:src="@drawable/app_telephone"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center"/>
 
-    <TextView
-        android:id="@+id/on_duty_time"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/spacing_30"
-        android:gravity="center"
-        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/post"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/spacing_30"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center_vertical|left" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/diver"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/diver"></View>
 
 </LinearLayout>
+
+
+
+

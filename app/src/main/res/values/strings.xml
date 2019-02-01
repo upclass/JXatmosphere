@@ -61,7 +61,7 @@
     <string name="sv_feedback_pg_name1">决策服务</string>
     <string name="sv_feedback_slip_1">气象情况反馈</string>
     <string name="sv_feedback_slip_2">气象呈阅件</string>
-    <string name="sv_feedback_pg_name2">预报员评分表</string>
+    <string name="sv_feedback_pg_name2">预报评分</string>
     <string name="sv_feedback_pg_name3">信息员反馈</string>
     <string name="sv_feedback_pg_name4">帮助</string>
     <string name="title_activity_regist">RegistActivity</string>
@@ -132,4 +132,6 @@
     <string name="title_activity_zytqyb_gao_de">ZytqybGaoDeActivity</string>
     <string name="title_activity_yu_jing_gao_de">YuJingGaoDeActivity</string>
     <string name="title_activity_gdyb_gao_de">GdybGaoDeActivity</string>
+    <string name="title_activity_location_change">LocationChangeActivity</string>
+    <string name="title_activity_gdyb_gao_de1">GdybGaoDeActivity1</string>
 </resources>

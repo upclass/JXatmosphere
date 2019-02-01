@@ -1,0 +1,276 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/contain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            style="@style/header_color"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="@dimen/spacing_12"
+            android:paddingRight="@dimen/spacing_12">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/back"
+                    style="@style/feture_pic"
+                    android:src="@drawable/app_left" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/one_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/fc_warn_pg_name6"
+                android:textColor="@color/white" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/reload"
+                    style="@style/feture_pic"
+                    android:src="@drawable/app_reload" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            style="@style/header_color"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:id="@+id/relative1"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2">
+
+                <TextView
+                    android:id="@+id/time"
+                    style="@style/one_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:text="2000011"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relative2"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/title2"
+                    style="@style/one_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:text="@string/genefore_zs"
+                    android:textColor="@color/white" />
+
+                <View
+                    android:id="@+id/tabline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_alignLeft="@+id/title2"
+                    android:layout_alignRight="@+id/title2"
+                    android:layout_below="@+id/title2"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/white"
+                    android:visibility="invisible"></View>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relative3"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/title3"
+                    style="@style/one_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:text="@string/genefore_zw"
+                    android:textColor="@color/white" />
+
+                <View
+                    android:id="@+id/tabline3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_alignLeft="@+id/title3"
+                    android:layout_alignRight="@+id/title3"
+                    android:layout_below="@+id/title3"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/white"
+                    android:visibility="invisible"></View>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relative4"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/title4"
+                    style="@style/one_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:text="@string/genefore_xw"
+                    android:textColor="@color/white" />
+
+                <View
+                    android:id="@+id/tabline4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_alignLeft="@+id/title4"
+                    android:layout_alignRight="@+id/title4"
+                    android:layout_below="@+id/title4"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/white"
+                    android:visibility="invisible"></View>
+            </RelativeLayout>
+
+            <!--<RelativeLayout-->
+            <!--android:id="@+id/relative5"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_weight="1">-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/title5"-->
+            <!--style="@style/one_title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="@string/genefore_st"-->
+            <!--android:textColor="@color/white" />-->
+
+            <!--<View-->
+            <!--android:id="@+id/tabline5"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_alignLeft="@+id/title5"-->
+            <!--android:layout_alignRight="@+id/title5"-->
+            <!--android:layout_below="@+id/title5"-->
+            <!--android:layout_marginBottom="3dp"-->
+            <!--android:layout_marginTop="3dp"-->
+            <!--android:background="@color/white"-->
+            <!--android:visibility="invisible"></View>-->
+            <!--</RelativeLayout>-->
+
+            <RelativeLayout
+                android:id="@+id/relative5"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/left"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/app_w_left" />
+
+                <ImageView
+                    android:id="@+id/right"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_toRightOf="@id/left"
+                    android:src="@drawable/app_w_right" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_10"
+                    android:layout_marginRight="@dimen/spacing_10" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:backgroundTint="#0d61a6"
+        android:src="@drawable/map_new"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/contain"
+        app:layout_anchorGravity="right|bottom"
+        app:pressedTranslationZ="10dp" />
+
+
+</android.support.design.widget.CoordinatorLayout>

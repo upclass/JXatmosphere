@@ -4,9 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,24 +22,20 @@ import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
-import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 
 import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.ZytqybAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.ZytqybBeen;
 import net.univr.pushi.jxatmosphere.interfaces.MapI;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
-import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 import net.univr.pushi.jxatmosphere.widget.MapScreenLinstenter;
 import net.univr.pushi.jxatmosphere.widget.TianDiTuMethodsClass;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -308,7 +302,7 @@ public class ZytqybActivity extends BaseActivity implements MapI {
     @Override
     public void showIdentQueryPoint(Graphic graphic) {
 //        mapView.setViewpointGeometryAsync(graphic.getGeometry(),100);
-        ShowCallout(graphic);
+//        ShowCallout(graphic);
     }
 
     /**
@@ -316,66 +310,66 @@ public class ZytqybActivity extends BaseActivity implements MapI {
      *
      * @param graphic
      */
-    public void ShowCallout(Graphic graphic) {
-        List<ZytqybBeen.DataBean.InfoArrayBean> infoArray = new ArrayList<>();
-        String infoArray_key = (String) graphic.getAttributes().get("infoArray_key");
-        String infoArray_values = (String) graphic.getAttributes().get("infoArray_values");
-        String infoArray_key1 = (String) graphic.getAttributes().get("infoArray_key1");
-        String infoArray_values1 = (String) graphic.getAttributes().get("infoArray_values1");
-        if (infoArray_key != null) {
-            ZytqybBeen.DataBean.InfoArrayBean infoData = new ZytqybBeen.DataBean.InfoArrayBean();
-            infoData.setInfo_key(infoArray_key+":");
-            infoData.setInfo_values(infoArray_values);
-            infoArray.add(infoData);
-        }
-
-        if (infoArray_key1 != null) {
-            ZytqybBeen.DataBean.InfoArrayBean infoData = new ZytqybBeen.DataBean.InfoArrayBean();
-            infoData.setInfo_key(infoArray_key1+":");
-            infoData.setInfo_values(infoArray_values1);
-            infoArray.add(infoData);
-        }
-
-        String shi = (String) graphic.getAttributes().get("shi");
-        String forecast_time = (String) graphic.getAttributes().get("forecast_time");
-        Callout.Style style = new Callout.Style(context, R.xml.my_callout_identify);
-//        style.setMaxHeight(950);
-        mapView.getCallout().setStyle(style);
-        View view = getLayoutInflater().inflate(R.layout.zytqyb_xq_layout, null);
-        RecyclerView recyclerView = view.findViewById(R.id.zytq_xq_recycle);
-
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
-        int height = ShipeiUtils.getHeight(context);
-        double v = height * 0.5;
-        layoutParams.height = Integer.parseInt(new java.text.DecimalFormat("0").format(v));
-        recyclerView.setLayoutParams(layoutParams);
-        LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false){
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        ZytqybAdapter adapter = new ZytqybAdapter(infoArray);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
-        TextView shi_tv = view.findViewById(R.id.shi);
-        shi_tv.setText(shi);
-        TextView forecast_time_tv = view.findViewById(R.id.forecast_time);
-        forecast_time_tv.setText("起报时间:"+forecast_time);
-        ImageView imageView = view.findViewById(R.id.cancle_xq);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mapView.getCallout().dismiss();
-                mapView.setViewpointGeometryAsync(gridLayer.getFullExtent(), 10);
-            }
-        });
-        mapView.getCallout().show(view, graphic.getGeometry().getExtent().getCenter());
-        Point point = graphic.getGeometry().getExtent().getCenter();
-        android.graphics.Point point1 = mapView.locationToScreen(point);
-        point1.y = point1.y - 400;
-        point = mapView.screenToLocation(point1);
-        mapView.setViewpointCenterAsync(point);
-    }
+//    public void ShowCallout(Graphic graphic) {
+//        List<ZytqybBeen.DataBean.InfoArrayBean> infoArray = new ArrayList<>();
+//        String infoArray_key = (String) graphic.getAttributes().get("infoArray_key");
+//        String infoArray_values = (String) graphic.getAttributes().get("infoArray_values");
+//        String infoArray_key1 = (String) graphic.getAttributes().get("infoArray_key1");
+//        String infoArray_values1 = (String) graphic.getAttributes().get("infoArray_values1");
+//        if (infoArray_key != null) {
+//            ZytqybBeen.DataBean.InfoArrayBean infoData = new ZytqybBeen.DataBean.InfoArrayBean();
+//            infoData.setInfo_key(infoArray_key+":");
+//            infoData.setInfo_values(infoArray_values);
+//            infoArray.add(infoData);
+//        }
+//
+//        if (infoArray_key1 != null) {
+//            ZytqybBeen.DataBean.InfoArrayBean infoData = new ZytqybBeen.DataBean.InfoArrayBean();
+//            infoData.setInfo_key(infoArray_key1+":");
+//            infoData.setInfo_values(infoArray_values1);
+//            infoArray.add(infoData);
+//        }
+//
+//        String shi = (String) graphic.getAttributes().get("shi");
+//        String forecast_time = (String) graphic.getAttributes().get("forecast_time");
+//        Callout.Style style = new Callout.Style(context, R.xml.my_callout_identify);
+////        style.setMaxHeight(950);
+//        mapView.getCallout().setStyle(style);
+//        View view = getLayoutInflater().inflate(R.layout.zytqyb_xq_layout, null);
+//        RecyclerView recyclerView = view.findViewById(R.id.zytq_xq_recycle);
+//
+//        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
+//        int height = ShipeiUtils.getHeight(context);
+//        double v = height * 0.5;
+//        layoutParams.height = Integer.parseInt(new java.text.DecimalFormat("0").format(v));
+//        recyclerView.setLayoutParams(layoutParams);
+//        LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false){
+//            @Override
+//            public boolean canScrollVertically() {
+//                return false;
+//            }
+//        };
+//        ZytqybAdapter adapter = new ZytqybAdapter(infoArray);
+//        recyclerView.setLayoutManager(manager);
+//        recyclerView.setAdapter(adapter);
+//        TextView shi_tv = view.findViewById(R.id.shi);
+//        shi_tv.setText(shi);
+//        TextView forecast_time_tv = view.findViewById(R.id.forecast_time);
+//        forecast_time_tv.setText("起报时间:"+forecast_time);
+//        ImageView imageView = view.findViewById(R.id.cancle_xq);
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mapView.getCallout().dismiss();
+//                mapView.setViewpointGeometryAsync(gridLayer.getFullExtent(), 10);
+//            }
+//        });
+//        mapView.getCallout().show(view, graphic.getGeometry().getExtent().getCenter());
+//        Point point = graphic.getGeometry().getExtent().getCenter();
+//        android.graphics.Point point1 = mapView.locationToScreen(point);
+//        point1.y = point1.y - 400;
+//        point = mapView.screenToLocation(point1);
+//        mapView.setViewpointCenterAsync(point);
+//    }
 
 }

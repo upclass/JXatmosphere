@@ -4,6 +4,7 @@ import net.univr.pushi.jxatmosphere.beens.DmcgjcBeen;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcCustomMenu;
 import net.univr.pushi.jxatmosphere.beens.DmcgjcmenuBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
+import net.univr.pushi.jxatmosphere.beens.GdybBeen1;
 import net.univr.pushi.jxatmosphere.beens.GkdmgcBeen;
 import net.univr.pushi.jxatmosphere.beens.LdptBeen;
 import net.univr.pushi.jxatmosphere.beens.SwzdBeen;
@@ -47,5 +48,8 @@ public interface WeatherMonitorService {
     //格点预报
     @POST("gdybAction.do")
     Observable<GdybBeen> getGdyb(@Query("lon")String lon, @Query("lat")String lat, @Query("interval")String interval,@Query("coordType")String coordType ,@Query("datetime")String datetime);
+
+    @POST("gdybAction1.do")
+    Observable<GdybBeen1> getGdyb1(@Query("lon")String lon, @Query("lat")String lat, @Query("coordType")String coordType , @Query("datetime")String datetime);
 
 }

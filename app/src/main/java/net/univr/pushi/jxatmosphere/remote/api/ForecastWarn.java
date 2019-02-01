@@ -9,7 +9,9 @@ import net.univr.pushi.jxatmosphere.beens.GdyutxTagBeen;
 import net.univr.pushi.jxatmosphere.beens.GeneforeBeen;
 import net.univr.pushi.jxatmosphere.beens.QxfxBeen;
 import net.univr.pushi.jxatmosphere.beens.RadarForecastBeen;
-import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
+import net.univr.pushi.jxatmosphere.beens.RefReturn;
+import net.univr.pushi.jxatmosphere.beens.TyphoonDetiveBeen;
+import net.univr.pushi.jxatmosphere.beens.YujinInfo;
 import net.univr.pushi.jxatmosphere.beens.ZytqybBeen;
 
 import retrofit2.http.GET;
@@ -53,7 +55,7 @@ public interface ForecastWarn {
 
     //格点预报图形根据type和tag获取材料
     @GET("gdyutxTagDataAction.do")
-    Observable<GdybtxBeen> getGdyutxTagData(@Query("type") String type,@Query("tag")String tag);
+    Observable<GdybtxBeen> getGdyutxTagData(@Query("type") String type, @Query("tag") String tag);
 
 
     //本地实况
@@ -69,11 +71,12 @@ public interface ForecastWarn {
 
     //预警信号
     @GET("yujin.do")
-    Observable<YuJinXinhaoBeen> getYujinInfo(@Query("tag") String tag);
+//    Observable<YuJinXinhaoBeen> getYujinInfo(@Query("tag") String tag);
+    Observable<YujinInfo> getYujinInfo(@Query("tag") String tag);
 
     //本地实况getTest3所需预警信号数据
     @GET("yujin!getYujingbycity.do")
-    Observable<YuJinXinhaoBeen> getYujinInfoToBdsk(@Query("city") String city);
+    Observable<YujinInfo> getYujinInfoToBdsk(@Query("city") String city);
 
     //重要天气预
     @GET("zytqybAction.do")
@@ -84,9 +87,19 @@ public interface ForecastWarn {
 //    Observable<DsljybBeen> getRainGird(@Query("type")String type,@Query("lat")String lattitude, @Query("lon")String lontitude);
     //短时临近预报
     @GET("rainForecastGirdFrom20Action!getDataList.do")
-    Observable<DsljybBeen>  getRainGird(@Query("lat") String lattitude, @Query("lon") String lontitude);
+    Observable<DsljybBeen> getRainGird(@Query("lat") String lattitude, @Query("lon") String lontitude);
 
     @GET("rainForecastGirdFrom20Action!getDataListSum.do")
         //短时临近预报读所有数据
     Observable<DsljybBeen> getRainSumGird(@Query("lat") String lattitude, @Query("lon") String lontitude);
+
+
+    @GET("refPicAction.do")
+        //短时临近预报反射率图片
+    Observable<RefReturn> getRefPicList(@Query("forecastTime") String forecastTime, @Query("tag") String tag);
+
+    @GET("typhoonDetetiveAction.do")
+        //短时临近预报反射率图片
+    Observable<TyphoonDetiveBeen> typhoonDetetive();
+
 }

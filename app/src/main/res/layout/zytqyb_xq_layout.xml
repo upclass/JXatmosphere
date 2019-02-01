@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/black"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/toolbar_color">
+        android:layout_height="40dp">
 
         <TextView
             android:id="@+id/shi"
@@ -30,18 +30,89 @@
             android:src="@drawable/app_cancle" />
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/zytq_xq_recycle"
+        <ImageView
+            android:id="@+id/pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/weath_104" />
+
+        <LinearLayout
+            android:id="@+id/contain"
+            android:layout_marginRight="8dp"
             android:layout_width="match_parent"
-            android:layout_height="80dp"></android.support.v7.widget.RecyclerView>
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/pic"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/item_1"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:gravity="left|center"
+
+                android:text="极大的风速的风向(m/s) "
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+
+
+            <TextView
+                android:id="@+id/item_2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:gravity="left|center"
+                android:text="现在天气"
+
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginRight="8dp"
+            android:id="@+id/contain1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/contain"
+            android:layout_toRightOf="@id/pic"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <TextView
+                android:id="@+id/item_3"
+                android:layout_width="160dp"
+                android:layout_height="match_parent"
+                android:gravity="left|center"
+                android:text="极大的风速的风向(m/s) "
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+
+
+            <TextView
+                android:id="@+id/item_4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:gravity="left|center"
+                android:text="现在天气"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+
+        </LinearLayout>
+
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/zytq_xq_recycle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="80dp"></android.support.v7.widget.RecyclerView>-->
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
@@ -50,6 +121,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_marginRight="8dp"
         android:layout_height="40dp">
 
         <TextView
@@ -70,7 +142,7 @@
             android:layout_toRightOf="@id/target"
             android:gravity="center"
             android:text="111"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="14dp" />
 
 

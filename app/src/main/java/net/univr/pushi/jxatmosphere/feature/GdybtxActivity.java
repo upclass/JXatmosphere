@@ -117,12 +117,12 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 
     private void initView() {
 //        initSpinner();
-
         getOneMenu();
         initOnclick();
         type = "rain";
         testType = "rain12";
         getTwoMenu();
+        getTestdata();
         getTag(testType);
         CallBackUtil.setBrightness(new BrightnessActivity() {
             @Override
@@ -168,26 +168,6 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         reload.setOnClickListener(this);
     }
 
-//    private void initSpinner() {
-//        oneMenu = new ArrayList<>();
-//        spinAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, oneMenu);
-//        /*adapter设置一个下拉列表样式，参数为系统子布局*/
-//        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        /*spDown加载适配器*/
-//        spDown.setAdapter(spinAdapter);
-//        spDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//    }
-
 
     public void setStart(Boolean start) {
         isStart = start;
@@ -210,7 +190,11 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.reload:
                 PicUtils.deleteDir("gdybtx/" + testType);
-                getTestdata();
+                if (timeTag.getText().equals("请选择时段")) {
+                    getTestdata();
+                }else{
+                    getTagData(testType,timeTag.getText().toString());
+                }
                 break;
             case R.id.time:
                 if(popupWindow!=null){
@@ -257,7 +241,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxBeen -> {
                     progressDialog.dismiss();
-                    DisplayGdyutxData(gdybtxBeen);
+                    DisplayGdyutxData(gdybtxBeen,tag);
                 },throwable -> {
                     progressDialog.dismiss();
                     throwable.printStackTrace();
@@ -296,7 +280,6 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtxOneMenu -> {
-                    progressDialog.dismiss();
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxOneMenu.getData().getMenu();
                     List<DmcgjcmenuBeen.DataBean> destmenu = new ArrayList<>();
                     for (int i = 0; i < menu.size(); i++) {
@@ -304,22 +287,18 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                         if (i == 0) {
                             dataBean.setSelect(true);
                         }
-
                         dataBean.setZnName(menu.get(i).getName());
                         destmenu.add(dataBean);
                     }
                     menuAdapter.setNewData(destmenu);
 
                 }, throwable -> {
-                    progressDialog.dismiss();
                     throwable.printStackTrace();
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
 
     private void getTwoMenu() {
-        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
         RetrofitHelper.getForecastWarn()
                 .getGdybtTwoMenu(type)
                 .compose(bindToLifecycle())
@@ -333,10 +312,9 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
 //                        mViewPager.setScanScroll(true);
 //                    }
                     mViewPager.setScanScroll(true);
-                    progressDialog.dismiss();
                     List<GdybtxMenuBeen.DataBean.MenuBean> menu = gdybtxTwoMenu.getData().getMenu();
                     List<DmcgjcmenuBeen.DataBean> dataBeans = new ArrayList<>();
-                    getTestdata();
+
                     for (int i = 0; i < menu.size(); i++) {
                         DmcgjcmenuBeen.DataBean temp = new DmcgjcmenuBeen.DataBean();
                         String menuname = menu.get(i).getName();
@@ -360,7 +338,6 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                         mAdapter1.setNewData(dataBeans);
                     }
                 }, throwable -> {
-                    progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
@@ -486,6 +463,8 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 if(timeTag.equals("请选择时段"))
                 getTestdata();
                 else getTagData(testType,timeTag.getText().toString());
+                layoutManager.scrollToPositionWithOffset(position,0);
+                layoutManager.setStackFromEnd(false);
             });
         }
         return mAdapter1;
@@ -500,7 +479,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
             menuRecycleview.setLayoutManager(layoutManager);
             menuRecycleview.setAdapter(menuAdapter);
             menuAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-
+                getTag(testType);
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapter) adapter).getLastposition();
                 DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
@@ -550,6 +529,15 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                     testType = "tcc12";
                 }
                 getTwoMenu();
+                if(timeTag.equals("请选择时段"))
+                    getTestdata();
+                else getTagData(testType,timeTag.getText().toString());
+
+                layoutManager.scrollToPositionWithOffset(position,0);
+                layoutManager.setStackFromEnd(false);
+                LinearLayoutManager layoutManager1 = (LinearLayoutManager) mRecyclerView1.getLayoutManager();
+                layoutManager1.scrollToPositionWithOffset(0,0);
+                layoutManager1.setStackFromEnd(false);
             });
         }
         return menuAdapter;
@@ -565,7 +553,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybtx -> {
-                    DisplayGdyutxData(gdybtx);
+                    DisplayGdyutxData(gdybtx,null);
                 }, throwable -> {
                     progressDialog.dismiss();
                     LogUtils.e(throwable);
@@ -573,7 +561,7 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
                 });
     }
 
-    private void DisplayGdyutxData(GdybtxBeen gdybtx) {
+    private void DisplayGdyutxData(GdybtxBeen gdybtx,String tag) {
         GdybtxBeen.DataBean data = gdybtx.getData();
         List<String> timeList = new ArrayList<>();
         List<String> picListtemp = new ArrayList<>();
@@ -604,7 +592,10 @@ public class GdybtxActivity extends BaseActivity implements View.OnClickListener
         }
         list.clear();
         for (int i = 0; i < picList.size(); i++) {
-            PicLoadFragment picLoadFragment = PicLoadFragment.newInstance(picList.get(i), picList, "gdybtx/" + testType);
+            PicLoadFragment picLoadFragment;
+            if(tag!=null)
+                picLoadFragment= PicLoadFragment.newInstance(picList.get(i), picList, "gdybtx/"+ tag+"/"+ testType);
+            else picLoadFragment= PicLoadFragment.newInstance(picList.get(i), picList, "gdybtx/" + testType);;
             list.add(picLoadFragment);
         }
 //                    ArrayList<String> picTemp = new ArrayList<>();

@@ -34,7 +34,8 @@ public class LoginActivity extends BaseActivity {
     EditText re_code;
     @BindView(R.id.send_code)
     TextView sms_button;
-    long lastSmsClick;
+    int lastSmsClick = 59;
+    Boolean nowCaculate = false;
 
     @Override
     public int getLayoutId() {
@@ -55,7 +56,6 @@ public class LoginActivity extends BaseActivity {
             }
         });
         sms_button.setOnClickListener(v -> {
-            long now = System.currentTimeMillis();
             String phone = re_phone.getText().toString();
             if (TextUtils.isEmpty(phone))
                 Toast.makeText(context, "手机号不能为空", Toast.LENGTH_SHORT).show();
@@ -64,21 +64,39 @@ public class LoginActivity extends BaseActivity {
                 if (chinaPhoneLegal == true) {
                     // 注册一个事件回调，用于处理发送验证码操作的结果
                     // 触发操作
-                    if ((now - lastSmsClick) < 60000) {
-                        ToastUtils.showShort("请60s后重新发送");
-                    } else
+                    if (nowCaculate == false) {
                         SMSSDK.getVerificationCode("86", phone);
+                        nowCaculate = true;
+                        startJishi();
+                    } else {
+                        Toast.makeText(context, "请" + lastSmsClick + "后重试", Toast.LENGTH_SHORT).show();
+                    }
                 } else
                     Toast.makeText(context, "手机号码错误", Toast.LENGTH_SHORT).show();
 
             }
-            lastSmsClick = now;
         });
     }
+
+//                boolean chinaPhoneLegal = PhoneFormatCheckUtils.isChinaPhoneLegal(phone);
+//                if (chinaPhoneLegal == true) {
+//                    // 注册一个事件回调，用于处理发送验证码操作的结果
+//                    // 触发操作
+//                    if ((now - lastSmsClick) < 60000) {
+//                        ToastUtils.showShort("请60s后重新发送");
+//                    } else
+//                        SMSSDK.getVerificationCode("86", phone);
+//                } else
+//                    Toast.makeText(context, "手机号码错误", Toast.LENGTH_SHORT).show();
+//
+//                }
+//            lastSmsClick = now;
 
 
     @OnClick(R.id.login)
     public void onViewClicked() {
+        Intent intent = new Intent(context, MainActivity.class);
+        startActivity(intent);
         String phone = re_phone.getText().toString();
         boolean chinaPhoneLegal = PhoneFormatCheckUtils.isChinaPhoneLegal(phone);
         String code = re_code.getText().toString();
@@ -144,7 +162,7 @@ public class LoginActivity extends BaseActivity {
                                 });
                     } else {
                         // TODO 处理错误的结果
-                        Toast.makeText(context, "验证码错误", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "验证码错误", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -157,5 +175,48 @@ public class LoginActivity extends BaseActivity {
         super.onDestroy();
         //用完回调要注销掉，否则可能会出现内存泄露
         SMSSDK.unregisterAllEventHandler();
+        handler.removeCallbacksAndMessages(null);
     }
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.arg1 == 999) {
+                if (sms_button != null)
+                    sms_button.setText("获取验证码");
+            } else {
+                if (sms_button != null)
+                    sms_button.setText("重新发送(" + msg.arg1 + ")");
+            }
+            return true;
+        }
+    });
+
+
+    //开启倒计时
+    public void startJishi() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (lastSmsClick >= 0) {
+                    Message message = Message.obtain();
+                    message.arg1 = lastSmsClick;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (handler != null)
+                        handler.sendMessage(message);
+                    lastSmsClick--;
+                }
+                Message message = Message.obtain();
+                message.arg1 = 999;//完成倒计时
+                if (handler != null)
+                    handler.sendMessage(message);
+                nowCaculate = false;
+            }
+        }).start();
+    }
+
 }

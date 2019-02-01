@@ -78,7 +78,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 3
-        versionName "4.3"
+        versionName "4.7"
         testInstrumentationRunner "android.support.popup_feedback_layout.runner.AndroidJUnitRunner"
         //方法>64k
         multiDexEnabled true
@@ -180,6 +180,7 @@ dependencies {
     compile 'com.amap.api:3dmap:latest.integration'
     //高德定位
     compile 'com.amap.api:location:latest.integration'
-
+    //time选择
+    compile 'com.jzxiang.pickerview:TimePickerDialog:1.0.1'
 
 }

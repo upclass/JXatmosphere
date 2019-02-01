@@ -34,7 +34,7 @@ import net.univr.pushi.jxatmosphere.adapter.WeathMainBdybAdapter;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.BdskBeen;
 import net.univr.pushi.jxatmosphere.beens.GdybBeen;
-import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
+import net.univr.pushi.jxatmosphere.beens.YujinInfo;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.GetResourceInt;
 import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
@@ -43,6 +43,7 @@ import net.univr.pushi.jxatmosphere.widget.FullyLinearLayoutManager;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -87,8 +88,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     LinearLayout yjxh1;
     @BindView(R.id.yujin_info)
     LinearLayout yujin_info;
-    private List<YuJinXinhaoBeen.DataBean> data;
-
+    private List<YujinInfo.DataBean> data;
     private int mDay;
     private String lat;
     private String lon;
@@ -114,6 +114,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         workScheduleLeave.setOnClickListener(this);
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
+        loc.setOnClickListener(this);
         initDate();
         initLocation();
 
@@ -207,10 +208,10 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.reload:
-                jslData.setText("N/A");
-                xdsdData.setText("N/A");
+                jslData.setText("0.0mm");
+                xdsdData.setText("0.0%");
                 fsData.setText("");
-                loc.setText("");
+//                loc.setText("");
                 temper.setText("");
 
                 if (mAdapter != null) {
@@ -227,8 +228,10 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 tqms.setText("");
                 fbdw.setText("");
                 bd_tqtp.setImageBitmap(null);
-
-                initLocation();
+                getTestData();
+                getTestData1();
+                getTestData2();
+//                initLocation();
 //                Handler handler = new Handler();
 //                handler.postDelayed(new Runnable() {
 //                    @Override
@@ -243,10 +246,56 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
             case R.id.yujin_info:
                 Intent intent = new Intent(context, YujinInfoActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("data", data.get(0));
+                ArrayList arrayList = new ArrayList();
+                arrayList.addAll(data);
+                bundle.putParcelableArrayList("data", arrayList);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
+            case R.id.titleBar_title:
+                Intent intent1 = new Intent(context, LocationChangeActivity.class);
+                startActivityForResult(intent1, 11);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 11) {
+            if (resultCode == 1) {
+                //之前数据置空
+                jslData.setText("0.0mm");
+                xdsdData.setText("0.0%");
+                fsData.setText("");
+                loc.setText("");
+                temper.setText("");
+                if (mAdapter != null) {
+                    mAdapter.getData().clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+                if (mbdybAdapter != null) {
+                    mbdybAdapter.getData().clear();
+                    mbdybAdapter.notifyDataSetChanged();
+                }
+                tqms.setText("");
+                fbdw.setText("");
+                bd_tqtp.setImageBitmap(null);
+                //
+                Bundle extras = data.getExtras();
+                lat = extras.getString("lat");
+                lon = extras.getString("lon");
+                city=extras.getString("city");
+                loc.setText(extras.getString("weizhi"));
+                //重新请求数据
+                getTestData();
+                getTestData1();
+                getTestData2();
+                getTestData3();
+            }
+            if (resultCode == 2) {
+                initLocation();
+            }
         }
     }
 
@@ -260,16 +309,16 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 .subscribe(bdskBeen -> {
                     BdskBeen.DataBean data = bdskBeen.getData().get(0);
                     if (data.getPRE().equals("0") || data.getPRE().equals("0.0"))
-                        jslData.setText("N/A");
+                        jslData.setText("0.0mm");
                     else
-                        jslData.setText(data.getPRE());
+                        jslData.setText(data.getPRE() + "mm");
 
                     temper.setText(double2zhen(Double.valueOf(data.getTEM())) + "℃");
 
                     if (data.getRHU().equals("0") || data.getRHU().equals("0.0"))
-                        xdsdData.setText("N/A");
+                        xdsdData.setText("0.0%");
                     else
-                        xdsdData.setText(data.getRHU());
+                        xdsdData.setText(data.getRHU() + "%");
 
                     String win_s_inst = data.getWIN_S_INST();
                     Double win_s_inst_D = Double.valueOf(win_s_inst);
@@ -420,33 +469,56 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(yuJinXinhaoBeen -> {
                     data = yuJinXinhaoBeen.getData();
-                    if (data.size() > 0) yjxh1.setVisibility(View.VISIBLE);
-                    else yjxh.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < data.size(); i++) {
-                        String danwei = data.get(i).getDanwei();
-                        String subclass = data.get(i).getSubclass();
-                        String citySelect = data.get(i).getCitySelect();
-                        if (citySelect.contains(city)) {
-                            tqms.setText(subclass);
-                            fbdw.setText(danwei);
-                            String substring = subclass.substring(0, subclass.length() - 4);
-                            String picName = YujinWeiZhi.getPicName(substring);
-                            int resource = GetResourceInt.getResource(picName, context);
-                            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
-                            bd_tqtp.setImageBitmap(bitmap);
-                        }
+                    if (null != data && data.size() != 0) {
+                        String danwei = data.get(0).getDanwei();
+                        String subclass = data.get(0).getYujinInfo();
+                        yjxh1.setVisibility(View.VISIBLE);
+                        tqms.setText(subclass);
+                        fbdw.setText(danwei);
+                        String substring = subclass.substring(0, subclass.length() - 2);
+                        String picName = YujinWeiZhi.getPicName(substring);
+                        int resource = GetResourceInt.getResource(picName, context);
+                        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
+                        bd_tqtp.setImageBitmap(bitmap);
+                    } else {
+                        yjxh.setVisibility(View.VISIBLE);
                     }
+
+//                    if (data.size() > 0) yjxh1.setVisibility(View.VISIBLE);
+//                    else yjxh.setVisibility(View.VISIBLE);
+//                    for (int i = 0; i < data.size(); i++) {
+//                        String danwei = data.get(i).getDanwei();
+//                        String subclass = data.get(i).getYujinInfo();
+//                        String citySelect = data.get(i).getAcodes();
+//                        String[] split = citySelect.split(",");
+//                        for (int j = 0; j < split.length; j++) {
+//                            String title = YujinWeiZhi.getTitle(split[i]);
+//                            if (title.equals(city+"市")) {
+//                                yjxh1.setVisibility(View.VISIBLE);
+//                                tqms.setText(subclass);
+//                                fbdw.setText(danwei);
+//                                String substring = subclass.substring(0, subclass.length() - 4);
+//                                String picName = YujinWeiZhi.getPicName(substring);
+//                                int resource = GetResourceInt.getResource(picName, context);
+//                                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
+//                                bd_tqtp.setImageBitmap(bitmap);
+//                                break;
+//                            }else {
+//                                yjxh.setVisibility(View.VISIBLE);
+//                            }
+//                        }
+//                    }
 
                 }, throwable -> {
                     LogUtils.e(throwable);
                 });
-
     }
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
         loc.setText(regeocodeResult.getRegeocodeAddress().getAois().get(0).getAoiName());
         city = regeocodeResult.getRegeocodeAddress().getCity();
+        city = city.replace("市", "");
         getTestData3();
     }
 
@@ -463,7 +535,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     }
 
     public int double2zhen(double num_d) {
-        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_UP);
+        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_HALF_UP);
         return bg.intValue();
     }
 }

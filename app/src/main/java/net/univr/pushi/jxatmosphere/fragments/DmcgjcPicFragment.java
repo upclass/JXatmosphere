@@ -133,9 +133,9 @@ public class DmcgjcPicFragment extends RxLazyFragment {
         if (interval.equals("5")) {
             ;
         } else {
-            five_m.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
+            five_m.setBackground(getResources().getDrawable(R.drawable.gd_yj_5));
             five_m.setTextColor(getResources().getColor(R.color.toolbar_color));
-            one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3_select));
+            one_hour.setBackground(getResources().getDrawable(R.drawable.gd_yj_4));
             one_hour.setTextColor(getResources().getColor(R.color.white));
         }
         if (visibility == 1) sjjg_lay.setVisibility(View.VISIBLE);

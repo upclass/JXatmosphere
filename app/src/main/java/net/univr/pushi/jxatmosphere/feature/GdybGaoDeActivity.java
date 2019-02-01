@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +30,9 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.Projection;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
@@ -68,6 +71,7 @@ import net.univr.pushi.jxatmosphere.utils.ViewUtil;
 import net.univr.pushi.jxatmosphere.widget.FutureDaysChart;
 import net.univr.pushi.jxatmosphere.widget.ScrollFutureDaysWeatherView;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,6 +118,8 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     MapView mapView;
     @BindView(R.id.delete)
     ImageView delete;
+    @BindView(R.id.search)
+    LinearLayout search;
     public AMapLocationClient mlocationClient;
     public AMapLocationClientOption mLocationOption;
     private GeocodeSearch geocoderSearch;
@@ -146,7 +152,7 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     @BindView(R.id.now_position)
     ImageView nowPosition;
 
-
+    private int mMarkerX, mMarderY;
 
 
     @Override
@@ -173,7 +179,15 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     }
 
 
+    //手动加定位图标
+//                            MarkerOptions markerOption = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.location))
+//                                    .position(latLng)
+//                                    .draggable(false);
+//                            mAMap.addMarker(markerOption);
+
     private void initView(Bundle savedInstanceState) {
+        search.getBackground().setAlpha(250);
+        content.getBackground().setAlpha(250);
         mapView.onCreate(savedInstanceState);
         mAMap = mapView.getMap();
         myLocationStyle = new MyLocationStyle();
@@ -234,6 +248,27 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getTestdata() {
+//        //当前点居中
+//        LatLng centerLatLng = new LatLng(y,x);
+////        mAMap.moveCamera(CameraUpdateFactory.changeLatLng(centerLatLng));
+////        mAMap.moveCamera(CameraUpdateFactory.zoomTo(6));
+//        Projection projection = mAMap.getProjection();
+//        Point center = projection.toScreenLocation(centerLatLng);
+//        //当前(屏幕上的点 )
+//        mMarkerX=center.x;
+//        mMarderY = center.y;
+//        int height = ShipeiUtils.getHeight(context)/4;
+//        mMarderY=mMarderY+ height;
+//        Point point=new Point(mMarkerX,mMarderY);
+//        LatLng center1 = projection.fromScreenLocation(point);
+////        mAMap.setPointToCenter(mMarkerX,mMarderY);
+//
+////
+////        //设置中心点和缩放比例
+//        mAMap.moveCamera(CameraUpdateFactory.newLatLng(center1));
+////        mAMap.moveCamera(CameraUpdateFactory.zoomTo(8));
+////        mAMap.setPointToCenter(width,height);
+
         dialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
         dialog.setCancelable(true);
         content.setVisibility(View.VISIBLE);
@@ -250,6 +285,12 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gdybBeen -> {
                     data = gdybBeen.getData();
+                    for (int j = 0; j < data.size(); j++) {
+                        String temper = data.get(j).getTemper();
+                        Double aDouble = Double.valueOf(temper);
+                        BigDecimal bd = new BigDecimal(aDouble).setScale(0, BigDecimal.ROUND_HALF_UP);
+                        data.get(j).setTemper(String.valueOf(Integer.parseInt(bd.toString())));
+                    }
                     forecast_time.setText(initForecastTime());
                     province.setText(gdybBeen.getLocation().getProvince());
                     city.setText(gdybBeen.getLocation().getCity());
@@ -288,16 +329,31 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
                         TextView xdsd = view.findViewById(R.id.xdsd);
                         //设置日期
                         String forecastTime = data.get(i).getForecastTime();
-
-                        if (forecastTime.length() <= 18) {
-                            StringBuilder builder = new StringBuilder(forecastTime);
-                            builder.insert(11, 0);
-                            forecastTime = builder.toString();
-                        }
+                        StringBuilder builderTemp = new StringBuilder(forecastTime);
+                        int i1 = builderTemp.indexOf("/");
+                        int i2 = builderTemp.lastIndexOf("/");
+                        int i3 = builderTemp.indexOf(" ");
+                        int i4 = builderTemp.indexOf(":");
+                        int i5 = builderTemp.lastIndexOf(":");
+                        if (i2 - i1 == 2) ;
+                        else builderTemp.insert(i1 + 1, 0);
+                        if (i3 - i2 == 3) ;
+                        else builderTemp.insert(i2 + 1, 0);
+                        if (i4 - i3 == 3) ;
+                        else builderTemp.insert(i3 + 1, 0);
+                        if (i5 - i4 == 3) ;
+                        else builderTemp.insert(i4 + 1, 0);
+                        if (builderTemp.length() - i5 == 3) ;
+                        else builderTemp.insert(i5 + 1, 0);
+//                        if (forecastTime.length() <= 18) {
+//                            StringBuilder builder = new StringBuilder(forecastTime);
+//                            builder.insert(11, 0);
+//                            forecastTime = builder.toString();
+//                        }
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
                         Calendar calendar = Calendar.getInstance();
                         try {
-                            Date forecastDate = simpleDateFormat.parse(forecastTime);
+                            Date forecastDate = simpleDateFormat.parse(builderTemp.toString());
                             calendar.setTime(forecastDate);
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -409,71 +465,71 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
             case R.id.one_hour:
                 interval = "1";
                 one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1_select));
-                one_hour.setTextColor(getResources().getColor(R.color.white));
+                one_hour.setTextColor(getResources().getColor(R.color.black_yj));
                 three_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                three_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                three_hour.setTextColor(getResources().getColor(R.color.white));
                 six_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                six_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                six_hour.setTextColor(getResources().getColor(R.color.white));
                 twelve_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                twelve_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twelve_hour.setTextColor(getResources().getColor(R.color.white));
                 twentyfour_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
-                twentyfour_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twentyfour_hour.setTextColor(getResources().getColor(R.color.white));
                 getTestdata();
                 break;
             case R.id.three_hour:
                 interval = "3";
                 one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
-                one_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                one_hour.setTextColor(getResources().getColor(R.color.white));
                 three_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2_select));
-                three_hour.setTextColor(getResources().getColor(R.color.white));
+                three_hour.setTextColor(getResources().getColor(R.color.black_yj));
                 six_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                six_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                six_hour.setTextColor(getResources().getColor(R.color.white));
                 twelve_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                twelve_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twelve_hour.setTextColor(getResources().getColor(R.color.white));
                 twentyfour_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
-                twentyfour_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twentyfour_hour.setTextColor(getResources().getColor(R.color.white));
                 getTestdata();
                 break;
             case R.id.six_hour:
                 interval = "6";
                 one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
-                one_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                one_hour.setTextColor(getResources().getColor(R.color.white));
                 three_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                three_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                three_hour.setTextColor(getResources().getColor(R.color.white));
                 six_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2_select));
-                six_hour.setTextColor(getResources().getColor(R.color.white));
+                six_hour.setTextColor(getResources().getColor(R.color.black_yj));
                 twelve_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                twelve_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twelve_hour.setTextColor(getResources().getColor(R.color.white));
                 twentyfour_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
-                twentyfour_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twentyfour_hour.setTextColor(getResources().getColor(R.color.white));
                 getTestdata();
                 break;
             case R.id.twelve_hour:
                 interval = "12";
                 one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
-                one_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                one_hour.setTextColor(getResources().getColor(R.color.white));
                 three_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                three_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                three_hour.setTextColor(getResources().getColor(R.color.white));
                 six_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                six_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                six_hour.setTextColor(getResources().getColor(R.color.white));
                 twelve_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2_select));
-                twelve_hour.setTextColor(getResources().getColor(R.color.white));
+                twelve_hour.setTextColor(getResources().getColor(R.color.black_yj));
                 twentyfour_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
-                twentyfour_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twentyfour_hour.setTextColor(getResources().getColor(R.color.white));
                 getTestdata();
                 break;
             case R.id.twentyfour_hour:
                 interval = "24";
                 one_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
-                one_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                one_hour.setTextColor(getResources().getColor(R.color.white));
                 three_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                three_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                three_hour.setTextColor(getResources().getColor(R.color.white));
                 six_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                six_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                six_hour.setTextColor(getResources().getColor(R.color.white));
                 twelve_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg2));
-                twelve_hour.setTextColor(getResources().getColor(R.color.toolbar_color));
+                twelve_hour.setTextColor(getResources().getColor(R.color.white));
                 twentyfour_hour.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3_select));
-                twentyfour_hour.setTextColor(getResources().getColor(R.color.white));
+                twentyfour_hour.setTextColor(getResources().getColor(R.color.black_yj));
                 getTestdata();
                 break;
             case R.id.back:
@@ -697,14 +753,16 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
 
     private void initLocation() {
         if (ShipeiUtils.isLocationEnabled(context)) {
-            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_location));
-            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE));
+            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW));
+            //启用定位蓝点
+            mAMap.setMyLocationEnabled(true);
             mlocationClient = new AMapLocationClient(this);
             mLocationOption = new AMapLocationClientOption();
             //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位间隔,单位毫秒,默认为2000ms
-            mLocationOption.setInterval(1000);
+//            mLocationOption.setInterval(1000);
             mLocationOption.setOnceLocation(true);
             mlocationClient.setLocationOption(mLocationOption);
             mlocationClient.startLocation();
@@ -713,17 +771,21 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
             mlocationClient.setLocationListener(new AMapLocationListener() {
                 @Override
                 public void onLocationChanged(AMapLocation aMapLocation) {
+
                     if (aMapLocation != null) {
                         if (aMapLocation.getErrorCode() == 0) {
-                            //启用定位蓝点
-                            mAMap.setMyLocationEnabled(true);
+
+
 //                        city.setText(aMapLocation.getCity());
 //                        town.setText(aMapLocation.getDistrict());
 //                        province.setText(aMapLocation.getProvince());
                             x = aMapLocation.getLongitude();//获取经度
                             y = aMapLocation.getLatitude();//获取纬度
-//                        LatLng latLng = new LatLng(y, x);
+                            LatLng latLng = new LatLng(y, x);
 //                        addMarkersToMap(latLng);
+
+
+
                             getTestdata();
                             selectItem = true;
                             sousuo_tv.setText(aMapLocation.getAoiName());
@@ -741,7 +803,7 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
             });
         } else {
             //取消定位蓝点
-            mAMap.setMyLocationEnabled(false);
+//            mAMap.setMyLocationEnabled(false);
             //移除之前的数据
             forecast_time.setText("                                   ");
             province.setText("");
@@ -786,14 +848,28 @@ public class GdybGaoDeActivity extends BaseActivity implements View.OnClickListe
     public void onMapClick(LatLng point) {
 //        LatLonPoint latLonPoint = new LatLonPoint(point.latitude, point.longitude);
 //        getAddress(latLonPoint);
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
-        mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE));
+//        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+//        mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE));
         if (marker != null)
             marker.destroy();
         addMarkersToMap(point);
         x = point.longitude;
         y = point.latitude;
         clickMap = true;
+
+
+        mAMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(point, 7, 0, 0)));
+        Projection projection = mAMap.getProjection();
+        Point center = projection.toScreenLocation(point);
+        //当前(屏幕上的点 )
+        mMarkerX = center.x;
+        mMarderY = center.y;
+        int height = ShipeiUtils.getHeight(context) / 5;
+        mMarderY = mMarderY + height;
+        Point pointa = new Point(mMarkerX, mMarderY);
+        LatLng latLng = projection.fromScreenLocation(pointa);
+        mAMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 7, 0, 0)));
+
         getTestdata();
     }
 

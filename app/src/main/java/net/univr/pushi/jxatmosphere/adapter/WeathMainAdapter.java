@@ -188,26 +188,95 @@ public class WeathMainAdapter extends BaseQuickAdapter<GdybBeen.DataBean, BaseVi
 //    }
 
 
+//    public static JsonArray initWeathTuPianJson() {
+//        String jsonArrayStr = " [\n" +
+//                "  {\"name\":\"大雪\",\"image\":\"weather_daxue_2x\"},\n" +
+//                "  {\"name\":\"大雨\",\"image\":\"weather_dayu_2x\"},\n" +
+//                "  {\"name\":\"冻雨\",\"image\":\"weather_dongyu_2x\"},\n" +
+//                "  {\"name\":\"多云夜\",\"image\":\"weather_duoyun_ye_2x\"},\n" +
+//                "  {\"name\":\"多云\",\"image\":\"weather_duoyun_2x\"},\n" +
+//                "  {\"name\":\"风\",\"image\":\"weather_feng_2x\"},\n" +
+//                "  {\"name\":\"霾\",\"image\":\"weather_mai_2x\"},\n" +
+//                "  {\"name\":\"晴\",\"image\":\"weather_qing_2x\"},\n" +
+//                "  {\"name\":\"晴夜\",\"image\":\"weather_qingye_2x\"},\n" +
+//                "  {\"name\":\"雾\",\"image\":\"weather_wu_2x\"},\n" +
+//                "  {\"name\":\"小雪\",\"image\":\"weather_xiaoxue_2x\"},\n" +
+//                "  {\"name\":\"小雨\",\"image\":\"weather_xiaoyu_2x\"},\n" +
+//                "  {\"name\":\"雨\",\"image\":\"weather_xiaoyu_2x\"},\n" +
+//                "  {\"name\":\"雪\",\"image\":\"weather_xiaoxue_2x\"},\n" +
+//                "  {\"name\":\"阴\",\"image\":\"weather_yin_2x\"},\n" +
+//                "  {\"name\":\"中雪\",\"image\":\"weather_zhongxue_2x\"},\n" +
+//                "  {\"name\":\"中雨\",\"image\":\"weather_zhongyu_2x\"}\n" +
+//                "  ]\n";
+//        JsonParser parser = new JsonParser();
+//        JsonArray JsonArray = parser.parse(jsonArrayStr).getAsJsonArray();
+//        return JsonArray;
+//    }
+
+
+//    public static JsonArray initWeathTuPianJson() {
+//        String jsonArrayStr =" [\n" +
+//                "  {\"name\":\"晴\",\"image\":\"ic_weather_100\"},\n" +
+//                "  {\"name\":\"晴夜\",\"image\":\"ic_weather_100_n\"},\n" +
+//                "  {\"name\":\"阴\",\"image\":\"ic_weather_104\"},\n" +
+//                "  {\"name\":\"阴夜\",\"image\":\"ic_weather_104_n\"},\n" +
+//                "  {\"name\":\"多云\",\"image\":\"ic_weather_101\"},\n" +
+//                "  {\"name\":\"多云夜\",\"image\":\"ic_weather_101_n\"},\n" +
+//                "  {\"name\":\"霾\",\"image\":\"ic_weather_200\"},\n" +
+//                "  {\"name\":\"雾\",\"image\":\"ic_weather_502\"},\n" +
+//                "  {\"name\":\"沙尘暴\",\"image\":\"ic_weather_208\"},\n" +
+//                "  {\"name\":\"强沙尘暴\",\"image\":\"ic_weather_507\"},\n" +
+//                "  {\"name\":\"雪\",\"image\":\"ic_weather_901\"},\n" +
+//                "  {\"name\":\"小雪\",\"image\":\"ic_weather_400\"},\n" +
+//                "  {\"name\":\"中雪\",\"image\":\"ic_weather_401\"},\n" +
+//                "  {\"name\":\"大雪\",\"image\":\"ic_weather_402\"},\n" +
+//                "  {\"name\":\"暴雪\",\"image\":\"ic_weather_403\"},\n" +
+//                "  {\"name\":\"雨夹雪\",\"image\":\"ic_weather_404\"},\n" +
+//                "  {\"name\":\"雨\",\"image\":\"ic_weather_305\"},\n" +
+//                "  {\"name\":\"小雨\",\"image\":\"ic_weather_305\"},\n" +
+//                "  {\"name\":\"中雨\",\"image\":\"ic_weather_306\"},\n" +
+//                "  {\"name\":\"大雨\",\"image\":\"ic_weather_307\"},\n" +
+//                "  {\"name\":\"暴雨\",\"image\":\"ic_weather_308\"},\n" +
+//                "  {\"name\":\"大暴雨\",\"image\":\"ic_weather_309\"},\n" +
+//                "  {\"name\":\"冻雨\",\"image\":\"ic_weather_310\"},\n" +
+//                "  {\"name\":\"阵雨\",\"image\":\"ic_weather_300\"},\n" +
+//                "  {\"name\":\"冰雹\",\"image\":\"ic_weather_313\"},\n" +
+//                "  {\"name\":\"雷阵雨\",\"image\":\"ic_weather_302\"}\n" +
+//                "  ]\n";
+//        JsonParser parser = new JsonParser();
+//        JsonArray JsonArray = parser.parse(jsonArrayStr).getAsJsonArray();
+//        return JsonArray;
+//    }
+
     public static JsonArray initWeathTuPianJson() {
-        String jsonArrayStr = " [\n" +
-                "  {\"name\":\"大雪\",\"image\":\"weather_daxue_2x\"},\n" +
-                "  {\"name\":\"大雨\",\"image\":\"weather_dayu_2x\"},\n" +
-                "  {\"name\":\"冻雨\",\"image\":\"weather_dongyu_2x\"},\n" +
-                "  {\"name\":\"多云夜\",\"image\":\"weather_duoyun_ye_2x\"},\n" +
-                "  {\"name\":\"多云\",\"image\":\"weather_duoyun_2x\"},\n" +
-                "  {\"name\":\"风\",\"image\":\"weather_feng_2x\"},\n" +
-                "  {\"name\":\"霾\",\"image\":\"weather_mai_2x\"},\n" +
-                "  {\"name\":\"晴\",\"image\":\"weather_qing_2x\"},\n" +
-                "  {\"name\":\"晴夜\",\"image\":\"weather_qingye_2x\"},\n" +
-                "  {\"name\":\"雾\",\"image\":\"weather_wu_2x\"},\n" +
-                "  {\"name\":\"小雪\",\"image\":\"weather_xiaoxue_2x\"},\n" +
-                "  {\"name\":\"小雨\",\"image\":\"weather_xiaoyu_2x\"},\n" +
-                "  {\"name\":\"雨\",\"image\":\"weather_xiaoyu_2x\"},\n" +
-                "  {\"name\":\"雪\",\"image\":\"weather_xiaoxue_2x\"},\n" +
-                "  {\"name\":\"阴\",\"image\":\"weather_yin_2x\"},\n" +
-                "  {\"name\":\"中雪\",\"image\":\"weather_zhongxue_2x\"},\n" +
-                "  {\"name\":\"中雨\",\"image\":\"weather_zhongyu_2x\"}\n" +
-                "  ]\n";
+        String jsonArrayStr ="[\n" +
+                "  {\"name\":\"晴\",\"image\":\"ic_weather_100\"},\n" +
+                "  {\"name\":\"晴夜\",\"image\":\"ic_weather_100_n\"},\n" +
+                "  {\"name\":\"阴\",\"image\":\"ic_weather_104\"},\n" +
+                "  {\"name\":\"阴夜\",\"image\":\"ic_weather_104_n\"},\n" +
+                "  {\"name\":\"多云\",\"image\":\"ic_weather_101\"},\n" +
+                "  {\"name\":\"多云夜\",\"image\":\"ic_weather_101_n\"},\n" +
+                "  {\"name\":\"霾\",\"image\":\"ic_weather_502\"},\n" +
+                "  {\"name\":\"雾\",\"image\":\"ic_weather_508\"},\n" +
+                "  {\"name\":\"沙尘暴\",\"image\":\"ic_weather_208\"},\n" +
+                "  {\"name\":\"强沙尘暴\",\"image\":\"ic_weather_507\"},\n" +
+                "  {\"name\":\"雪\",\"image\":\"ic_weather_901\"},\n" +
+                "  {\"name\":\"小雪\",\"image\":\"ic_weather_400\"},\n" +
+                "  {\"name\":\"中雪\",\"image\":\"ic_weather_401\"},\n" +
+                "  {\"name\":\"大雪\",\"image\":\"ic_weather_402\"},\n" +
+                "  {\"name\":\"暴雪\",\"image\":\"ic_weather_403\"},\n" +
+                "  {\"name\":\"雨夹雪\",\"image\":\"ic_weather_404\"},\n" +
+                "  {\"name\":\"雨\",\"image\":\"ic_weather_305\"},\n" +
+                "  {\"name\":\"小雨\",\"image\":\"ic_weather_305\"},\n" +
+                "  {\"name\":\"中雨\",\"image\":\"ic_weather_306\"},\n" +
+                "  {\"name\":\"大雨\",\"image\":\"ic_weather_307\"},\n" +
+                "  {\"name\":\"暴雨\",\"image\":\"ic_weather_308\"},\n" +
+                "  {\"name\":\"大暴雨\",\"image\":\"ic_weather_309\"},\n" +
+                "  {\"name\":\"冻雨\",\"image\":\"ic_weather_310\"},\n" +
+                "  {\"name\":\"阵雨\",\"image\":\"ic_weather_300\"},\n" +
+                "  {\"name\":\"冰雹\",\"image\":\"ic_weather_200\"},\n" +
+                "  {\"name\":\"雷阵雨\",\"image\":\"ic_weather_302\"}\n" +
+                "  ]";
         JsonParser parser = new JsonParser();
         JsonArray JsonArray = parser.parse(jsonArrayStr).getAsJsonArray();
         return JsonArray;
@@ -221,7 +290,7 @@ public class WeathMainAdapter extends BaseQuickAdapter<GdybBeen.DataBean, BaseVi
     }
 
     public int double2zhen(double num_d) {
-        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_UP);
+        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_HALF_UP);
         return bg.intValue();
     }
 }

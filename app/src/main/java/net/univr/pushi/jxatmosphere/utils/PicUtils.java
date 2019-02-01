@@ -33,6 +33,14 @@ public class PicUtils {
         File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/images" + "/" + pack);//设置保存路径
         if (!PHOTO_DIR.exists())
             PHOTO_DIR.mkdirs();
+//        else{
+//            File[] files = PHOTO_DIR.listFiles();
+//            if(files!=null){
+//                for (int j = 0; j < files.length; j++) {
+//                    files[j].delete();
+//                }
+//            }
+//        }
         File avaterFile = new File(PHOTO_DIR, name);//设置文件名称
         try {
 

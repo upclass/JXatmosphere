@@ -9,7 +9,7 @@
     <color name="black">#2c2a2a</color>
     <color name="yujin_black">#514949</color>
     <color name="tine_black">#e3e3e3</color>
-    <color name="tine_black1">#8e8a8a</color>
+    <color name="tine_black1">#9b9999</color>
 
 
     <color name="white">#FFFFFF</color><!--白色 -->
@@ -20,7 +20,10 @@
     <color name="toolbar_color">#0081e7</color><!--题头颜色 -->
     <color name="translucent_background">#00000000</color>
     <color name="red">#df1324</color>
-
+    <color name="diver">#c7c7cb</color>
+    <color name="useless">#f0f0f0</color>
+    <color name="black_yj">#393838</color>
+    <color name="colorTransparent">#00000000</color>
 
 
 </resources>

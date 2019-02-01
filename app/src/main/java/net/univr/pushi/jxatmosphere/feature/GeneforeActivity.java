@@ -3,18 +3,19 @@ package net.univr.pushi.jxatmosphere.feature;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.jzxiang.pickerview.TimePickerDialog;
+import com.jzxiang.pickerview.data.Type;
+import com.jzxiang.pickerview.listener.OnDateSetListener;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.adapter.MyPagerAdapter;
@@ -23,13 +24,14 @@ import net.univr.pushi.jxatmosphere.beens.GeneforeMenuBeen;
 import net.univr.pushi.jxatmosphere.fragments.GeneforeFragment;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.qqtheme.framework.picker.DatePicker;
-import cn.qqtheme.framework.util.ConvertUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -40,7 +42,7 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
     @BindView(R.id.time)
     TextView time;
     String timeStr;
-    DatePicker picker;
+    //    DatePicker picker;
     int mYear;
     int mMonth;
     int mDay;
@@ -55,8 +57,8 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
     RelativeLayout relative3;
     @BindView(R.id.relative4)
     RelativeLayout relative4;
-    @BindView(R.id.relative5)
-    RelativeLayout relative5;
+//    @BindView(R.id.relative5)
+//    RelativeLayout relative5;
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
@@ -73,13 +75,20 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
     TextView title4;
     @BindView(R.id.tabline4)
     View tabline4;
-    @BindView(R.id.title5)
-    TextView title5;
-    @BindView(R.id.tabline5)
-    View tabline5;
+    //    @BindView(R.id.title5)
+//    TextView title5;
+//    @BindView(R.id.tabline5)
+//    View tabline5;
     List<Fragment> list;
     List<GeneforeMenuBeen> menuList;
     private String tag;
+    @BindView(R.id.left)
+    ImageView left;
+    @BindView(R.id.right)
+    ImageView right;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    TimePickerDialog mDialogAll;
 
     @Override
     public int getLayoutId() {
@@ -97,10 +106,12 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
         relative2.setOnClickListener(this);
         relative3.setOnClickListener(this);
         relative4.setOnClickListener(this);
-        relative5.setOnClickListener(this);
+//        relative5.setOnClickListener(this);
+        left.setOnClickListener(this);
+        right.setOnClickListener(this);
+        fab.setOnClickListener(this);
         initMenu();
         getTestdata();
-
     }
 
     private void getNowTime() {
@@ -122,29 +133,29 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.confirm:
-                timeStr = time.getText().toString();
-                initFragmentByParam(timeStr);
-                picker.dismiss();
-                break;
-            case R.id.cancel:
-                time.setText(timeStr);
-                picker.dismiss();
-                break;
+//            case R.id.confirm:
+//                timeStr = time.getText().toString();
+//                initFragmentByParam(timeStr);
+//                picker.dismiss();
+//                break;
+//            case R.id.cancel:
+//                time.setText(timeStr);
+//                picker.dismiss();
+//                break;
             case R.id.reload:
                 if (list != null && list.size() > 0) {
                     int currentItem = viewPager.getCurrentItem();
                     GeneforeFragment fragment = (GeneforeFragment) list.get(currentItem);
                     ProgressDialog progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
                     progressDialog.setCancelable(true);
-                    Handler handler=new Handler();
+                    Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             progressDialog.dismiss();
                         }
-                    },1000);
-                    fragment.time=time.getText().toString().substring(2, time.getText().toString().length());
+                    }, 1000);
+                    fragment.time = time.getText().toString().substring(2, time.getText().toString().length());
                     fragment.getTestdata();
                 }
 
@@ -185,42 +196,134 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                 viewPager.setCurrentItem(3);
                 break;
             case R.id.time:
-                picker = new DatePicker(this);
-                picker.setOffset(2);
-                LayoutInflater inflater = LayoutInflater.from(context);
-                View layout = inflater.inflate(R.layout.top_time_select_layout, null);
-                Button confirm = layout.findViewById(R.id.confirm);
-                Button cancel = layout.findViewById(R.id.cancel);
-                confirm.setOnClickListener(this);
-                cancel.setOnClickListener(this);
-                picker.setHeaderView(layout);
-                picker.setUseWeight(true);
-                picker.setTopPadding(ConvertUtils.toPx(this, 10));
-                picker.setGravity(Gravity.BOTTOM);
-                picker.setRangeStart(2016, 1, 1);
-                picker.setRangeEnd(mYear, mMonth, mDay);
-                picker.setSelectedItem(mYear, mMonth, mDay);
-                picker.setCanceledOnTouchOutside(false);
-                picker.setResetWhileWheel(false);
-                picker.setOnWheelListener(new DatePicker.OnWheelListener() {
-                    @Override
-                    public void onYearWheeled(int index, String year) {
-                        time.setText(year + "-" + picker.getSelectedMonth() + "-" + picker.getSelectedDay());
-                    }
+//                picker = new DatePicker(this);
+//                picker.setOffset(2);
+//                LayoutInflater inflater = LayoutInflater.from(context);
+//                View layout = inflater.inflate(R.layout.top_time_select_layout, null);
+//                Button confirm = layout.findViewById(R.id.confirm);
+//                Button cancel = layout.findViewById(R.id.cancel);
+//                confirm.setOnClickListener(this);
+//                cancel.setOnClickListener(this);
+//                picker.setHeaderView(layout);
+//                picker.setUseWeight(true);
+//                picker.setTopPadding(ConvertUtils.toPx(this, 10));
+//                picker.setGravity(Gravity.BOTTOM);
+//                picker.setRangeStart(2016, 1, 1);
+//                picker.setRangeEnd(mYear, mMonth, mDay);
+//                picker.setSelectedItem(mYear, mMonth, mDay);
+//                picker.setCanceledOnTouchOutside(false);
+//                picker.setResetWhileWheel(false);
+//                picker.setOnWheelListener(new DatePicker.OnWheelListener() {
+//                    @Override
+//                    public void onYearWheeled(int index, String year) {
+//                        time.setText(year + "-" + picker.getSelectedMonth() + "-" + picker.getSelectedDay());
+//                    }
+//
+//                    @Override
+//                    public void onMonthWheeled(int index, String month) {
+//                        time.setText(picker.getSelectedYear() + "-" + month + "-" + picker.getSelectedDay());
+//                    }
+//
+//                    @Override
+//                    public void onDayWheeled(int index, String day) {
+//                        time.setText(picker.getSelectedYear() + "-" + picker.getSelectedMonth() + "-" + day);
+//                    }
+//                });
+//                picker.show();
+                initTimePick().show(getSupportFragmentManager(), "null");
+                break;
+            case R.id.left:
+                long l = dateToStamp(timeStr);
+                long l1 = l - 3600 * 1000 * 24;
+                time.setText(stampToDate(l1));
+                timeStr = stampToDate(l1);
+                initFragmentByParam(timeStr);
+                break;
+            case R.id.right:
+                String s = time.getText().toString();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String format1 = format.format(new Date());
+                if (format1.equals(s)) {
+                    ;
+                } else {
+                    long l2 = dateToStamp(timeStr);
+                    long l3 = l2 + 3600 * 1000 * 24;
+                    time.setText(stampToDate(l3));
+                    timeStr = stampToDate(l3);
+                    initFragmentByParam(timeStr);
+                }
+                break;
+            case R.id.fab:
+                String tempTime;
+                Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH) + 1;
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
+                if (mMonth < 10)
+                    tempTime = mYear + "-0" + mMonth + "-" + mDay;
+                else
+                    tempTime = mYear + "-" + mMonth + "-" + mDay;
 
-                    @Override
-                    public void onMonthWheeled(int index, String month) {
-                        time.setText(picker.getSelectedYear() + "-" + month + "-" + picker.getSelectedDay());
-                    }
-
-                    @Override
-                    public void onDayWheeled(int index, String day) {
-                        time.setText(picker.getSelectedYear() + "-" + picker.getSelectedMonth() + "-" + day);
-                    }
-                });
-                picker.show();
+                for (int i = 0; i < list.size(); i++) {
+                    GeneforeFragment fragment = (GeneforeFragment) list.get(i);
+                    fragment.getNewData();
+                }
+                setTime(tempTime);
+                timeStr = time.getText().toString();
                 break;
         }
+    }
+
+    private TimePickerDialog initTimePick() {
+        if (mDialogAll == null) {
+            mDialogAll = new TimePickerDialog.Builder()
+                    .setCallBack(new OnDateSetListener() {
+                        @Override
+                        public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
+                            time.setText(stampToDate(millseconds));
+                            timeStr = time.getText().toString();
+                            initFragmentByParam(timeStr);
+                        }
+                    })
+                    .setCancelStringId("取消")
+                    .setSureStringId("确定")
+                    .setTitleStringId("选择时间")
+                    .setYearText("年")
+                    .setMonthText("月")
+                    .setDayText("日")
+                    .setHourText("时")
+                    .setMinuteText("分")
+                    .setCyclic(true)
+                    .setMinMillseconds(dateToStamp("1990-01-01"))
+                    .setMaxMillseconds(dateToStamp("2030-01-01"))
+                    .setCurrentMillseconds(System.currentTimeMillis())
+                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
+                    .setType(Type.YEAR_MONTH_DAY)
+                    .setWheelItemTextNormalColor(getResources().getColor(R.color.timetimepicker_default_text_color))
+                    .setWheelItemTextSelectorColor(getResources().getColor(R.color.timepicker_toolbar_bg))
+                    .setWheelItemTextSize(12)
+                    .build();
+            return mDialogAll;
+        }
+        return mDialogAll;
+    }
+
+
+    public long dateToStamp(String s) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date.getTime();
+    }
+
+    public String stampToDate(long stamp) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = simpleDateFormat.format(stamp);
+        return date;
     }
 
 
@@ -237,15 +340,15 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                     GeneforeFragment geneforeFragment1 = GeneforeFragment.newInstance(timeParams, "早晨");
                     GeneforeFragment geneforeFragment2 = GeneforeFragment.newInstance(timeParams, "中午");
                     GeneforeFragment geneforeFragment3 = GeneforeFragment.newInstance(timeParams, "下午");
-                    GeneforeFragment geneforeFragment4 = GeneforeFragment.newInstance(timeParams, "三天");
+//                    GeneforeFragment geneforeFragment4 = GeneforeFragment.newInstance(timeParams, "三天");
                     list.add(geneforeFragment1);
                     list.add(geneforeFragment2);
                     list.add(geneforeFragment3);
-                    list.add(geneforeFragment4);
+//                    list.add(geneforeFragment4);
                     MyPagerAdapter adapter = new MyPagerAdapter(
                             getSupportFragmentManager(), list, null);
                     // 绑定适配器
-                    viewPager.setOffscreenPageLimit(4);
+                    viewPager.setOffscreenPageLimit(3);
                     viewPager.setAdapter(adapter);
 
                     if (tag.equals("早晨")) {
@@ -265,11 +368,11 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                         changeMenuStyle();
                     }
 
-                    if (tag.equals("三天")) {
-                        viewPager.setCurrentItem(3);
-                        menuList.get(3).setSelect(true);
-                        changeMenuStyle();
-                    }
+//                    if (tag.equals("三天")) {
+//                        viewPager.setCurrentItem(3);
+//                        menuList.get(3).setSelect(true);
+//                        changeMenuStyle();
+//                    }
                     viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                         @Override
                         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -298,7 +401,6 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
-
     }
 
     void initFragmentByParam(String time) {
@@ -313,11 +415,11 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
         Fragment geneforeFragment1 = GeneforeFragment.newInstance(time1, "早晨");
         Fragment geneforeFragment2 = GeneforeFragment.newInstance(time1, "中午");
         Fragment geneforeFragment3 = GeneforeFragment.newInstance(time1, "下午");
-        Fragment geneforeFragment4 = GeneforeFragment.newInstance(time1, "三天");
+//        Fragment geneforeFragment4 = GeneforeFragment.newInstance(time1, "三天");
         list.add(geneforeFragment1);
         list.add(geneforeFragment2);
         list.add(geneforeFragment3);
-        list.add(geneforeFragment4);
+//        list.add(geneforeFragment4);
         MyPagerAdapter adapter = new MyPagerAdapter(
                 getSupportFragmentManager(), list, huancunFragment);
         viewPager.setAdapter(adapter);
@@ -329,7 +431,7 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
 
     void initMenu() {
         menuList = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             GeneforeMenuBeen menu = new GeneforeMenuBeen();
             if (i == 0) {
                 menu.setTag("早晨");
@@ -343,10 +445,10 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                 menu.setTag("下午");
                 menu.setSelect(false);
             }
-            if (i == 3) {
-                menu.setTag("三天");
-                menu.setSelect(false);
-            }
+//            if (i == 3) {
+//                menu.setTag("三天");
+//                menu.setSelect(false);
+//            }
             menuList.add(menu);
         }
     }
@@ -359,42 +461,42 @@ public class GeneforeActivity extends BaseActivity implements View.OnClickListen
                     title2.setTextSize(17);
                     title3.setTextSize(15);
                     title4.setTextSize(15);
-                    title5.setTextSize(15);
+//                    title5.setTextSize(15);
                     tabline2.setVisibility(View.VISIBLE);
                     tabline3.setVisibility(View.INVISIBLE);
                     tabline4.setVisibility(View.INVISIBLE);
-                    tabline5.setVisibility(View.INVISIBLE);
+//                    tabline5.setVisibility(View.INVISIBLE);
                 }
                 if (i == 1) {
                     title2.setTextSize(15);
                     title3.setTextSize(17);
                     title4.setTextSize(15);
-                    title5.setTextSize(15);
+//                    title5.setTextSize(15);
                     tabline2.setVisibility(View.INVISIBLE);
                     tabline3.setVisibility(View.VISIBLE);
                     tabline4.setVisibility(View.INVISIBLE);
-                    tabline5.setVisibility(View.INVISIBLE);
+//                    tabline5.setVisibility(View.INVISIBLE);
                 }
                 if (i == 2) {
                     title2.setTextSize(15);
                     title3.setTextSize(15);
                     title4.setTextSize(17);
-                    title5.setTextSize(15);
+//                    title5.setTextSize(15);
                     tabline2.setVisibility(View.INVISIBLE);
                     tabline3.setVisibility(View.INVISIBLE);
                     tabline4.setVisibility(View.VISIBLE);
-                    tabline5.setVisibility(View.INVISIBLE);
+//                    tabline5.setVisibility(View.INVISIBLE);
                 }
-                if (i == 3) {
-                    title2.setTextSize(15);
-                    title3.setTextSize(15);
-                    title4.setTextSize(15);
-                    title5.setTextSize(17);
-                    tabline2.setVisibility(View.INVISIBLE);
-                    tabline3.setVisibility(View.INVISIBLE);
-                    tabline4.setVisibility(View.INVISIBLE);
-                    tabline5.setVisibility(View.VISIBLE);
-                }
+//                if (i == 3) {
+//                    title2.setTextSize(15);
+//                    title3.setTextSize(15);
+//                    title4.setTextSize(15);
+//                    title5.setTextSize(17);
+//                    tabline2.setVisibility(View.INVISIBLE);
+//                    tabline3.setVisibility(View.INVISIBLE);
+//                    tabline4.setVisibility(View.INVISIBLE);
+//                    tabline5.setVisibility(View.VISIBLE);
+//                }
             }
         }
     }

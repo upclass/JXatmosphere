@@ -242,11 +242,17 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
                             fragmentHuancun.add(fragment);
                         }
                     }
+                    layoutManager.scrollToPositionWithOffset(position,0);
+                    layoutManager.setStackFromEnd(false);
+                    LinearLayoutManager layoutManager1 = (LinearLayoutManager) mRecyclerView1.getLayoutManager();
+                    layoutManager1.scrollToPositionWithOffset(0,0);
+                    layoutManager1.setStackFromEnd(false);
                 }
             });
         }
         return menuAdapter;
     }
+
 
 
     private DmcgjcMenuAdapterForSwzd getAdapter1() {
@@ -258,7 +264,8 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
             mRecyclerView1.setLayoutManager(layoutManager);
             mRecyclerView1.setAdapter(mAdapter1);
             mAdapter1.setOnItemChildClickListener((adapter, view, position) -> {
-
+                layoutManager.scrollToPositionWithOffset(position,0);
+                layoutManager.setStackFromEnd(false);
                 List<DmcgjcmenuBeen.DataBean> data = adapter.getData();
                 int lastclick = ((DmcgjcMenuAdapterForSwzd) adapter).getLastposition();
                 DmcgjcmenuBeen.DataBean dataBeanlasted = data.get(lastclick);
@@ -338,18 +345,22 @@ public class DMCGJCActivity extends BaseActivity implements View.OnClickListener
                 finish();
             case R.id.reload:
                 int currentItem = mViewPager.getCurrentItem();
-                if (twoMenuList.get(0).getZnName().equals("气象水文")) {
-                    if (currentItem == 0) ((SWZDYLFragment) fragmentlist.get(0)).getTestdata();
-                    else {
+                if(null==twoMenuList||twoMenuList.size()==0){
+                    getCustomMenuData();
+                }else{
+                    if (twoMenuList.get(0).getZnName().equals("气象水文")) {
+                        if (currentItem == 0) ((SWZDYLFragment) fragmentlist.get(0)).getTestdata();
+                        else {
+                            DMCGJCFragment fragment = (DMCGJCFragment) fragmentlist.get(currentItem);
+                            PicUtils.deleteDir("dmcgjc/" + fragment.type + "/" + fragment.ctype);
+                            fragment.getTestdata();
+                        }
+
+                    } else {
                         DMCGJCFragment fragment = (DMCGJCFragment) fragmentlist.get(currentItem);
                         PicUtils.deleteDir("dmcgjc/" + fragment.type + "/" + fragment.ctype);
                         fragment.getTestdata();
                     }
-
-                } else {
-                    DMCGJCFragment fragment = (DMCGJCFragment) fragmentlist.get(currentItem);
-                    PicUtils.deleteDir("dmcgjc/" + fragment.type + "/" + fragment.ctype);
-                    fragment.getTestdata();
                 }
                 break;
         }

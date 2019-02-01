@@ -7,8 +7,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:popupMenuStyle">@style/MenuTextStyle</item>
         <!--屏蔽多点触控，否则左滑时可以同时左滑多条item。-->
-        <item name="android:windowEnableSplitTouch" >false </item>
-        <item name="android:splitMotionEvents" >false </item>
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
 
     </style>
 
@@ -107,5 +107,20 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
+    <!-- 自定义Dialog -->
+    <style name="Teldialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/colorTransparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
 
 </resources>

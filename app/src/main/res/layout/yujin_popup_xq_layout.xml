@@ -96,21 +96,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="签发人:"
-            android:textColor="@color/yujin_black"
-            android:textSize="15dp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="签发人:"-->
+            <!--android:textColor="@color/yujin_black"-->
+            <!--android:textSize="15dp" />-->
 
-        <TextView
-            android:id="@+id/qfr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="9dp"
-            android:text="陈邹瑞"
-            android:textColor="@color/yujin_black"
-            android:textSize="15dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/qfr"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="9dp"-->
+            <!--android:text="陈邹瑞"-->
+            <!--android:textColor="@color/yujin_black"-->
+            <!--android:textSize="15dp" />-->
 
     </LinearLayout>
 
@@ -119,19 +119,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:text="预报范围:"
-            android:textColor="@color/yujin_black"
-            android:textSize="15dp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="12dp"-->
+            <!--android:text="预报范围:"-->
+            <!--android:textColor="@color/yujin_black"-->
+            <!--android:textSize="15dp" />-->
 
         <TextView
             android:id="@+id/ybfw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="9dp"
+            android:layout_marginLeft="12dp"
             android:text="陈邹瑞"
             android:textColor="@color/yujin_black"
             android:textSize="15dp" />

@@ -43,7 +43,7 @@ import com.vector.update_app.service.DownloadService;
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.BdskBeen;
-import net.univr.pushi.jxatmosphere.beens.DutyBeen;
+import net.univr.pushi.jxatmosphere.beens.DutyBeen1;
 import net.univr.pushi.jxatmosphere.remote.ApiConstants;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.CProgressDialogUtils;
@@ -253,12 +253,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         YujinXinhao.setOnTouchListener(this);
         Zytqyb.setOnClickListener(this);
         Zytqyb.setOnTouchListener(this);
-        dsljyb.setOnClickListener(this);
-        dsljyb.setOnTouchListener(this);
-        grapes_ms.setOnClickListener(this);
-        grapes_ms.setOnTouchListener(this);
-        hdqyms.setOnClickListener(this);
-        hdqyms.setOnTouchListener(this);
+//        dsljyb.setOnClickListener(this);
+//        dsljyb.setOnTouchListener(this);
+//        grapes_ms.setOnClickListener(this);
+//        grapes_ms.setOnTouchListener(this);
+//        hdqyms.setOnClickListener(this);
+//        hdqyms.setOnTouchListener(this);
         navigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -307,6 +307,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 // 若没有获得相应权限，则弹出对话框获取
         else {
             permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);//申请权限//申请权限
+//            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            //相应操作
+        }
+// 若没有获得相应权限，则弹出对话框获取
+        else {
+            permissionList.add(Manifest.permission.CALL_PHONE);//申请权限//申请权限
 //            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
 
@@ -587,22 +597,39 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DutyBeen -> {
-                    List<DutyBeen.DataBean.DutysBean> dutys = DutyBeen.getData().getDutys();
+                    List<DutyBeen1.DataBean.DutysBean> dutys = DutyBeen.getData().getDutys();
+                    for (int i = 0; i < dutys.size(); i++) {
+                        net.univr.pushi.jxatmosphere.beens.DutyBeen1.DataBean.DutysBean dutysBean = dutys.get(i);
+                        String duty = dutysBean.getDuty();
+                        String name = dutysBean.getName();
+                        String property = dutysBean.getProperty();
+                        String date = dutysBean.getDate();
+                        if (duty.equals("预报首席")) {
+                            leader.setText(name + "(" + duty + ")");
+                            leader_time.setText(property);
+                            leader_date.setText(date);
+                        }
+                        if (duty.equals("带班领导")) {
+                            chief.setText(name + "(" + duty + ")");
+                            chief_time.setText(property);
+                            chief_date.setText(date);
+                        }
+                    }
 
-                    String duty = dutys.get(0).getDuty();
-                    String name = dutys.get(0).getName();
-                    String property = dutys.get(0).getProperty();
-                    String date = dutys.get(0).getDate();
-                    leader.setText(name + "(" + duty + ")");
-                    leader_time.setText(property);
-                    leader_date.setText(date);
-                    String duty1 = dutys.get(1).getDuty();
-                    String name1 = dutys.get(1).getName();
-                    String property1 = dutys.get(1).getProperty();
-                    String date1 = dutys.get(1).getDate();
-                    chief.setText(name1 + "(" + duty1 + ")");
-                    chief_time.setText(property1);
-                    chief_date.setText(date1);
+//                    String duty = dutys.get(0).getDuty();
+//                    String name = dutys.get(0).getName();
+//                    String property = dutys.get(0).getProperty();
+//                    String date = dutys.get(0).getDate();
+//                    leader.setText(name + "(" + duty + ")");
+//                    leader_time.setText(property);
+//                    leader_date.setText(date);
+//                    String duty1 = dutys.get(1).getDuty();
+//                    String name1 = dutys.get(1).getName();
+//                    String property1 = dutys.get(1).getProperty();
+//                    String date1 = dutys.get(1).getDate();
+//                    chief.setText(name1 + "(" + duty1 + ")");
+//                    chief_time.setText(property1);
+//                    chief_date.setText(date1);
                 }, throwable ->
 
                 {
@@ -654,7 +681,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(intent43);
                 break;
             case R.id.main_content_item4_2:
-                Intent intent42 = new Intent(context, ForecasterScoreActivity.class);
+                Intent intent42 = new Intent(context, ForecasterScoreActivity1.class);
                 startActivity(intent42);
                 break;
             case R.id.main_content_item4_1:
@@ -679,7 +706,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.main_content_item2_4:
 //                Intent intent24 = new Intent(context, GdybActivity.class);
-                Intent intent24 = new Intent(context, GdybGaoDeActivity.class);
+                Intent intent24 = new Intent(context, GdybGaoDeActivity2.class);
                 startActivity(intent24);
                 break;
             case R.id.main_content_item0_1:
@@ -691,7 +718,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(intent31);
                 break;
             case R.id.main_content_item3_2:
-                Intent intent32 = new Intent(context, GeneforeActivity.class);
+                Intent intent32 = new Intent(context, GeneforeActivity1.class);
                 startActivity(intent32);
                 break;
             case R.id.main_content_item3_3:
@@ -715,7 +742,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(zytqyb);
                 break;
             case R.id.main_content_item2_3:
-                Intent radarForecast = new Intent(context, RadarForecastActivity.class);
+                Intent radarForecast = new Intent(context, DsljybGaodeActivity.class);
                 startActivity(radarForecast);
                 break;
             case R.id.main_content_item2_1:
@@ -725,10 +752,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.main_content_item3_4:
 //                Intent dsljyb = new Intent(context, DsljybActivity.class);
-                Intent dsljyb = new Intent(context, DsljybGaodeActivity.class);
-//                Intent dsljyb = new Intent(context, testActivity.class);
-
-                startActivity(dsljyb);
+//                Intent dsljyb = new Intent(context, DsljybGaodeActivity.class);
+//                startActivity(dsljyb);
                 break;
         }
 
@@ -823,7 +848,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     .setPositiveButton("是", new DialogInterface.OnClickListener() {//添加"Yes"按钮
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             startActivity(intent);
                         }
                     })
@@ -855,7 +880,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     String tempStr = data.getTEM();
                     Double aDouble = Double.valueOf(tempStr);
                     BigDecimal decimal = new BigDecimal(aDouble);
-                    int tempInt = decimal.setScale(0, BigDecimal.ROUND_UP).intValue();
+                    int tempInt = decimal.setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
                     temp.setText(tempInt + "℃");
 
                 }, throwable -> {

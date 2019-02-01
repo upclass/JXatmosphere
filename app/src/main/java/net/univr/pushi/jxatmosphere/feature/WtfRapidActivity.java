@@ -489,6 +489,9 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 if (selectTime.equals(""))
                     getTestdata();
                 else getTestDataBytime(timeMinusHour(-8,selectTime));
+
+                layoutManager.scrollToPositionWithOffset(position,0);
+                layoutManager.setStackFromEnd(false);
             });
         }
         return mAdapter1;

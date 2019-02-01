@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
@@ -33,7 +32,6 @@ import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
 import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
 import net.univr.pushi.jxatmosphere.interfaces.MapI;
-import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.GetResourceInt;
 import net.univr.pushi.jxatmosphere.utils.YujinWeiZhi;
 import net.univr.pushi.jxatmosphere.widget.MapScreenLinstenter;
@@ -44,8 +42,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class YujingActivity extends BaseActivity implements MapI, View.OnClickListener {
 
@@ -124,7 +120,7 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
         initArcgisUtils();
         initBaseMap();//初始化底图
         tag = "0";
-        getYujinInfo();
+//        getYujinInfo();
         startMapLinstenter();
     }
 
@@ -145,20 +141,20 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
     }
 
 
-    private void getYujinInfo() {
-        RetrofitHelper.getForecastWarn()
-                .getYujinInfo(tag)
-                .compose(bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(yunjinInfo -> {
-                    data = yunjinInfo.getData();
-                    showPollutionGrahpics(data);
-                }, throwable -> {
-                    LogUtils.e(throwable);
-                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
-                });
-    }
+//    private void getYujinInfo() {
+//        RetrofitHelper.getForecastWarn()
+//                .getYujinInfo(tag)
+//                .compose(bindToLifecycle())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(yunjinInfo -> {
+//                    data = yunjinInfo.getData();
+//                    showPollutionGrahpics(data);
+//                }, throwable -> {
+//                    LogUtils.e(throwable);
+//                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+//                });
+//    }
 
 
     private void initArcgisUtils() {
@@ -316,7 +312,7 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
                 shixian.setTextColor(getResources().getColor(R.color.toolbar_color));
                 getMissionGraphicLayer().getGraphics().clear();
                 tag = "0";
-                getYujinInfo();
+//                getYujinInfo();
                 break;
             case R.id.shixian:
                 if (popupWindowXq != null && popupWindow != null) {
@@ -329,13 +325,13 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
                 shixian.setTextColor(getResources().getColor(R.color.white));
                 getMissionGraphicLayer().getGraphics().clear();
                 tag = "1";
-                getYujinInfo();
+//                getYujinInfo();
                 break;
             case R.id.back:
                 finish();
                 break;
             case R.id.reload:
-                getYujinInfo();
+//                getYujinInfo();
                 break;
 
         }
@@ -383,8 +379,8 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
         TextView qxjXq = popLayoutXq.findViewById(R.id.qxj_xq);
         TextView sjXq = popLayoutXq.findViewById(R.id.sj_xq);
         TextView yby = popLayoutXq.findViewById(R.id.yby);
-        TextView qfr = popLayoutXq.findViewById(R.id.qfr);
-        TextView ybfw = popLayoutXq.findViewById(R.id.ybfw);
+//        TextView qfr = popLayoutXq.findViewById(R.id.qfr);
+//        TextView ybfw = popLayoutXq.findViewById(R.id.ybfw);
         TextView ybxx = popLayoutXq.findViewById(R.id.ybxx);
         LinearLayout ditu = popLayoutXq.findViewById(R.id.ditu);
         TextView gb_xq = popLayoutXq.findViewById(R.id.gb_xq);
@@ -404,8 +400,8 @@ public class YujingActivity extends BaseActivity implements MapI, View.OnClickLi
         qxjXq.setText(danwei);
         sjXq.setText(fabu);
         yby.setText(ybyStr);
-        qfr.setText(qfrStr);
-        ybfw.setText(fanweiStr);
+//        qfr.setText(qfrStr);
+//        ybfw.setText(fanweiStr);
         ybxx.setText(info);
         ditu.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -8,7 +8,10 @@ import android.widget.TextView;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
-import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
+import net.univr.pushi.jxatmosphere.beens.YujinInfo;
+import net.univr.pushi.jxatmosphere.utils.YujinWeiZhi;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 
@@ -45,14 +48,30 @@ public class YujinInfoActivity extends BaseActivity implements View.OnClickListe
     private void initDatas() {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        YuJinXinhaoBeen.DataBean data = (YuJinXinhaoBeen.DataBean) extras.get("data");
-        yujinYby.setText(data.getYubaoyuan());
+        ArrayList dataArrayList = (ArrayList) extras.get("data");
+        Object o = dataArrayList.get(0);
+        YujinInfo.DataBean data = (YujinInfo.DataBean) o;
+        StringBuilder diqu = initDiqu(data.getAcodes());
+        yujinYby.setText(data.getYuBaoYuan());
         yujinFbdw.setText(data.getDanwei());
         yujinFbsj.setText(data.getFabu());
-        yujinLb.setText(data.getZtname());
-        yujinDq.setText(data.getCitySelect());
-        content.setText(data.getJielun());
+        yujinLb.setText(data.getYujinInfo());
+        yujinDq.setText(diqu.toString());
+        content.setText(data.getContent());
     }
+
+    private StringBuilder initDiqu(String acode) {
+        StringBuilder ret=new StringBuilder();
+        String[] split = acode.split(",");
+
+        for (int i = 0; i < split.length; i++) {
+            ret.append(YujinWeiZhi.getTitle(split[i]));
+            ret.append(",");
+        }
+        ret.deleteCharAt(ret.length()-1);
+        return ret;
+    }
+
 
     private void initOnclick() {
         back.setOnClickListener(this);

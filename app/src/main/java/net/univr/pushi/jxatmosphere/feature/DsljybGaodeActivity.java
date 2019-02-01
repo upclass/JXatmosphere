@@ -1,5 +1,6 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,13 +17,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -31,8 +38,10 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.Projection;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.GroundOverlay;
 import com.amap.api.maps.model.GroundOverlayOptions;
 import com.amap.api.maps.model.LatLng;
@@ -118,7 +127,8 @@ public class DsljybGaodeActivity extends BaseActivity implements
 
     @BindView(R.id.pic_recycle)
     RecyclerView picRecycleview;
-
+    @BindView(R.id.menu_txt)
+    TextView menu_txt;
     Double x;
     Double y;
 
@@ -131,9 +141,17 @@ public class DsljybGaodeActivity extends BaseActivity implements
     List<String> overLayerUrls;
     GroundOverlay groundOverlay;
     private GeocodeSearch geocoderSearch;
-    @BindView(R.id.now_position)
-    ImageView now_position;
+    //    @BindView(R.id.now_position)
+//    ImageView now_position;
     MyLocationStyle myLocationStyle;
+    ListPopupWindow popupWindow;
+    List<String> menu;
+    private ArrayAdapter timeAdapter;
+    @BindView(R.id.myLinear)
+    LinearLayout myLinear;
+    private int mMarkerX, mMarderY;
+    @BindView(R.id.reload)
+    ImageView reload;
 
     @Override
     public int getLayoutId() {
@@ -189,6 +207,41 @@ public class DsljybGaodeActivity extends BaseActivity implements
     }
 
 
+    @SuppressLint("NewApi")
+    private void initSpinner() {
+        popupWindow = new ListPopupWindow(context);
+        menu = new ArrayList<>();
+        menu.add("降水");
+        menu.add("反射率");
+        timeAdapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, menu);
+        popupWindow.setAdapter(timeAdapter);
+        popupWindow.setAnchorView(myLinear);
+        popupWindow.setWidth(240);   //WRAP_CONTENT会出错
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setDropDownGravity(Gravity.START);
+        popupWindow.setModal(true);
+        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                initRecycleView();
+                if (position == 0) {
+                    menu_txt.setText("降水");
+                    popupWindow.dismiss();
+                    if (select.equals("now")) getDsljyb();
+                    else getDsljybSum();
+                }
+                if (position == 1) {
+                    menu_txt.setText("反射率");
+                    popupWindow.dismiss();
+                    getRefPicList();
+                }
+            }
+        });
+    }
+
+
     private void getProvinceFanWei() {
         DistrictSearch search = new DistrictSearch(getApplicationContext());
         DistrictSearchQuery query = new DistrictSearchQuery();
@@ -196,8 +249,33 @@ public class DsljybGaodeActivity extends BaseActivity implements
         query.setShowBoundary(true);
         search.setQuery(query);
         search.setOnDistrictSearchListener(this);
-
         search.searchDistrictAsyn();
+    }
+
+    private void getRefPicList() {
+        ProgressDialog progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
+        RetrofitHelper.getForecastWarn()
+                .getRefPicList(getTimeAddHour(forecast_time.getText().toString().substring(5, forecast_time.getText().toString().length()), -8), select)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(refReturn -> {
+                    progressDialog.dismiss();
+                    scrollView.setVisibility(View.VISIBLE);
+                    List<String> picList = refReturn.getPicList();
+                    overLayerUrls = picList;
+                    if (null == picList || picList.size() == 0) {
+                        if (groundOverlay != null) groundOverlay.remove();
+                    } else {
+                        String pic = picList.get(0);
+                        changeOverLayer(pic);
+                    }
+                }, throwable -> {
+                    progressDialog.dismiss();
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
     }
 
     private void getDsljyb() {
@@ -224,7 +302,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
 
                     List<String> picList = dsljybBeen.getPicList();
                     overLayerUrls = picList;
-                    if (picList == null) {
+                    if (null == picList || picList.size() == 0) {
                         if (groundOverlay != null) groundOverlay.remove();
                     } else {
                         String pic = picList.get(0);
@@ -289,7 +367,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
 
                     List<String> picList = dsljybBeen.getPicList();
                     overLayerUrls = picList;
-                    if (picList == null) {
+                    if (null == picList || picList.size() == 0) {
                         if (groundOverlay != null) groundOverlay.remove();
                     } else {
                         String pic = picList.get(0);
@@ -306,8 +384,11 @@ public class DsljybGaodeActivity extends BaseActivity implements
 
     private void initLocation() {
         if (ShipeiUtils.isLocationEnabled(context)) {
-            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_location));
-            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE));
+            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+//            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE));
+            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW));
+            //启用定位蓝点
+//            mAMap.setMyLocationEnabled(true);
             if (marker != null)
                 marker.destroy();
             mlocationClient = new AMapLocationClient(this);
@@ -315,7 +396,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
             //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位间隔,单位毫秒,默认为2000ms
-            mLocationOption.setInterval(1000);
+//            mLocationOption.setInterval(1000);
             mLocationOption.setOnceLocation(true);
             mlocationClient.setLocationOption(mLocationOption);
             mlocationClient.startLocation();
@@ -339,8 +420,11 @@ public class DsljybGaodeActivity extends BaseActivity implements
                             y = aMapLocation.getLongitude();//获取经度
                             LatLng latLng = new LatLng(x, y);
 //                        addMarkersToMap(latLng);
-                            //启用定位蓝点
-                            mAMap.setMyLocationEnabled(true);
+
+                            MarkerOptions markerOption = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point))
+                                    .position(latLng)
+                                    .draggable(false);
+                            mAMap.addMarker(markerOption);
                             getDsljyb();
 
                         } else {
@@ -354,7 +438,7 @@ public class DsljybGaodeActivity extends BaseActivity implements
             });
         } else {
             //取消定位蓝点
-            mAMap.setMyLocationEnabled(false);
+//            mAMap.setMyLocationEnabled(false);
             AlertDialog alertDialog2 = new AlertDialog.Builder(this)
                     .setMessage("是否开启位置信息")
                     .setPositiveButton("是", new DialogInterface.OnClickListener() {//添加"Yes"按钮
@@ -379,10 +463,16 @@ public class DsljybGaodeActivity extends BaseActivity implements
     }
 
     private void initView() {
-
+        initSpinner();
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
         mAMap.setOnMapClickListener(this);
+        menu_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.show();
+            }
+        });
         UiSettings uiSettings = mAMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
@@ -396,14 +486,16 @@ public class DsljybGaodeActivity extends BaseActivity implements
         now_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 rainfallkd.setImageDrawable(context.getResources().getDrawable(R.drawable.dsljybkd));
                 now_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg_select));
                 now_time.setTextColor(getResources().getColor(R.color.black));
                 sum_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg1));
                 sum_time.setTextColor(getResources().getColor(R.color.white));
                 initRecycleView();
-                getDsljyb();
                 select = "now";
+                menu_txt.setText("降水");
+                getDsljyb();
             }
         });
         sum_time.setOnClickListener(new View.OnClickListener() {
@@ -414,19 +506,20 @@ public class DsljybGaodeActivity extends BaseActivity implements
                 now_time.setTextColor(getResources().getColor(R.color.white));
                 sum_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg1_select));
                 sum_time.setTextColor(getResources().getColor(R.color.black));
-                getDsljybSum();
                 initRecycleView();
                 select = "sum";
+                menu_txt.setText("降水");
+                getDsljybSum();
             }
         });
         myLocationStyle = new MyLocationStyle();
-        now_position.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                initLocation();
-            }
-        });
+//        now_position.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                initLocation();
+//            }
+//        });
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -454,6 +547,24 @@ public class DsljybGaodeActivity extends BaseActivity implements
         mWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 
         initRecycleView();
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getProvinceFanWei();
+                if (null != x && null != y)
+                    getDsljyb();
+                else
+                    initLocation();
+                initRecycleView();
+                menu_txt.setText("降水");
+                rainfallkd.setImageDrawable(context.getResources().getDrawable(R.drawable.dsljybkd));
+                now_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg_select));
+                now_time.setTextColor(getResources().getColor(R.color.black));
+                sum_time.setBackground(getResources().getDrawable(R.drawable.dsljyb_bg1));
+                sum_time.setTextColor(getResources().getColor(R.color.white));
+                select = "now";
+            }
+        });
 
     }
 
@@ -525,10 +636,24 @@ public class DsljybGaodeActivity extends BaseActivity implements
         addMarkersToMap(point);
         x = point.latitude;
         y = point.longitude;
-        if (select.equals("now")) getDsljyb();
-        else if (select.equals("sum")) getDsljybSum();
+        if (select.equals("now")) {
+            getDsljyb();
+        } else if (select.equals("sum")) getDsljybSum();
+        menu_txt.setText("降水");
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
         mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE));
+
+        mAMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(point, 7, 0, 0)));
+        Projection projection = mAMap.getProjection();
+        Point center = projection.toScreenLocation(point);
+        //当前(屏幕上的点 )
+        mMarkerX = center.x;
+        mMarderY = center.y;
+        int height = ShipeiUtils.getHeight(context) / 9;
+        mMarderY = mMarderY + height;
+        Point pointa = new Point(mMarkerX, mMarderY);
+        LatLng latLng = projection.fromScreenLocation(pointa);
+        mAMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 7, 0, 0)));
     }
 
     @Override

@@ -1,10 +1,16 @@
 package net.univr.pushi.jxatmosphere.feature;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +22,10 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
@@ -24,6 +34,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
@@ -36,10 +47,11 @@ import com.blankj.utilcode.util.ToastUtils;
 
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
-import net.univr.pushi.jxatmosphere.beens.YuJinXinhaoBeen;
+import net.univr.pushi.jxatmosphere.beens.YujinInfo;
 import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 import net.univr.pushi.jxatmosphere.utils.GetResourceInt;
 import net.univr.pushi.jxatmosphere.utils.PicUtils;
+import net.univr.pushi.jxatmosphere.utils.ShipeiUtils;
 import net.univr.pushi.jxatmosphere.utils.ThreadUtil;
 import net.univr.pushi.jxatmosphere.utils.YujinWeiZhi;
 
@@ -65,7 +77,7 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
     TextView shengtai;
     @BindView(R.id.shixian)
     TextView shixian;
-    private List<YuJinXinhaoBeen.DataBean> data;
+    private List<YujinInfo.DataBean> data;
     String tag;
     PopupWindow popupWindow;
     PopupWindow popupWindowXq;
@@ -73,7 +85,10 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
     private View popLayout;
     private AMap mAMap;
     List<Marker> markList;
-
+    private MyLocationStyle myLocationStyle;
+    public AMapLocationClient mlocationClient;
+    public AMapLocationClientOption mLocationOption;
+    ProgressDialog progressDialog;
 
     @Override
     public int getLayoutId() {
@@ -92,12 +107,75 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
     private void myInit(Bundle savedInstanceState) {
         mapView.onCreate(savedInstanceState);
         mAMap = mapView.getMap();
+        myLocationStyle = new MyLocationStyle();
+        mAMap.getUiSettings().setZoomControlsEnabled(false);
+        mAMap.getUiSettings().setLogoBottomMargin(-50);
+        mAMap.getUiSettings().setCompassEnabled(true);
+        mAMap.getUiSettings().setRotateGesturesEnabled(false);
+        initLocation();
         markList = new ArrayList<>();
         tag = "0";
         getYujinInfo();
         getJiangXiFanWei();
 
     }
+
+    private void initLocation() {
+        if (ShipeiUtils.isLocationEnabled(context)) {
+            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+            mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW));
+            mAMap.setMyLocationEnabled(true);
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位间隔,单位毫秒,默认为2000ms
+//            mLocationOption.setInterval(1000);
+            mLocationOption.setOnceLocation(true);
+            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.startLocation();
+
+            //设置定位监听
+            mlocationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    if (aMapLocation != null) {
+                        if (aMapLocation.getErrorCode() == 0) {
+
+                        } else {
+
+                            //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                            Log.e("AmapError", "location Error, ErrCode:"
+                                    + aMapLocation.getErrorCode() + ", errInfo:"
+                                    + aMapLocation.getErrorInfo());
+                        }
+                    }
+                }
+            });
+        } else {
+            //取消定位蓝点
+//            mAMap.setMyLocationEnabled(false);
+            AlertDialog alertDialog2 = new AlertDialog.Builder(this)
+                    .setMessage("是否开启位置信息")
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+
+                    .setNegativeButton("否", new DialogInterface.OnClickListener() {//添加取消
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .create();
+            alertDialog2.show();
+        }
+    }
+
 
     private void getJiangXiFanWei() {
         DistrictSearch search = new DistrictSearch(getApplicationContext());
@@ -173,79 +251,135 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
 
 
     private void getYujinInfo() {
+        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
         RetrofitHelper.getForecastWarn()
                 .getYujinInfo(tag)
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(yunjinInfo -> {
+                    progressDialog.dismiss();
                     data = yunjinInfo.getData();
-                    showPollutionGrahpics(data);
+                    if (null != data && data.size() > 0)
+                        showPollutionGrahpics(data, tag);
                 }, throwable -> {
+                    progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
     }
 
 
-    private void showPollutionGrahpics(List<YuJinXinhaoBeen.DataBean> dataBeans) {
-        for (int i = 0; i < dataBeans.size(); i++) {
-            Double[] info;
-            String danwei = dataBeans.get(i).getDanwei();
-            if (tag.equals("1")) {
+    private void showPollutionGrahpics(List<YujinInfo.DataBean> dataBeans, String tag) {
+        if (tag.equals("1")) {
+            for (int i = 0; i < dataBeans.size(); i++) {
+                Double[] info = new Double[2];
+                String danwei = dataBeans.get(i).getDanwei();
                 String substring = danwei.substring(0, danwei.length() - 3);
                 info = YujinWeiZhi.getInfo(substring);
-            } else {
-                String citySelect = dataBeans.get(i).getCitySelect();
-                if (citySelect.equals("全市")) continue;
-                info = YujinWeiZhi.getInfo(citySelect);
+                Double lat = info[1];
+                Double lon = info[0];
+                if (lat == null || lon == null) continue;
+                String subclass = dataBeans.get(i).getYujinInfo();
+                String fabu = dataBeans.get(i).getFabu();
+                String yubaoyuan = dataBeans.get(i).getYuBaoYuan();
+                String jielun = dataBeans.get(i).getContent();
+                String fanwei = dataBeans.get(i).getAcodes();
+                substring = subclass.substring(0, subclass.length() - 4);
+                String picName = YujinWeiZhi.getPicName(substring);
+                int resource = GetResourceInt.getResource(picName, context);
+                Map<String, Object> stringObjectMap = new HashMap<>();
+                stringObjectMap.put("subclass", subclass);
+                stringObjectMap.put("danwei", danwei);
+                stringObjectMap.put("fabu", fabu);
+                stringObjectMap.put("yby", yubaoyuan);
+                stringObjectMap.put("info", jielun);
+                stringObjectMap.put("picId", resource);
+                stringObjectMap.put("fanwei", "预报范围:"+fanwei);
+
+                View parentView = LayoutInflater.from(context).inflate(R.layout.gaode_marker_image, null, false);
+                ImageView markerView = parentView.findViewById(R.id.mark_view);
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
+                bitmap = PicUtils.setImgSize(bitmap, 80, 80);
+                markerView.setImageBitmap(bitmap);
+                JSONObject makerJson = JSONObject.parseObject(JSON.toJSONString(stringObjectMap));
+                Marker marker = mAMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
+                        .position(new LatLng(lat,//设置纬度
+                                lon))//设置经度
+                        .title(substring)//设置标题
+                        .snippet(makerJson.toJSONString())//设置内容
+                        .draggable(false) //设置Marker可拖动
+                        .icon(BitmapDescriptorFactory.fromView(parentView)));
+                marker.hideInfoWindow();
+                markList.add(marker);
             }
+        } else {
+//                else {
+////                String citySelect = dataBeans.get(i).getCitySelect();
+////                if (citySelect.equals("全市")) continue;
+////                info = YujinWeiZhi.getInfo(citySelect);
+//                info[1] = 28.69;
+//                info[0] = 115.99;
+            Double[] info = new Double[2];
+            YujinInfo.DataBean dataBean = dataBeans.get(0);
+            String acodes = dataBean.getAcodes();
+            String[] split = acodes.split(",");
+            String title="";
+            for (int i = 0; i < split.length; i++) {
+                String danwei =dataBean.getDanwei();
+                info = YujinWeiZhi.getInfoBycode(split[i]);
+                Double lat = info[1];
+                Double lon = info[0];
+                title=YujinWeiZhi.getTitle(split[i]);
+                if (lat == null || lon == null) continue;
+                String subclass = dataBean.getYujinInfo();
+                String fabu = dataBean.getFabu();
+                String yubaoyuan = dataBean.getYuBaoYuan();
+                String jielun = dataBean.getContent();
+                String substring = subclass.substring(0, subclass.length() - 2);
+                String picName = YujinWeiZhi.getPicName(substring);
+                String fanwei = dataBean.getAcodes();
+                int resource = GetResourceInt.getResource(picName, context);
+                Map<String, Object> stringObjectMap = new HashMap<>();
+                stringObjectMap.put("subclass", subclass);
+                stringObjectMap.put("danwei", danwei);
+                stringObjectMap.put("fabu", fabu);
+                stringObjectMap.put("yby", yubaoyuan);
+                stringObjectMap.put("info", jielun);
+                stringObjectMap.put("picId", resource);
+                stringObjectMap.put("fanwei", "预报范围:"+initDiqu(fanwei).toString());
 
-            Double lat = info[1];
-            Double lon = info[0];
-            if (lat == null || lon == null) continue;
-
-            String subclass = dataBeans.get(i).getSubclass();
-
-            String fabu = dataBeans.get(i).getFabu();
-            String yubaoyuan = dataBeans.get(i).getYubaoyuan();
-            String qianfaren = dataBeans.get(i).getQianfaren();
-            String jielun = dataBeans.get(i).getJielun();
-            String substring = subclass.substring(0, subclass.length() - 4);
-            String picName = YujinWeiZhi.getPicName(substring);
-            String citySelect = dataBeans.get(i).getCitySelect();
-            int resource = GetResourceInt.getResource(picName, context);
-
-            Map<String, Object> stringObjectMap = new HashMap<>();
-            stringObjectMap.put("subclass", subclass);
-            stringObjectMap.put("danwei", danwei);
-            stringObjectMap.put("fabu", fabu);
-            stringObjectMap.put("yby", yubaoyuan);
-            stringObjectMap.put("qfr", qianfaren);
-            stringObjectMap.put("fanwei", citySelect);
-            stringObjectMap.put("info", jielun);
-            stringObjectMap.put("picId", resource);
-
-
-            View parentView = LayoutInflater.from(context).inflate(R.layout.gaode_marker_image, null, false);
-            ImageView markerView = parentView.findViewById(R.id.mark_view);
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
-            bitmap = PicUtils.setImgSize(bitmap, 80, 80);
-            markerView.setImageBitmap(bitmap);
-            JSONObject makerJson = JSONObject.parseObject(JSON.toJSONString(stringObjectMap));
-            Marker marker = mAMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
-                    .position(new LatLng(lat,//设置纬度
-                            lon))//设置经度
-                    .title("")//设置标题
-                    .snippet(makerJson.toJSONString())//设置内容
-                    .draggable(false) //设置Marker可拖动
-                    .icon(BitmapDescriptorFactory.fromView(parentView)));
-            marker.hideInfoWindow();
-            markList.add(marker);
+                View parentView = LayoutInflater.from(context).inflate(R.layout.gaode_marker_image, null, false);
+                ImageView markerView = parentView.findViewById(R.id.mark_view);
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
+                bitmap = PicUtils.setImgSize(bitmap, 80, 80);
+                markerView.setImageBitmap(bitmap);
+                JSONObject makerJson = JSONObject.parseObject(JSON.toJSONString(stringObjectMap));
+                Marker marker = mAMap.addMarker(new MarkerOptions().anchor(0.2f, 0.5f)
+                        .position(new LatLng(lat,//设置纬度
+                                lon))//设置经度
+                        .title(title)//设置标题
+                        .snippet(makerJson.toJSONString())//设置内容
+                        .draggable(false) //设置Marker可拖动
+                        .icon(BitmapDescriptorFactory.fromView(parentView)));
+                marker.hideInfoWindow();
+                markList.add(marker);
+            }
         }
-
     }
 
+    private StringBuilder initDiqu(String acode) {
+        StringBuilder ret=new StringBuilder();
+        String[] split = acode.split(",");
+
+        for (int i = 0; i < split.length; i++) {
+            ret.append(YujinWeiZhi.getTitle(split[i]));
+            ret.append(",");
+        }
+        ret.deleteCharAt(ret.length()-1);
+        return ret;
+    }
 
     @Override
     public void onClick(View v) {
@@ -256,9 +390,9 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
                     popupWindowXq.dismiss();
                 }
 
-                shengtai.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1_select));
+                shengtai.setBackground(getResources().getDrawable(R.drawable.gd_yj_1));
                 shengtai.setTextColor(getResources().getColor(R.color.white));
-                shixian.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3));
+                shixian.setBackground(getResources().getDrawable(R.drawable.gd_yj_2));
                 shixian.setTextColor(getResources().getColor(R.color.toolbar_color));
                 clearAllMarker();
                 tag = "0";
@@ -269,9 +403,9 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
                     popupWindow.dismiss();
                     popupWindowXq.dismiss();
                 }
-                shengtai.setBackground(getResources().getDrawable(R.drawable.gd_text_bg1));
+                shengtai.setBackground(getResources().getDrawable(R.drawable.gd_yj_3));
                 shengtai.setTextColor(getResources().getColor(R.color.toolbar_color));
-                shixian.setBackground(getResources().getDrawable(R.drawable.gd_text_bg3_select));
+                shixian.setBackground(getResources().getDrawable(R.drawable.gd_yj_text));
                 shixian.setTextColor(getResources().getColor(R.color.white));
                 clearAllMarker();
                 tag = "1";
@@ -282,6 +416,7 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
                 break;
             case R.id.reload:
                 getJiangXiFanWei();
+                initLocation();
                 if (popupWindowXq != null)
                     popupWindowXq.dismiss();
                 if (popupWindow != null)
@@ -334,7 +469,7 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
         TextView qxjXq = popLayoutXq.findViewById(R.id.qxj_xq);
         TextView sjXq = popLayoutXq.findViewById(R.id.sj_xq);
         TextView yby = popLayoutXq.findViewById(R.id.yby);
-        TextView qfr = popLayoutXq.findViewById(R.id.qfr);
+//        TextView qfr = popLayoutXq.findViewById(R.id.qfr);
         TextView ybfw = popLayoutXq.findViewById(R.id.ybfw);
         TextView ybxx = popLayoutXq.findViewById(R.id.ybxx);
         LinearLayout ditu = popLayoutXq.findViewById(R.id.ditu);
@@ -345,7 +480,7 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
         String fabu = (String) selectMap.get("fabu");
         Integer resource = (Integer) selectMap.get("picId");
         String ybyStr = (String) selectMap.get("yby");
-        String qfrStr = (String) selectMap.get("qfr");
+//        String qfrStr = (String) selectMap.get("qfr");
         String fanweiStr = (String) selectMap.get("fanwei");
         String info = "预报信息:" + (String) selectMap.get("info");
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
@@ -355,7 +490,7 @@ public class YuJingGaoDeActivity extends BaseActivity implements DistrictSearch.
         qxjXq.setText(danwei);
         sjXq.setText(fabu);
         yby.setText(ybyStr);
-        qfr.setText(qfrStr);
+//        qfr.setText(qfrStr);
         ybfw.setText(fanweiStr);
         ybxx.setText(info);
         ditu.setOnClickListener(new View.OnClickListener() {

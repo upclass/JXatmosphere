@@ -99,17 +99,16 @@ public class PicLoadFragment extends RxLazyFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bitmap = PicUtils.readLocalImageWithouChange(url, pack);
-        if (bitmap == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    PicUtils.decodeUriAsBitmapFromNet(url, pack);
-                    uiHandler.sendEmptyMessage(0);
-                }
-            }).start();
-        } else {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PicUtils.decodeUriAsBitmapFromNet(url, pack);
+                uiHandler.sendEmptyMessage(0);
+            }
+        }).start();
+        if (bitmap != null)
             pic.setImageBitmap(bitmap);
-        }
+
 
         pic.setOnLongClickListener(v -> {
             if (bitmap == null) {
@@ -193,7 +192,7 @@ public class PicLoadFragment extends RxLazyFragment {
                 int i = url.lastIndexOf("/");
                 tempFileName = url.substring(i + 1, url.length());
                 File tempFile = new File(PHOTO_DIR, tempFileName);
-                showShare(getContext(), url,tempFile.getAbsolutePath());
+                showShare(getContext(), url, tempFile.getAbsolutePath());
                 popupWindow.dismiss();
             }
         });
@@ -250,7 +249,7 @@ public class PicLoadFragment extends RxLazyFragment {
     }
 
 
-    private void showShare(Context context, String path,String localPath) {
+    private void showShare(Context context, String path, String localPath) {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();

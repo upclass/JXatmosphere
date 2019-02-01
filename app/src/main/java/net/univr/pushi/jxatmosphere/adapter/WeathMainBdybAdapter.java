@@ -103,7 +103,7 @@ public class WeathMainBdybAdapter extends BaseQuickAdapter<GdybBeen.DataBean, Ba
     }
 
     public int double2zhen(double num_d) {
-        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_UP);
+        BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_HALF_UP);
         return bg.intValue();
     }
 

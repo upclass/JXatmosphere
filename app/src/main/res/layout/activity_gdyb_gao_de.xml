@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/header_color"
@@ -36,256 +32,279 @@
             android:textColor="@color/white" />
     </RelativeLayout>
 
-    <android.support.percent.PercentFrameLayout
+    <com.amap.api.maps.MapView
+        android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4">
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
 
+    </com.amap.api.maps.MapView>
 
-        <com.amap.api.maps.MapView
-            android:id="@+id/mapview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </com.amap.api.maps.MapView>
-
-        <LinearLayout
-            android:id="@+id/search"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/loginout_bg"
-            android:orientation="horizontal"
-            app:layout_marginLeftPercent="10%"
-            app:layout_marginRightPercent="10%"
-            app:layout_widthPercent="80%">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/app_search" />
-
-            <EditText
-                android:id="@+id/gd_dizhi"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:gravity="left|center"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/search_info"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="15dp"
-                android:gravity="center"
-                android:text="搜索"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_search"
-            android:layout_height="130dp"
-            android:layout_marginTop="55dp"
-            android:background="@color/white"
-            android:visibility="gone"
-            app:layout_marginLeftPercent="15%"
-            app:layout_marginRightPercent="15%"
-            app:layout_widthPercent="70%">
-
-        </android.support.v7.widget.RecyclerView>
-
-        <ImageView
-            android:id="@+id/now_position"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/now_position" />
-
-    </android.support.percent.PercentFrameLayout>
-
-    <LinearLayout
-        android:id="@+id/content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="6dp"
-        android:layout_weight="6.5"
-        android:background="@drawable/app_forecastback1"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <android.support.percent.PercentRelativeLayout
-            android:id="@+id/weizhi_relative"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_gravity="bottom">
 
-
-            <TextView
-                android:id="@+id/province"
-                style="@style/two_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:text="加载中"
-                android:textColor="@color/white" />
-
-
-            <TextView
-                android:id="@+id/city"
-                style="@style/two_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/province"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/white" />
-
-
-            <TextView
-                android:id="@+id/town"
-                style="@style/two_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/city"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/white" />
-
-            <ImageView
-                android:id="@+id/delete"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/app_cancle"></ImageView>
-        </android.support.percent.PercentRelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/white" />
-
-        <HorizontalScrollView
-            android:id="@+id/myScrollView"
+        <android.support.percent.PercentFrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="none">
+            android:layout_weight="4">
 
-            <!--<net.univr.pushi.jxatmosphere.widget.ScrollFutureDaysWeatherView-->
-            <!--android:id="@+id/tqyb"-->
+
+            <!--<com.amap.api.maps.MapView-->
+            <!--android:id="@+id/mapview"-->
             <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"></net.univr.pushi.jxatmosphere.widget.ScrollFutureDaysWeatherView>-->
+            <!--android:layout_height="match_parent">-->
 
-        </HorizontalScrollView>
+            <!--</com.amap.api.maps.MapView>-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/white" />
+            <LinearLayout
+                android:id="@+id/search"
+                android:layout_height="35dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/black_yj"
+                android:orientation="horizontal"
+                app:layout_marginLeftPercent="10%"
+                app:layout_marginRightPercent="10%"
+                app:layout_widthPercent="80%">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/app_search" />
+
+                <EditText
+                    android:id="@+id/gd_dizhi"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="left|center"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/search_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center"
+                    android:text="搜索"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_search"
+                android:layout_height="130dp"
+                android:layout_marginTop="55dp"
+                android:background="@color/white"
+                android:visibility="gone"
+                app:layout_marginLeftPercent="15%"
+                app:layout_marginRightPercent="15%"
+                app:layout_widthPercent="70%">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <ImageView
+                android:id="@+id/now_position"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/now_position" />
+
+        </android.support.percent.PercentFrameLayout>
 
         <LinearLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="6dp"
+            android:layout_weight="6.5"
+            android:background="@color/black_yj"
+            android:clickable="true"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:text="起报时间:"
-                android:textColor="@color/white"
-                android:textSize="13sp" />
+            <android.support.percent.PercentRelativeLayout
+                android:id="@+id/weizhi_relative"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom">
 
 
-            <TextView
-                android:id="@+id/forecast_time"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="2dp"
-                android:gravity="center"
-                android:text="2018-11-20 08:00:00"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/province"
+                    style="@style/two_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="加载中"
+                    android:textColor="@color/white" />
 
-            <TextView
-                android:id="@+id/one_hour"
-                android:layout_width="34dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/gd_text_bg1_select"
-                android:gravity="center"
-                android:text="1h"
-                android:textColor="@color/white"
-                android:textSize="11sp" />
 
-            <TextView
-                android:id="@+id/three_hour"
-                android:layout_width="34dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="-1dp"
-                android:background="@drawable/gd_text_bg2"
-                android:gravity="center"
-                android:text="3h"
-                android:textColor="@color/toolbar_color"
-                android:textSize="11sp" />
+                <TextView
+                    android:id="@+id/city"
+                    style="@style/two_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/province"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white" />
 
-            <TextView
-                android:id="@+id/six_hour"
-                android:layout_width="34dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="-1dp"
-                android:background="@drawable/gd_text_bg2"
-                android:gravity="center"
-                android:text="6h"
-                android:textColor="@color/toolbar_color"
-                android:textSize="11sp" />
 
-            <TextView
-                android:id="@+id/twelve_hour"
-                android:layout_width="34dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="-1dp"
-                android:background="@drawable/gd_text_bg2"
-                android:gravity="center"
-                android:text="12h"
-                android:textColor="@color/toolbar_color"
-                android:textSize="11sp" />
+                <TextView
+                    android:id="@+id/town"
+                    style="@style/two_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/city"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white" />
 
-            <TextView
-                android:id="@+id/twentyfour_hour"
-                android:layout_width="34dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="-1dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/gd_text_bg3"
-                android:gravity="center"
-                android:text="24h"
-                android:textColor="@color/toolbar_color"
-                android:textSize="11sp" />
+                <ImageView
+                    android:id="@+id/delete"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/app_cancle"></ImageView>
+            </android.support.percent.PercentRelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/white" />
+
+            <HorizontalScrollView
+                android:id="@+id/myScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scrollbars="none">
+
+                <!--<net.univr.pushi.jxatmosphere.widget.ScrollFutureDaysWeatherView-->
+                <!--android:id="@+id/tqyb"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"></net.univr.pushi.jxatmosphere.widget.ScrollFutureDaysWeatherView>-->
+
+            </HorizontalScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="起报时间:"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+
+                <TextView
+                    android:id="@+id/forecast_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="2dp"
+                    android:gravity="center"
+                    android:text="2018-11-20 08:00:00"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/one_hour"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/gd_text_bg1_select"
+                    android:gravity="center"
+                    android:text="1h"
+                    android:textColor="@color/black_yj"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/three_hour"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-1dp"
+                    android:background="@drawable/gd_text_bg2"
+                    android:gravity="center"
+                    android:text="3h"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/six_hour"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-1dp"
+                    android:background="@drawable/gd_text_bg2"
+                    android:gravity="center"
+                    android:text="6h"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/twelve_hour"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-1dp"
+                    android:background="@drawable/gd_text_bg2"
+                    android:gravity="center"
+                    android:text="12h"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/twentyfour_hour"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-1dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/gd_text_bg3"
+                    android:gravity="center"
+                    android:text="24h"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>
+
+
+

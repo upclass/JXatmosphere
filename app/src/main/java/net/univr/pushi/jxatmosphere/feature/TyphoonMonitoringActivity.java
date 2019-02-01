@@ -10,13 +10,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import net.univr.pushi.jxatmosphere.R;
 import net.univr.pushi.jxatmosphere.base.BaseActivity;
+import net.univr.pushi.jxatmosphere.beens.TyphoonDetiveBeen;
+import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 public class TyphoonMonitoringActivity extends BaseActivity implements View.OnClickListener {
@@ -26,9 +32,9 @@ public class TyphoonMonitoringActivity extends BaseActivity implements View.OnCl
     ProgressDialog progressDialog = null;
     @BindView(R.id.back)
     ImageView back;
-//    @BindView(R.id.share_to)
+    //    @BindView(R.id.share_to)
 //    ImageView share_to;
-
+    Map<String, String> map = new HashMap<String, String>();
 
     @Override
     public int getLayoutId() {
@@ -45,7 +51,7 @@ public class TyphoonMonitoringActivity extends BaseActivity implements View.OnCl
         back.setOnClickListener(this);
 //        share_to.setOnClickListener(this);
         webView.getSettings().setJavaScriptEnabled(true);
-        Map<String, String> map = new HashMap<String, String>();
+
         map.put("User-Agent", "Android");
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -65,8 +71,8 @@ public class TyphoonMonitoringActivity extends BaseActivity implements View.OnCl
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 progressDialog.dismiss();
-                if(webView!=null)
-                webView.setVisibility(View.VISIBLE);
+                if (webView != null)
+                    webView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
                 //网页加载结束的处理，可以停止动画
 
@@ -89,17 +95,38 @@ public class TyphoonMonitoringActivity extends BaseActivity implements View.OnCl
                 //移除动画或者删除背景图片
             }
         });
-
+        getTestData();
         //加载assets文件夹下的html
 //        webView.loadUrl("file:///android_asset/html/index.html");
         //加载网络请求的html
-        webView.loadUrl("http://journal.weather.cn/ty/", map);
+//        webView.loadUrl("http://journal.weather.cn/ty/", map);
+    }
+
+
+    public void getTestData() {
+        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
+        RetrofitHelper.getForecastWarn()
+                .typhoonDetetive()
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(typhoonDetiveBeen -> {
+                    progressDialog.dismiss();
+                    TyphoonDetiveBeen.DataBean data = typhoonDetiveBeen.getData();
+                    if (null != data)
+                        webView.loadUrl(data.getUrl(), map);
+                }, throwable -> {
+                    progressDialog.dismiss();
+                    LogUtils.e(throwable);
+                });
+
     }
 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
 //            case R.id.share_to:
 //                OnekeyShare oks = new OnekeyShare();
 //                //关闭sso授权
