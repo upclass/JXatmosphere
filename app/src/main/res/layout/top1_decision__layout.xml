@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/header_color"
     android:layout_width="match_parent"
     android:layout_height="40dp"
-    style="@style/header_color"
     android:paddingLeft="12dp"
     android:paddingRight="12dp">
 
@@ -19,25 +19,25 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/title"
+        style="@style/one_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/sv_feedback_pg_name1"
-        android:textColor="@color/white"
-       style="@style/one_title"/>
+        android:textColor="@color/white" />
 
-    <LinearLayout
-        style="@style/feture_pic"
+
+    <TextView
+        android:id="@+id/time_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/title"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:text="2016"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
 
-        <ImageView
-            android:id="@+id/reload"
-            style="@style/feture_pic"
-            android:src="@drawable/app_reload" />
-
-    </LinearLayout>
 
 </RelativeLayout>

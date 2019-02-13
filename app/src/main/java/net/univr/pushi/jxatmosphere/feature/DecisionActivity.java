@@ -1,47 +1,60 @@
 package net.univr.pushi.jxatmosphere.feature;
 
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import net.univr.pushi.jxatmosphere.R;
-import net.univr.pushi.jxatmosphere.adapter.ComPagerAdapter;
-import net.univr.pushi.jxatmosphere.base.BaseActivity;
-import net.univr.pushi.jxatmosphere.fragments.DecisionFragment;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.jzxiang.pickerview.TimePickerDialog;
+import com.jzxiang.pickerview.data.Type;
+import com.jzxiang.pickerview.listener.OnDateSetListener;
 
+import net.univr.pushi.jxatmosphere.R;
+import net.univr.pushi.jxatmosphere.adapter.DecisionAdapter;
+import net.univr.pushi.jxatmosphere.base.BaseActivity;
+import net.univr.pushi.jxatmosphere.beens.DecisionBeen1;
+import net.univr.pushi.jxatmosphere.remote.RetrofitHelper;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DecisionActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
+
     @BindView(R.id.main_tv)
     TextView main_tv;//气象情况反馈
     @BindView(R.id.vice_tv)
     TextView vice_tv; //气象呈阅件
-    @BindView(R.id.reload)
-    ImageView reload;
     @BindView(R.id.back)
     ImageView leave;
-    @BindView(R.id.tabline)
-    ImageView tabline;
-    private int tabLineLength;// 1/2屏幕宽
-    private List<Fragment> list;
-    private int currentPage = 0;// 初始化当前页为0（第一页）
-    int marginleft;
-
-
+    @BindView(R.id.content)
+    RecyclerView  recyclerView;
+    @BindView(R.id.time_select)
+    TextView time;
+    @BindView(R.id.view_fk)
+    View view_fk;
+    @BindView(R.id.view_cyj)
+    View view_cyj;
+    TimePickerDialog mDialogAll;
+    String tag="qkfy";
+    DecisionAdapter decisionAdapter;
+    ProgressDialog  progressDialog;
     @Override
     public int getLayoutId() {
         return R.layout.activity_decision;
@@ -50,116 +63,131 @@ public class DecisionActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void initViews(Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
-        // 初始化滑动条1/2
-        initTabLine();
-        // 初始化界面
         initView();
+        initTimePick();
+        getTestdata();
     }
 
 
-    private void initTabLine() {
-        Display display = getWindow().getWindowManager().getDefaultDisplay(); // 获取显示屏信息
-        DisplayMetrics metrics = new DisplayMetrics(); // 得到显示屏宽度
-        display.getMetrics(metrics);
-        tabLineLength = metrics.widthPixels / 2; // 1/2屏幕宽度
-        marginleft = tabLineLength / 8; // 1/16屏幕宽度
-        LinearLayout.LayoutParams ps = (LinearLayout.LayoutParams) tabline.getLayoutParams();
-        ps.width = tabLineLength * 3 / 4;
-        tabline.setLayoutParams(ps);
+
+
+    private void initTimePick() {
+        time.setText(String.valueOf(getNowYear(System.currentTimeMillis())));
+         mDialogAll= new TimePickerDialog.Builder()
+                .setCallBack(new OnDateSetListener() {
+                    @Override
+                    public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
+                        time.setText(String.valueOf(getNowYear(millseconds)));
+                        getTestdata();
+                    }
+                })
+                .setCancelStringId("取消")
+                .setSureStringId("确定")
+                .setTitleStringId("选择时间")
+                .setYearText("年")
+                .setMonthText("月")
+                .setDayText("日")
+                .setHourText("时")
+                .setMinuteText("分")
+                .setCyclic(true)
+                .setMinMillseconds(dateToStamp("1990-01-01"))
+                .setMaxMillseconds(dateToStamp("2030-01-01"))
+                .setCurrentMillseconds(System.currentTimeMillis())
+                .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
+                .setType(Type.YEAR)
+                .setWheelItemTextNormalColor(getResources().getColor(R.color.timetimepicker_default_text_color))
+                .setWheelItemTextSelectorColor(getResources().getColor(R.color.timepicker_toolbar_bg))
+                .setWheelItemTextSize(12)
+                .build();
+    }
+
+    public int getNowYear(long millseconds){
+        Date date=new Date(millseconds);
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public DecisionAdapter  getDecisionAdapter(){
+        if(decisionAdapter==null){
+            LinearLayoutManager manager=new LinearLayoutManager(DecisionActivity.this,LinearLayoutManager.VERTICAL,false);
+            List<DecisionBeen1.DataBean> dataBeans=new ArrayList<>();
+            decisionAdapter=new DecisionAdapter(dataBeans);
+            decisionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                    List data = ( adapter.getData());
+                    DecisionBeen1.DataBean dataBean = (DecisionBeen1.DataBean) data.get(position);
+                    Intent intent=new Intent(DecisionActivity.this,DecisionUrlActivity.class);
+                    intent.putExtra("url",dataBean.getUrl());
+                    startActivity(intent);
+                }
+            });
+            recyclerView.setLayoutManager(manager);
+            recyclerView.setAdapter(decisionAdapter);
+        }
+        return  decisionAdapter;
+    }
+
+    public long dateToStamp(String s) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date.getTime();
     }
 
     private void initView() {
-        list = new ArrayList<>();
         main_tv.setOnClickListener(this);
         vice_tv.setOnClickListener(this);
-        reload.setOnClickListener(this);
         leave.setOnClickListener(this);
-
-
-        // 设置参数
-        String a = "qkfy";
-        DecisionFragment fragment = DecisionFragment.newInstance(a);
-
-        String b = "cyj";
-        DecisionFragment fragment1 = DecisionFragment.newInstance(b);
-
-
-        list.add(fragment);
-        list.add(fragment1);
-
-        // 设置适配器
-        ComPagerAdapter adapter = new ComPagerAdapter(
-                getSupportFragmentManager(), list);
-        // 绑定适配器
-        viewPager.setAdapter(adapter);
-
-
-        // 设置滑动监听
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                currentPage = position;
-                changeSize(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-                Log.i("tuzi", arg0 + "," + arg1 + "," + arg2);
-             /*   arg0 :当前页面，及你点击滑动的页面
-                arg1:当前页面偏移的百分比
-                arg2:当前页面偏移的像素位置*/
-                // 取得该控件的实例
-                LinearLayout.LayoutParams ll = (android.widget.LinearLayout.LayoutParams) tabline
-                        .getLayoutParams();
-
-                if (currentPage == 0 && arg0 == 0) { // 0->1移动(第一页到第二页)
-                    ll.leftMargin = (int) (currentPage * tabLineLength + arg1
-                            * tabLineLength + marginleft);
-
-
-                } else if (currentPage == 1 && arg0 == 0) { // 1->0移动（第二页到第一页）
-                    ll.leftMargin = (int) (currentPage * tabLineLength + marginleft - ((1 - arg1) * tabLineLength));
-
-                }
-                tabline.setLayoutParams(ll);
-            }
-
-        });
-
+        time.setOnClickListener(this);
     }
+
+    void getTestdata() {
+        progressDialog = ProgressDialog.show(context, "请稍等...", "获取数据中...", true);
+        progressDialog.setCancelable(true);
+        RetrofitHelper.getFeedbackAPI()
+                .getDecision1(time.getText().toString(),tag)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(decisionBeen1 -> {
+                    progressDialog.dismiss();
+                    getDecisionAdapter().setNewData(decisionBeen1.getData());
+                },throwable ->
+                {
+                    progressDialog.dismiss();
+                    LogUtils.e(throwable);
+                    ToastUtils.showShort(getString(R.string.getInfo_error_toast));
+                });
+        }
 
     @Override
     public void onClick(View v) {
-        LinearLayout.LayoutParams ll = (android.widget.LinearLayout.LayoutParams) tabline
-                .getLayoutParams();
         switch (v.getId()) {
             case R.id.main_tv:
-                currentPage = 0;
+                tag="qkfy";
+                getTestdata();
                 changeSize(0);
-                viewPager.setCurrentItem(0);
-                ll.leftMargin = marginleft;
-                tabline.setLayoutParams(ll);
+                view_fk.setVisibility(View.VISIBLE);
+                view_cyj.setVisibility(View.INVISIBLE);
                 break;
             case R.id.vice_tv:
-                currentPage = 1;
+                 tag="qxcyj";
+                getTestdata();
                 changeSize(1);
-                viewPager.setCurrentItem(1);
-                ll.leftMargin = tabLineLength + marginleft;
-                tabline.setLayoutParams(ll);
-                break;
-            case R.id.reload:
-                int currentItem = viewPager.getCurrentItem();
-                DecisionFragment fragment = (DecisionFragment) list.get(currentItem);
-                fragment.getTestdata();
+                view_fk.setVisibility(View.INVISIBLE);
+                view_cyj.setVisibility(View.VISIBLE);
                 break;
             case R.id.back:
                 finish();
+                break;
+            case  R.id.time_select:
+                mDialogAll.show(getSupportFragmentManager(),"");
                 break;
         }
 
@@ -173,7 +201,6 @@ public class DecisionActivity extends BaseActivity implements View.OnClickListen
         if (flag == 1) {
             main_tv.setTextSize(15);
             vice_tv.setTextSize(17);
-
         }
     }
 

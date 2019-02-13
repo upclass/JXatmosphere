@@ -110,7 +110,8 @@ public class LocationChangeActivity extends BaseActivity {
                             double latitude = latLonPoint.getLatitude();
                             double longitude = latLonPoint.getLongitude();
                             String s = poiItem.toString();
-                            String s2 = poiItem.getProvinceName() + poiItem.getCityName() + poiItem.getAdName();
+//                            String s2 = poiItem.getProvinceName() + poiItem.getCityName() + poiItem.getAdName();
+                            String s2 = poiItem.getCityName() + poiItem.getAdName();
                             Locationbeen locationBean = new Locationbeen();
                             locationBean.setContent(s);
                             locationBean.setWeizhi(s2);

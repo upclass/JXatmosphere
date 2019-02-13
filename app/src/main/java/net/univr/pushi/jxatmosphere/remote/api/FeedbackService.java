@@ -1,6 +1,7 @@
 package net.univr.pushi.jxatmosphere.remote.api;
 
 import net.univr.pushi.jxatmosphere.beens.DecisionBeen;
+import net.univr.pushi.jxatmosphere.beens.DecisionBeen1;
 import net.univr.pushi.jxatmosphere.beens.DutyBeen1;
 import net.univr.pushi.jxatmosphere.beens.ForecasterScore;
 import net.univr.pushi.jxatmosphere.beens.WebForecastScore;
@@ -26,6 +27,9 @@ public interface FeedbackService {
     @POST("grade.do")
     Observable<ForecasterScore> getScore(@Query("grade")String grade);
     //决策服务
+    @POST("decesionAction1.do")
+    Observable<DecisionBeen1> getDecision1(@Query("time")String time, @Query("tag")String tag);
+
     @POST("decision.do")
     Observable<DecisionBeen> getDecision(@Query("type")String type);
     //排班表

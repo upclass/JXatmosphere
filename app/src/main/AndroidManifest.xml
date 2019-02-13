@@ -199,7 +199,12 @@
             android:name=".feature.GdybGaoDeActivity1"
             android:label="@string/title_activity_gdyb_gao_de1"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".feature.GdybGaoDeActivity2"></activity>
+        <activity android:name=".feature.GdybGaoDeActivity2" />
+        <activity
+            android:name=".feature.DecisionUrlActivity"
+            android:label="@string/title_activity_decision_url"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".feature.CitySelectActivity"></activity>
     </application>
 
 </manifest>

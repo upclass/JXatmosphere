@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="40dp"
     android:background="@color/white"
     android:gravity="center_vertical"
     android:orientation="horizontal">
@@ -9,13 +9,13 @@
 
     <LinearLayout
         android:layout_width="70dp"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/weekDay"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="25dp"
             android:gravity="right|center_vertical"
             android:text="今天"
             android:textColor="@color/black"
@@ -24,7 +24,7 @@
         <TextView
             android:id="@+id/date"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="15dp"
             android:gravity="center_vertical|right"
             android:text="01-28"
             android:textColor="@color/black_yj"
@@ -42,14 +42,14 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="16dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/weathDesc"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="25dp"
             android:gravity="left|center_vertical"
             android:text="多云11度"
             android:textColor="@color/black"
@@ -57,27 +57,29 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="15dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/rain_pic"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center"
                 android:src="@drawable/lattice_r_normal" />
 
             <TextView
                 android:id="@+id/rain"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="0mm" />
+                android:text="0mm"
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/xdsd_pic"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="12dp"
                 android:src="@drawable/lattice_h_normal" />
@@ -86,23 +88,27 @@
                 android:id="@+id/xdsd"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="76.2%" />
+                android:text="76.2%"
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/wind_pic"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/lattice_w_normal" />
 
             <TextView
                 android:id="@+id/wind"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="微风" />
+                android:text="微风"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 

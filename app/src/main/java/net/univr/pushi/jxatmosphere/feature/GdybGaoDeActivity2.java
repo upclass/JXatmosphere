@@ -300,7 +300,7 @@ public class GdybGaoDeActivity2 extends BaseActivity implements View.OnClickList
                     }
                 })
                 //设置高度
-                .setGroupHeight(ScreenUtil.dip2px(this, 60))
+                .setGroupHeight(ScreenUtil.dip2px(this, 40))
                 .build();
         tq_recyclerView.addItemDecoration(decoration);
     }

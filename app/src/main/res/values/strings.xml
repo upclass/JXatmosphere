@@ -134,4 +134,5 @@
     <string name="title_activity_gdyb_gao_de">GdybGaoDeActivity</string>
     <string name="title_activity_location_change">LocationChangeActivity</string>
     <string name="title_activity_gdyb_gao_de1">GdybGaoDeActivity1</string>
+    <string name="title_activity_decision_url">DecisionUrlActivity</string>
 </resources>

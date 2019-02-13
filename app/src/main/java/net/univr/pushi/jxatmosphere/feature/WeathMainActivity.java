@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -26,6 +27,7 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import net.univr.pushi.jxatmosphere.R;
@@ -99,7 +101,16 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     public AMapLocationClient mlocationClient;
     //声明mLocationOption对象
     public AMapLocationClientOption mLocationOption;
+    @BindView(R.id.city_contain)
+    RelativeLayout city_contain;
+    @BindView(R.id.point_contain)
+    LinearLayout point_contain;
 
+    @BindView(R.id.change_city)
+    ImageView change_city;
+    String cityTown;
+    int cityIndex = 0;//当前city点选中的下标
+//    Map<String, Object> citySelectFlag = new HashMap<>();
 
     @Override
     public int getLayoutId() {
@@ -115,9 +126,66 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
         loc.setOnClickListener(this);
+        change_city.setOnClickListener(this);
         initDate();
         initLocation();
+        initCity();
+    }
 
+    private void initCity() {
+        String local_lat = SPUtils.getInstance().getString("local_lat", "");
+        String local_lon = SPUtils.getInstance().getString("local_lon", "");
+        String local_city = SPUtils.getInstance().getString("local_city", "");
+        String local_weizhi = SPUtils.getInstance().getString("local_weizhi", "");
+        if (null != local_weizhi && !local_weizhi.equals("")) {
+            String[] split = local_weizhi.split(",");
+            for (int i = -1; i < split.length; i++) {//-1代表本地信息
+                ImageView imageView = new ImageView(context);
+                if (i == -1) imageView.setImageResource(R.drawable.point);
+                else
+                    imageView.setImageResource(R.drawable.point_unselect);
+                imageView.setId(i);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String[] lat_split = local_lat.split(",");
+                        String[] lon_split = local_lon.split(",");
+                        String[] city_split = local_city.split(",");
+                        String[] weizhi_split = local_weizhi.split(",");
+                        if (v.getId() == -1) {
+                            initLocation();
+                        } else {
+                            lat = lat_split[imageView.getId()];
+                            lon = lon_split[imageView.getId()];
+                            city = city_split[imageView.getId()];
+                            loc.setText(weizhi_split[imageView.getId()]);
+                            getTestData();
+                            getTestData1();
+                            getTestData2();
+                            getTestData3();
+
+                        }
+                        initCityIcon((v.getId()) + 1);
+                        cityIndex = (imageView.getId()) + 1;//设置选中位置
+                    }
+                });
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(60, 60);
+                layoutParams.leftMargin = 30;
+                point_contain.addView(imageView, layoutParams);
+            }
+        }
+    }
+
+    void initCityIcon(int index) {
+        int childCount = point_contain.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            ImageView childAt = (ImageView) point_contain.getChildAt(i);
+            if (index == i) {
+                childAt.setImageResource(R.drawable.point);
+            } else {
+                childAt.setImageResource(R.drawable.point_unselect);
+            }
+        }
     }
 
     //    private  WeathMainAdapter getAdapter{
@@ -252,9 +320,14 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
-            case R.id.titleBar_title:
-                Intent intent1 = new Intent(context, LocationChangeActivity.class);
-                startActivityForResult(intent1, 11);
+//            case R.id.titleBar_title:
+//                Intent intent1 = new Intent(context, LocationChangeActivity.class);
+//                startActivityForResult(intent1, 11);
+//                break;
+            case R.id.change_city:
+                Intent intent2 = new Intent(context, CitySelectActivity.class);
+                intent2.putExtra("cityTown", cityTown);
+                startActivityForResult(intent2, 11);
                 break;
         }
     }
@@ -263,40 +336,81 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 11) {
-            if (resultCode == 1) {
-                //之前数据置空
-                jslData.setText("0.0mm");
-                xdsdData.setText("0.0%");
-                fsData.setText("");
-                loc.setText("");
-                temper.setText("");
-                if (mAdapter != null) {
-                    mAdapter.getData().clear();
-                    mAdapter.notifyDataSetChanged();
+            Bundle extras = data.getExtras();
+            if (extras == null) ;
+            else {
+                Boolean addOrRemove = extras.getBoolean("addOrRemove", false);
+                Boolean relocation = extras.getBoolean("relocation", false);
+                if(relocation){
+                    initLocation();
+                    initCityIcon(0);
                 }
-                if (mbdybAdapter != null) {
-                    mbdybAdapter.getData().clear();
-                    mbdybAdapter.notifyDataSetChanged();
+                if (addOrRemove) {
+                    point_contain.removeAllViews();
+                    String local_lat = SPUtils.getInstance().getString("local_lat", "");
+                    String local_lon = SPUtils.getInstance().getString("local_lon", "");
+                    String local_city = SPUtils.getInstance().getString("local_city", "");
+                    String local_weizhi = SPUtils.getInstance().getString("local_weizhi", "");
+                    if (local_weizhi.equals("")) {
+                    } else {
+                        initCity();
+                        String[] lat_split = local_lat.split(",");
+                        String[] lon_split = local_lon.split(",");
+                        String[] city_split = local_city.split(",");
+                        String[] weizhi_split = local_weizhi.split(",");
+                        int length = weizhi_split.length-1;
+                        if(cityIndex==0);
+                        else{
+                            if (cityIndex-1 <= length-1){
+                                initCityIcon(cityIndex);
+                                RequestData(lat_split[cityIndex - 1], lon_split[cityIndex - 1], city_split[cityIndex - 1], weizhi_split[cityIndex - 1]);
+                            }
+                            else{
+                                initCityIcon(length+1);
+                                RequestData(lat_split[length], lon_split[length], city_split[length], weizhi_split[length]);
+                            }
+                        }
+                    }
+                } else {
+                    if (resultCode == 1) {//点击了选项
+                        Integer position = extras.getInt("position", -100);
+                        if (position != -100) {
+                            initCityIcon(position);
+                        }
+                        RequestData(extras.getString("lat"), extras.getString("lon"), extras.getString("city"), extras.getString("weizhi"));
+                    }
                 }
-                tqms.setText("");
-                fbdw.setText("");
-                bd_tqtp.setImageBitmap(null);
-                //
-                Bundle extras = data.getExtras();
-                lat = extras.getString("lat");
-                lon = extras.getString("lon");
-                city=extras.getString("city");
-                loc.setText(extras.getString("weizhi"));
-                //重新请求数据
-                getTestData();
-                getTestData1();
-                getTestData2();
-                getTestData3();
-            }
-            if (resultCode == 2) {
-                initLocation();
             }
         }
+    }
+
+    private void RequestData(String lat_p, String lon_p, String city_p, String weizhi_p) {
+        //之前数据置空
+        jslData.setText("0.0mm");
+        xdsdData.setText("0.0%");
+        fsData.setText("");
+        loc.setText("");
+        temper.setText("");
+        if (mAdapter != null) {
+            mAdapter.getData().clear();
+            mAdapter.notifyDataSetChanged();
+        }
+        if (mbdybAdapter != null) {
+            mbdybAdapter.getData().clear();
+            mbdybAdapter.notifyDataSetChanged();
+        }
+        tqms.setText("");
+        fbdw.setText("");
+        bd_tqtp.setImageBitmap(null);
+        lat = lat_p;
+        lon = lon_p;
+        city = city_p;
+        loc.setText(weizhi_p);
+        //重新请求数据
+        getTestData();
+        getTestData1();
+        getTestData2();
+        getTestData3();
     }
 
     public void getTestData() {
@@ -519,6 +633,7 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         loc.setText(regeocodeResult.getRegeocodeAddress().getAois().get(0).getAoiName());
         city = regeocodeResult.getRegeocodeAddress().getCity();
         city = city.replace("市", "");
+        cityTown = regeocodeResult.getRegeocodeAddress().getTownship() + "·" + regeocodeResult.getRegeocodeAddress().getCity();
         getTestData3();
     }
 
@@ -538,4 +653,14 @@ public class WeathMainActivity extends BaseActivity implements View.OnClickListe
         BigDecimal bg = new BigDecimal(num_d).setScale(0, BigDecimal.ROUND_HALF_UP);
         return bg.intValue();
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Object position = citySelectFlag.get("position");
+//        if(position!=null){
+//            Integer position1 = (Integer) position;
+//            initCityIcon(position1);
+//        }
+//    }
 }

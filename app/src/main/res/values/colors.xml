@@ -24,6 +24,7 @@
     <color name="useless">#f0f0f0</color>
     <color name="black_yj">#393838</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="color_city_contain">#66BEF0</color>
 
 
 </resources>

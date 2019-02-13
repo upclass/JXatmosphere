@@ -1,8 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_backimage"
-    android:orientation="vertical">
+    android:background="@drawable/app_backimage">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,6 +52,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/spacing_40"
         android:fillViewport="true"
         android:scrollbars="none">
 
@@ -257,12 +257,13 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/bdybRecycle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:scrollbars="none" />
 
@@ -370,8 +371,41 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/city_contain"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                  >
+                    <LinearLayout
+                        android:id="@+id/point_contain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/change_city"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="6dp"
+                    android:src="@drawable/tianjia" />
+
+            </LinearLayout>
+
         </LinearLayout>
+
+
 
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>
