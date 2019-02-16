@@ -91,11 +91,11 @@
     </style>
 
     <style name="one_title">
-        <item name="android:textSize">@dimen/spacing_17</item>
+        <item name="android:textSize">@dimen/spacing_15</item>
     </style>
 
     <style name="two_title">
-        <item name="android:textSize">@dimen/spacing_15</item>
+        <item name="android:textSize">@dimen/spacing_13</item>
     </style>
 
     <style name="three_title">

@@ -78,7 +78,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 3
-        versionName "4.9"
+        versionName "5.0"
         testInstrumentationRunner "android.support.popup_feedback_layout.runner.AndroidJUnitRunner"
         //方法>64k
         multiDexEnabled true

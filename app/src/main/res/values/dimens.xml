@@ -9,7 +9,9 @@
     <dimen name="spacing_10">10dp</dimen>
     <dimen name="spacing_12">12dp</dimen>
     <dimen name="spacing_13">13dp</dimen>
+    <dimen name="spacing_14">14dp</dimen>
     <dimen name="spacing_15">15dp</dimen>
+    <dimen name="spacing_16">16dp</dimen>
     <dimen name="spacing_17">17dp</dimen>
     <dimen name="spacing_20">20dp</dimen>
     <dimen name="spacing_25">25dp</dimen>

@@ -62,6 +62,8 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
     TextView main_tv;
     @BindView(R.id.vice_tv)
     TextView vice_tv;
+    @BindView(R.id.vice_tv1)
+    TextView vice_tv1;
 
     @BindView(R.id.tabline)
     ImageView tabline;
@@ -172,7 +174,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
         Display display = getWindow().getWindowManager().getDefaultDisplay(); // 获取显示屏信息
         DisplayMetrics metrics = new DisplayMetrics(); // 得到显示屏宽度
         display.getMetrics(metrics);
-        tabLineLength = metrics.widthPixels / 2; // 1/2屏幕宽度
+        tabLineLength = metrics.widthPixels / 3; // 1/2屏幕宽度
         marginleft = tabLineLength / 8; // 1/16屏幕宽度
         LinearLayout.LayoutParams ps = (LinearLayout.LayoutParams) tabline.getLayoutParams();
         ps.width = tabLineLength * 3 / 4;
@@ -182,6 +184,7 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
     private void initView() {
         main_tv.setOnClickListener(this);
         vice_tv.setOnClickListener(this);
+        vice_tv1.setOnClickListener(this);
         leave.setOnClickListener(this);
         reload.setOnClickListener(this);
         LinearLayout.LayoutParams ll = (android.widget.LinearLayout.LayoutParams) tabline
@@ -269,6 +272,19 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
 //                fragment.multitemList.set(0, multiItemGdybTx1);
 //                fragment.getAdapter3().notifyItemChanged(0);
                 break;
+
+            case R.id.vice_tv1:
+                changeSize(2);
+                ll.leftMargin = tabLineLength*2 + marginleft;
+                tabline.setLayoutParams(ll);
+                type = "ENSEMBLE-NOWCAST";
+                ctype = "Gale_ensemble";
+                uiHandler.removeCallbacksAndMessages(null);
+                getTwoMenu();
+                getTestdata();
+                getAdapter1().setLastposition(0);
+                getOneTime();
+                break;
             case R.id.back:
                 finish();
                 break;
@@ -283,12 +299,19 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
 
     public void changeSize(int flag) {
         if (flag == 0) {
-            vice_tv.setTextSize(15);
-            main_tv.setTextSize(17);
+            vice_tv.setTextSize(13);
+            vice_tv1.setTextSize(13);
+            main_tv.setTextSize(15);
         }
         if (flag == 1) {
-            main_tv.setTextSize(15);
-            vice_tv.setTextSize(17);
+            main_tv.setTextSize(13);
+            vice_tv1.setTextSize(13);
+            vice_tv.setTextSize(15);
+        }
+        if (flag == 2) {
+            main_tv.setTextSize(13);
+            vice_tv.setTextSize(13);
+            vice_tv1.setTextSize(15);
         }
 
     }
@@ -485,6 +508,15 @@ public class WtfRapidActivity extends BaseActivity implements View.OnClickListen
                 }
                 if (menu.equals("925百帕风场")) {
                     ctype = "Wind_925hPa";
+                }
+                if (menu.equals("大风")) {
+                    ctype = "Gale_ensemble";
+                }
+                if (menu.equals("降水")) {
+                    ctype = "Precipitation_ensemble";
+                }
+                if (menu.equals("反射率")) {
+                    ctype = "Thunder_ensemble";
                 }
                 if (selectTime.equals(""))
                     getTestdata();
