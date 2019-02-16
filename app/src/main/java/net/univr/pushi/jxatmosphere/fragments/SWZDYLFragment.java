@@ -1,7 +1,6 @@
 package net.univr.pushi.jxatmosphere.fragments;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +33,7 @@ public class SWZDYLFragment extends RxLazyFragment {
 //    TextView contentTv;
 //    @BindView(R.id.image)
 //ImageView image;
-    ProgressDialog progressDialog;
+//    ProgressDialog progressDialog;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
@@ -121,15 +120,15 @@ public class SWZDYLFragment extends RxLazyFragment {
 
 
     public void getTestdata() {
-        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
+//        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
+//        progressDialog.setCancelable(true);
         RetrofitHelper.getWeatherMonitorAPI()
                 .getSWZD()
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(SWZDBeen -> {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
 //                    String context = SWZDBeen.getData().getTextStr();
 //                    String url = SWZDBeen.getData().getUrl();
 //                    contentTv.setText(context);
@@ -148,7 +147,7 @@ public class SWZDYLFragment extends RxLazyFragment {
                     TextView content = header.findViewById(R.id.content);
                     content.setText(SWZDBeen.getData().getTextStr());
                 }, throwable -> {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });

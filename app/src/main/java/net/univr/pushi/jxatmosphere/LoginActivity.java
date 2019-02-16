@@ -95,8 +95,8 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login)
     public void onViewClicked() {
-//        Intent intent = new Intent(context, MainActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(context, MainActivity.class);
+        startActivity(intent);
         String phone = re_phone.getText().toString();
         boolean chinaPhoneLegal = PhoneFormatCheckUtils.isChinaPhoneLegal(phone);
         String code = re_code.getText().toString();

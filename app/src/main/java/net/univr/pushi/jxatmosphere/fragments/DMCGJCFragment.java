@@ -66,14 +66,15 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     private MultiGdybTxAdapterForDmcgjc mAdapter3;
     List<MultiItemGdybTx> multitemList = new ArrayList<>();
     ImageView isStartPic;
-
+    Boolean showDialog;
 
 
     List<Fragment> list;
     public String interval = "5";
 
-    public static DMCGJCFragment newInstance(String type, String ctype) {
+    public static DMCGJCFragment newInstance(String type, String ctype,Boolean showDialog) {
         DMCGJCFragment dmcgjcFragment = new DMCGJCFragment();
+        dmcgjcFragment.showDialog=showDialog;
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
         bundle.putString("ctype", ctype);
@@ -159,8 +160,10 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
 
 
     public void getTestdata() {
-        progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", true);
-        progressDialog.setCancelable(true);
+        if(showDialog){
+            progressDialog = ProgressDialog.show(getContext(), "请稍等...", "获取数据中...", false);
+            progressDialog.setCancelable(true);
+        }
         getAdapter3();
         RetrofitHelper.getWeatherMonitorAPI()
                 .getDmcgjc(type, ctype, interval)
@@ -168,6 +171,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DmcgjcDeen -> {
+                    if(progressDialog!=null)
                     progressDialog.dismiss();
                     int vis = 0;
                     if (ctype.equals("rain_sum") || ctype.equals("rain_sum1")
@@ -266,7 +270,8 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
                     //播放轮播
 
                 }, throwable -> {
-                    progressDialog.dismiss();
+                    if(progressDialog!=null)
+                        progressDialog.dismiss();
                     LogUtils.e(throwable);
                     ToastUtils.showShort(getString(R.string.getInfo_error_toast));
                 });
@@ -314,6 +319,7 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
+//        if(progressDialog!=null)progressDialog.dismiss();
         uiHandler.removeCallbacksAndMessages(null);
     }
 
@@ -336,4 +342,13 @@ public class DMCGJCFragment extends RxLazyFragment implements View.OnClickListen
             }
         }
     }
+
+    @Override
+    protected void onInvisible() {
+        super.onInvisible();
+        if(progressDialog!=null)
+            progressDialog.dismiss();
+    }
+
+
 }
